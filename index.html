@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mi Portafolio ✨</title>
+    <link rel="stylesheet" href="style.css?v=4">
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;800&family=Fredoka+One&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- Background elements -->
+    <div class="bg-shape shape1"></div>
+    <div class="bg-shape shape2"></div>
+    <div class="bg-shape shape3"></div>
+
+    <div class="sparkles-container" id="sparkles"></div>
+
+    <main class="container">
+        <header class="glass-card hero">
+            <div class="avatar-container">
+                <div class="avatar">
+                    <img src="avatar.jpg" alt="Lydiel Avatar">
+                </div>
+                <div class="badge">✨</div>
+            </div>
+            <h1 class="title">¡Hola, soy Lydiel! <span class="wave">👋</span></h1>
+            <p class="subtitle">Desarrollador Mágico 💖</p>
+            <p class="description">Me dedico a la <strong>programación impulsada por IA</strong>. Transformo ideas en realidad usando el poder de la inteligencia artificial y mucho amor. 🎀</p>
+            
+            <div class="social-links">
+                <a href="https://github.com/davidrfyt" target="_blank" class="social-btn"><i class="fab fa-github"></i> GitHub</a>
+                <a href="#" class="social-btn"><i class="fab fa-discord"></i> dave.x</a>
+                <a href="#contacto" class="social-btn"><i class="fas fa-envelope"></i> Contacto</a>
+            </div>
+        </header>
+
+        <section class="skills glass-card">
+            <h2>Mis Superpoderes 🪄</h2>
+            <div class="skills-grid">
+                <div class="skill-item">
+                    <div class="skill-icon">🤖</div>
+                    <h3>Inteligencia Artificial</h3>
+                    <p>Usamos la IA de forma profesional para potenciar cada uno de los proyectos.</p>
+                </div>
+                <div class="skill-item">
+                    <div class="skill-icon">💻</div>
+                    <h3>Desarrollo Web</h3>
+                    <p>Creando interfaces modernas, seguras y de alto rendimiento.</p>
+                </div>
+                <div class="skill-item">
+                    <div class="skill-icon">🎨</div>
+                    <h3>Diseño UI/UX</h3>
+                    <p>Diseño oscuro, atractivo y optimizado para ventas.</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="portfolio-section">
+            <h2>Portafolio 🚀</h2>
+            <div class="portfolio-container">
+                <div class="portfolio-card glass-card">
+                    <div class="portfolio-img">
+                        <img src="neogalaxyx.png?v=2" alt="NeoGalaxyX">
+                    </div>
+                    <div class="portfolio-content">
+                        <h3>NeoGalaxyX</h3>
+                        <p>Diseño y maquetación web de la página oficial del MMO espacial NeoGalaxyX, logrando una estética oscura, moderna y muy atractiva para los jugadores.</p>
+                        <a href="https://neogalaxyx.com" target="_blank" class="portfolio-btn">Visitar Proyecto <i class="fas fa-external-link-alt"></i></a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="contacto" class="contact-section glass-card">
+            <h2>Contacto 📩</h2>
+            <form action="https://formsubmit.co/webmaster@labcore.es" method="POST" class="contact-form">
+                <input type="hidden" name="_subject" value="Nuevo mensaje desde tu portafolio">
+                <input type="hidden" name="_captcha" value="false">
+                <div class="form-group">
+                    <input type="text" name="name" placeholder="Tu Nombre" required>
+                </div>
+                <div class="form-group">
+                    <input type="email" name="email" placeholder="Tu Correo" required>
+                </div>
+                <div class="form-group">
+                    <textarea name="message" placeholder="Tu Mensaje" rows="4" required></textarea>
+                </div>
+                <button type="submit" class="submit-btn">Enviar Mensaje <i class="fas fa-paper-plane"></i></button>
+            </form>
+        </section>
+    </main>
+
+    <footer>
+        <p>Hecho con 💖 y 🤖 por Lydiel</p>
+    </footer>
+
+    <!-- Chatbot Widget -->
+    <div class="chatbot-container" id="chatbot">
+        <div class="chatbot-header">
+            <div class="chatbot-title">
+                <i class="fas fa-robot"></i> Lydiel AI
+            </div>
+            <button class="chatbot-close" id="chatbot-close"><i class="fas fa-times"></i></button>
+        </div>
+        <div class="chatbot-messages" id="chatbot-messages">
+            <div class="message ai-message">
+                ¡Hola! Soy la IA asistente de Lydiel. ¿Te gustaría saber cómo un diseño o un agente de IA puede ayudar a disparar tus ventas? 🚀
+            </div>
+        </div>
+        <div class="chatbot-input">
+            <input type="text" id="chatbot-input-field" placeholder="Escribe tu mensaje...">
+            <button id="chatbot-send"><i class="fas fa-paper-plane"></i></button>
+        </div>
+    </div>
+    
+    <button class="chatbot-toggle" id="chatbot-toggle">
+        <i class="fas fa-comment-dots"></i>
+    </button>
+
+    <script src="script.js?v=5"></script>
+</body>
+</html>
