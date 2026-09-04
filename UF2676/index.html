@@ -1,0 +1,829 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>html{color-scheme:light dark}body{margin:0;font:14px system-ui,sans-serif}img{max-width:100%}[hidden]{display:none!important}</style>
+<title>Dispositivo UF2676</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600&family=Archivo:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+:root{
+  --bg:#E7EAEE;
+  --surface:#FDFDFE;
+  --surface-2:#F1F3F6;
+  --line:#CBD2DB;
+  --line-soft:#DDE2E9;
+  --ink:#131922;
+  --ink-2:#3D4756;
+  --muted:#68727F;
+  --azul:#17466E;
+  --azul-soft:#DCE7F1;
+  --ambar:#B4700F;
+  --ambar-soft:#F6E7CF;
+  --ok:#2A6B4F;
+  --ok-soft:#D8EADF;
+  --mal:#9E3226;
+  --mal-soft:#F5DCD8;
+  --shadow:0 1px 2px rgba(19,25,34,.06), 0 8px 24px -16px rgba(19,25,34,.35);
+  --f-xs:.75rem; --f-sm:.8125rem; --f-base:.9375rem; --f-md:1.0625rem;
+  --f-lg:1.25rem; --f-xl:1.625rem; --f-2xl:2.25rem;
+  --r:10px;
+  --display:"Oswald","Arial Narrow",system-ui,sans-serif;
+  --body:"Archivo","Helvetica Neue",system-ui,sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,"Courier New",monospace;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --bg:#0E1218;
+    --surface:#161C25;
+    --surface-2:#1D242F;
+    --line:#2C3644;
+    --line-soft:#232B37;
+    --ink:#E4E9EF;
+    --ink-2:#B7C1CD;
+    --muted:#8B98A8;
+    --azul:#7FB3E0;
+    --azul-soft:#1B2C3E;
+    --ambar:#E5A544;
+    --ambar-soft:#332508;
+    --ok:#6FC49A;
+    --ok-soft:#12281E;
+    --mal:#E58273;
+    --mal-soft:#301713;
+    --shadow:0 1px 2px rgba(0,0,0,.4), 0 10px 30px -18px rgba(0,0,0,.9);
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0E1218; --surface:#161C25; --surface-2:#1D242F; --line:#2C3644; --line-soft:#232B37;
+  --ink:#E4E9EF; --ink-2:#B7C1CD; --muted:#8B98A8;
+  --azul:#7FB3E0; --azul-soft:#1B2C3E; --ambar:#E5A544; --ambar-soft:#332508;
+  --ok:#6FC49A; --ok-soft:#12281E; --mal:#E58273; --mal-soft:#301713;
+  --shadow:0 1px 2px rgba(0,0,0,.4), 0 10px 30px -18px rgba(0,0,0,.9);
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--body);font-size:var(--f-base);line-height:1.55;-webkit-font-smoothing:antialiased}
+h1,h2,h3,h4{font-family:var(--display);font-weight:500;letter-spacing:.01em;text-wrap:balance;margin:0}
+button{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--ambar);outline-offset:2px;border-radius:4px}
+
+/* ---------- shell ---------- */
+.wrap{max-width:1040px;margin:0 auto;padding:0 18px 72px}
+header.top{border-bottom:1px solid var(--line);background:var(--surface);}
+.top-in{max-width:1040px;margin:0 auto;padding:18px 18px 0;display:flex;gap:18px;align-items:flex-start;flex-wrap:wrap}
+.brand{flex:1 1 320px;min-width:0}
+.eyebrow{font-family:var(--mono);font-size:var(--f-xs);letter-spacing:.14em;text-transform:uppercase;color:var(--ambar);display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.eyebrow b{color:var(--muted);font-weight:400}
+h1{font-size:var(--f-2xl);line-height:1.05;text-transform:uppercase;letter-spacing:.02em;margin:.15em 0 .1em}
+.sub{color:var(--muted);font-size:var(--f-sm);max-width:52ch}
+.hud{display:flex;gap:14px;align-items:center;padding-top:4px}
+.ring{width:64px;height:64px;flex:0 0 auto}
+.ring text{font-family:var(--mono);font-size:11px;fill:var(--ink)}
+.hud-txt{font-size:var(--f-xs);color:var(--muted);line-height:1.4}
+.hud-txt b{display:block;font-family:var(--display);font-size:var(--f-md);color:var(--ink);font-weight:500}
+.theme-btn{background:none;border:1px solid var(--line);border-radius:999px;padding:5px 11px;font-size:var(--f-xs);cursor:pointer;color:var(--muted)}
+.theme-btn:hover{border-color:var(--azul);color:var(--azul)}
+
+nav.tabs{display:flex;gap:2px;max-width:1040px;margin:14px auto 0;padding:0 18px;overflow-x:auto;scrollbar-width:none}
+nav.tabs::-webkit-scrollbar{display:none}
+.tab{background:none;border:0;border-bottom:2px solid transparent;padding:9px 14px;cursor:pointer;font-family:var(--display);text-transform:uppercase;letter-spacing:.06em;font-size:var(--f-sm);color:var(--muted);white-space:nowrap}
+.tab:hover{color:var(--ink)}
+.tab[aria-selected="true"]{color:var(--ink);border-bottom-color:var(--ambar)}
+.tab .n{font-family:var(--mono);font-size:10px;color:var(--muted);margin-left:6px}
+
+section.panel{padding-top:26px}
+section.panel[hidden]{display:none!important}
+.lead{color:var(--ink-2);font-size:var(--f-md);max-width:66ch;margin:0 0 20px}
+
+/* ---------- controles ---------- */
+.bar{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:18px}
+.chip{background:var(--surface);border:1px solid var(--line);border-radius:999px;padding:6px 13px;font-size:var(--f-sm);cursor:pointer;color:var(--ink-2)}
+.chip:hover{border-color:var(--azul)}
+.chip[aria-pressed="true"]{background:var(--azul);border-color:var(--azul);color:#fff}
+:root[data-theme="dark"] .chip[aria-pressed="true"]{color:#0E1218}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .chip[aria-pressed="true"]{color:#0E1218}}
+.btn{background:var(--ambar);color:#fff;border:0;border-radius:var(--r);padding:9px 18px;font-family:var(--display);text-transform:uppercase;letter-spacing:.05em;font-size:var(--f-sm);cursor:pointer}
+:root[data-theme="dark"] .btn:not(.ghost){color:#1A1204}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .btn:not(.ghost){color:#1A1204}}
+.btn:hover{filter:brightness(1.08)}
+.btn.ghost,.btn.ghost:not(.x){background:none;color:var(--ink-2);border:1px solid var(--line)}
+.btn.ghost:hover{border-color:var(--azul);color:var(--azul);filter:none}
+.spacer{flex:1}
+.hint{font-size:var(--f-xs);color:var(--muted)}
+
+/* ---------- temario ---------- */
+.ud-head{display:flex;align-items:baseline;gap:12px;margin:26px 0 10px;padding-bottom:8px;border-bottom:2px solid var(--ink)}
+.ud-head:first-of-type{margin-top:0}
+.ud-head .k{font-family:var(--mono);font-size:var(--f-xs);letter-spacing:.1em;color:var(--ambar)}
+.ud-head h2{font-size:var(--f-xl);text-transform:uppercase}
+.blocks{display:flex;flex-direction:column;gap:10px}
+.block{background:var(--surface);border:1px solid var(--line-soft);border-radius:var(--r);overflow:hidden}
+.block.done{border-color:var(--ok)}
+.block > .bh{display:flex;align-items:center;gap:12px;width:100%;background:none;border:0;padding:13px 15px;cursor:pointer;text-align:left}
+.bh .num{font-family:var(--mono);font-size:var(--f-xs);color:var(--muted);min-width:30px}
+.bh .t{flex:1;font-family:var(--display);font-size:var(--f-md);font-weight:500;line-height:1.25}
+.bh .mark{width:20px;height:20px;border-radius:50%;border:1.5px solid var(--line);flex:0 0 auto;display:grid;place-items:center;font-size:11px;color:transparent}
+.block.done .mark{background:var(--ok);border-color:var(--ok);color:#fff}
+:root[data-theme="dark"] .block.done .mark{color:#0E1218}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .block.done .mark{color:#0E1218}}
+.bh .caret{color:var(--muted);font-size:12px;transition:transform .18s}
+.block[data-open="1"] .caret{transform:rotate(90deg)}
+.bbody{padding:0 15px 16px 57px;border-top:1px solid var(--line-soft);padding-top:14px}
+.bbody[hidden]{display:none}
+.bbody h4{font-family:var(--mono);font-weight:500;font-size:var(--f-xs);letter-spacing:.1em;text-transform:uppercase;color:var(--ambar);margin:16px 0 6px}
+.bbody h4:first-child{margin-top:0}
+.bbody ul{margin:0;padding-left:18px;display:flex;flex-direction:column;gap:5px}
+.bbody li{max-width:70ch}
+.bbody li b{color:var(--ink)}
+.bbody p{margin:0 0 8px;max-width:70ch;color:var(--ink-2)}
+.tag{display:inline-block;font-family:var(--mono);font-size:10px;letter-spacing:.06em;background:var(--azul-soft);color:var(--azul);border-radius:4px;padding:2px 6px;vertical-align:2px}
+.mini{width:100%;margin-top:14px;display:flex;gap:8px;flex-wrap:wrap}
+
+/* ---------- fichas ---------- */
+.deck{display:grid;place-items:center;gap:16px}
+.card{width:100%;max-width:620px;min-height:280px;perspective:1400px;cursor:pointer}
+.card-in{position:relative;width:100%;height:100%;min-height:280px;transition:transform .5s cubic-bezier(.2,.7,.2,1);transform-style:preserve-3d}
+.card[data-flip="1"] .card-in{transform:rotateY(180deg)}
+.face{position:absolute;inset:0;backface-visibility:hidden;background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:26px;display:flex;flex-direction:column;justify-content:center;gap:12px;box-shadow:var(--shadow)}
+.face.back{transform:rotateY(180deg);background:var(--surface-2)}
+.face .lbl{font-family:var(--mono);font-size:var(--f-xs);letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+.face .q{font-family:var(--display);font-size:var(--f-xl);line-height:1.2}
+.face .a{font-size:var(--f-md);color:var(--ink-2)}
+.face .a ul{margin:8px 0 0;padding-left:18px;display:flex;flex-direction:column;gap:4px;font-size:var(--f-base)}
+.deck-nav{display:flex;align-items:center;gap:12px}
+.counter{font-family:var(--mono);font-size:var(--f-sm);color:var(--muted);min-width:70px;text-align:center}
+@media(prefers-reduced-motion:reduce){.card-in{transition:none}}
+
+/* ---------- test ---------- */
+.qcard{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:18px 20px;box-shadow:var(--shadow)}
+.qmeta{display:flex;gap:10px;align-items:center;font-family:var(--mono);font-size:var(--f-xs);color:var(--muted);margin-bottom:10px;flex-wrap:wrap}
+.qmeta .pill{background:var(--surface-2);border:1px solid var(--line-soft);border-radius:999px;padding:2px 9px}
+.qmeta .pill.multi{background:var(--ambar-soft);color:var(--ambar);border-color:transparent}
+.qtext{font-family:var(--display);font-size:var(--f-lg);line-height:1.3;margin-bottom:14px}
+.opts{display:flex;flex-direction:column;gap:8px}
+.opt{display:flex;gap:11px;align-items:flex-start;background:var(--surface-2);border:1px solid var(--line-soft);border-radius:8px;padding:11px 13px;cursor:pointer;text-align:left;width:100%}
+.opt:hover:not(:disabled){border-color:var(--azul)}
+.opt:disabled{cursor:default}
+.opt .k{font-family:var(--mono);font-size:var(--f-sm);color:var(--muted);flex:0 0 auto}
+.opt.sel{border-color:var(--azul);background:var(--azul-soft)}
+.opt.right{border-color:var(--ok);background:var(--ok-soft)}
+.opt.wrong{border-color:var(--mal);background:var(--mal-soft)}
+.opt .k.right{color:var(--ok)} .opt .k.wrong{color:var(--mal)}
+.why{margin-top:14px;border-left:3px solid var(--ambar);background:var(--ambar-soft);padding:10px 14px;border-radius:0 8px 8px 0;font-size:var(--f-sm);color:var(--ink-2)}
+.why b{color:var(--ink)}
+.progress{height:4px;background:var(--line-soft);border-radius:999px;overflow:hidden;margin-bottom:16px}
+.progress i{display:block;height:100%;background:var(--ambar);transition:width .3s}
+.score{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:12px;margin:18px 0}
+.stat{background:var(--surface);border:1px solid var(--line-soft);border-radius:var(--r);padding:14px 16px}
+.stat .v{font-family:var(--display);font-size:var(--f-2xl);line-height:1;font-variant-numeric:tabular-nums}
+.stat .l{font-family:var(--mono);font-size:var(--f-xs);letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-top:4px}
+.stat.ok .v{color:var(--ok)} .stat.mal .v{color:var(--mal)}
+.review{display:flex;flex-direction:column;gap:10px;margin-top:8px}
+.rev{background:var(--surface);border:1px solid var(--line-soft);border-left:3px solid var(--mal);border-radius:0 8px 8px 0;padding:12px 15px}
+.rev .rq{font-family:var(--display);font-size:var(--f-md);margin-bottom:5px}
+.rev .ra{font-size:var(--f-sm);color:var(--ink-2)}
+.rev .ra b{color:var(--ok)}
+
+/* ---------- oral ---------- */
+.oral{display:flex;flex-direction:column;gap:10px}
+.oq{background:var(--surface);border:1px solid var(--line-soft);border-radius:var(--r)}
+.oq > button{width:100%;display:flex;gap:12px;align-items:flex-start;background:none;border:0;padding:14px 16px;cursor:pointer;text-align:left}
+.oq .qi{font-family:var(--mono);font-size:var(--f-xs);color:var(--ambar);min-width:26px;padding-top:3px}
+.oq .qt{flex:1;font-family:var(--display);font-size:var(--f-md);line-height:1.3}
+.oq .st{font-family:var(--mono);font-size:10px;letter-spacing:.08em;color:var(--muted);text-transform:uppercase;padding-top:5px}
+.oa{padding:0 16px 16px 54px;border-top:1px solid var(--line-soft);padding-top:12px}
+.oa[hidden]{display:none}
+.oa ul{margin:0;padding-left:17px;display:flex;flex-direction:column;gap:5px;max-width:70ch}
+
+/* ---------- chuleta ---------- */
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(290px,1fr));gap:14px}
+.ref{background:var(--surface);border:1px solid var(--line-soft);border-radius:var(--r);padding:16px 18px}
+.ref h3{font-size:var(--f-md);text-transform:uppercase;letter-spacing:.04em;margin-bottom:2px}
+.ref .cnt{font-family:var(--mono);font-size:var(--f-xs);color:var(--ambar);letter-spacing:.08em}
+.ref ol,.ref ul{margin:10px 0 0;padding-left:19px;display:flex;flex-direction:column;gap:5px;font-size:var(--f-sm)}
+.ref ol li::marker{font-family:var(--mono);color:var(--muted)}
+.ref li b{color:var(--ink)}
+.diagram{background:var(--surface);border:1px solid var(--line-soft);border-radius:var(--r);padding:18px;display:grid;grid-template-columns:minmax(200px,260px) 1fr;gap:20px;align-items:center}
+@media(max-width:640px){.diagram{grid-template-columns:1fr}}
+.diagram svg{width:100%;height:auto;display:block}
+.d-ring{cursor:pointer;transition:opacity .15s}
+.d-ring:hover{opacity:.85}
+.d-info h4{font-family:var(--display);font-size:var(--f-lg);margin-bottom:4px}
+.d-info p{margin:0 0 10px;color:var(--ink-2);font-size:var(--f-sm);max-width:48ch}
+.d-info .who{font-family:var(--mono);font-size:var(--f-xs);letter-spacing:.08em;text-transform:uppercase;color:var(--ambar)}
+.d-legend{display:flex;flex-direction:column;gap:6px;margin-top:12px}
+.d-legend button{display:flex;gap:9px;align-items:center;background:none;border:0;padding:4px 0;cursor:pointer;font-size:var(--f-sm);color:var(--muted);text-align:left}
+.d-legend button[aria-pressed="true"]{color:var(--ink)}
+.d-legend .sw{width:12px;height:12px;border-radius:3px;flex:0 0 auto}
+.aviso{background:var(--ambar-soft);border-radius:var(--r);padding:13px 16px;font-size:var(--f-sm);color:var(--ink-2);border-left:3px solid var(--ambar)}
+.aviso b{color:var(--ink)}
+.caravana{display:flex;gap:26px;flex-wrap:wrap;margin-top:12px}
+.conv{display:flex;flex-direction:column-reverse;gap:7px;align-items:center}
+.conv .car{width:66px;padding:7px 0;text-align:center;font-family:var(--mono);font-size:var(--f-xs);border-radius:5px;border:1px solid var(--line)}
+.conv .car.vip{background:var(--azul);color:#fff;border-color:var(--azul)}
+:root[data-theme="dark"] .conv .car.vip{color:#0E1218}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .conv .car.vip{color:#0E1218}}
+.conv .car.ve{background:var(--surface-2);color:var(--ink-2)}
+.conv .cap{font-family:var(--mono);font-size:10px;color:var(--muted);margin-top:4px;text-align:center;order:-1}
+.conv .arrow{color:var(--muted);font-size:12px}
+footer{margin-top:44px;padding-top:16px;border-top:1px solid var(--line);color:var(--muted);font-size:var(--f-xs);display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="top-in">
+    <div class="brand">
+      <div class="eyebrow"><span>UF2676</span><b>MF0081_2 · Nivel 2 · 40 h</b></div>
+      <h1>Dispositivo<br>UF2676</h1>
+      <p class="sub">Técnicas de protección de personas. Temario comprimido, fichas, tests y simulacro de examen oral para escolta privado.</p>
+    </div>
+    <div class="hud">
+      <svg class="ring" viewBox="0 0 64 64" aria-hidden="true">
+        <circle cx="32" cy="32" r="27" fill="none" stroke="var(--line)" stroke-width="6"></circle>
+        <circle id="ringArc" cx="32" cy="32" r="27" fill="none" stroke="var(--ambar)" stroke-width="6"
+                stroke-linecap="round" stroke-dasharray="170" stroke-dashoffset="170" transform="rotate(-90 32 32)"></circle>
+        <text id="ringTxt" x="32" y="36" text-anchor="middle">0%</text>
+      </svg>
+      <div class="hud-txt">
+        <b id="hudDone">0 / 0</b>
+        temas dominados
+        <div style="margin-top:8px"><button class="theme-btn" id="themeBtn" type="button">Tema</button></div>
+      </div>
+    </div>
+  </div>
+  <nav class="tabs" role="tablist" id="tabs"></nav>
+</header>
+
+<div class="wrap">
+  <section class="panel" id="p-temario" role="tabpanel"></section>
+  <section class="panel" id="p-fichas" role="tabpanel" hidden></section>
+  <section class="panel" id="p-test" role="tabpanel" hidden></section>
+  <section class="panel" id="p-oral" role="tabpanel" hidden></section>
+  <section class="panel" id="p-chuleta" role="tabpanel" hidden></section>
+  <footer>
+    <span>Contenido basado en el manual UF2676 · I+D capacitación profesional</span>
+    <span id="savedNote">Tu progreso se guarda en este navegador</span>
+  </footer>
+</div>
+
+<script>
+"use strict";
+/* ============================ DATOS: TEMARIO ============================ */
+const TEMARIO=[
+{ud:1,titulo:"La protección integral",bloques:[
+ {id:"1.1",n:"1",t:"Seguridad, seguridad privada y protección",c:[
+  {h:"Conceptos",l:["<b>Seguridad</b>: no es solo un valor jurídico, normativo o político; también es un <b>valor social</b>. Pilar de la sociedad, base de la libertad y la igualdad.","<b>Seguridad privada</b>: forma en que los <b>agentes privados</b> contribuyen a reducir riesgos. Ofrecen seguridad <b>adicional</b> a la que provee la seguridad pública. Es medida de <b>anticipación y prevención</b>.","<b>Protección</b>: acción y efecto de proteger. Sistema diseñado e integrado por <b>medidas aplicables en función de lo que se requiera proteger</b>. Término <b>más específico</b> que seguridad."]},
+  {h:"Encaje constitucional",l:["Art. <b>149.1.29ª</b> CE: competencia exclusiva del Estado en seguridad pública.","Art. <b>104</b> CE: misión de las Fuerzas y Cuerpos de Seguridad, bajo dependencia del Gobierno: proteger el libre ejercicio de derechos y libertades y garantizar la seguridad ciudadana.","Las actividades de seguridad privada son <b>complementarias y subordinadas</b> respecto de la seguridad pública."]},
+  {h:"Nivel de seguridad",l:["Depende de la <b>eficiencia de las medidas</b> y de <b>factores externos o internos</b> de la zona donde el hombre desarrolla su actividad."]}]},
+ {id:"1.2",n:"2",t:"Personal de seguridad privada y habilitación",c:[
+  {h:"Quién puede ejercer (Ley 5/2014)",l:["Vigilantes de seguridad y su especialidad de <b>vigilantes de explosivos</b>.","<b>Escoltas privados</b>.","Guardas rurales y sus especialidades: guardas de caza y guardapescas marítimos.","Jefes de seguridad, directores de seguridad y detectives privados."]},
+  {h:"Habilitación",l:["La otorga el <b>Ministerio del Interior</b>; la tarjeta de identidad profesional es el <b>documento público de acreditación</b>.","Habilita la <b>Dirección General de la Policía</b>, <b>excepto</b> guardas rurales y sus especialidades → <b>Dirección General de la Guardia Civil</b>.","Solo se ejercen las funciones para las que se esté habilitado.","La <b>pérdida de un requisito</b> extingue la habilitación y cancela de oficio la inscripción en el Registro Nacional."]},
+  {h:"Requisitos generales (art. 28)",l:["<b>Mayor de edad</b> (18 años cumplidos al presentarse a las pruebas).","<b>Capacidad física</b> y <b>aptitud psicológica</b>.","<b>Nacionalidad</b> de un Estado de la UE, del EEE, o de un tercer Estado con convenio con España.","Poseer la <b>formación previa</b> requerida.","<b>Carecer de antecedentes penales</b> por delitos dolosos.","No haber sido sancionado en los <b>2 años</b> anteriores por infracción <b>grave</b>, ni en los <b>4 años</b> por <b>muy grave</b>, en materia de seguridad privada.","No haber sido <b>separado del servicio</b> en las FCS o FFAA en los <b>2 años</b> anteriores.","No haber sido <b>condenado</b> por intromisión ilegítima en honor, intimidad, propia imagen o secreto de las comunicaciones en los <b>5 años</b> anteriores.","Superar las <b>pruebas de comprobación</b> que establezca el Ministerio del Interior."]}]},
+ {id:"1.3",n:"3",t:"Principios básicos de actuación",c:[
+  {h:"Los nueve principios",l:["<b>Legalidad</b>: solo medios y acciones conforme al ordenamiento jurídico vigente.","<b>Integridad</b>: cumplir diligentemente los deberes, oponiéndose a todo acto de corrupción.","<b>Protección</b>: desarrollar efectivamente sus responsabilidades, sin inhibición ante hechos ilícitos o peligrosos.","<b>Dignidad</b> en el ejercicio de sus funciones.","<b>Corrección</b>: conducta irreprochable, evitando abuso, arbitrariedad o violencia.","<b>Congruencia</b>: medidas <b>proporcionadas y adecuadas a los riesgos</b>.","<b>Proporcionalidad</b> en el uso de las técnicas y medios de defensa e investigación.","<b>Reserva profesional</b> sobre los hechos que conozca.","<b>Colaboración</b> con las FCS, observando las instrucciones policiales concretas."]},
+  {h:"Ojo en el examen",l:["<b>Congruencia</b> = medidas proporcionadas <b>a los riesgos</b>. <b>Proporcionalidad</b> = uso de <b>técnicas y medios</b> de defensa. Se confunden siempre."]}]},
+ {id:"1.4",n:"4",t:"Técnicas y fundamentos de la protección",c:[
+  {h:"Las tres técnicas",l:["<b>Integral</b>: cobertura en <b>todos los aspectos</b> de la persona, esfera profesional <b>y</b> personal. Contempla la dinámica y la estática.","<b>Dinámica</b>: dispositivo organizado para proteger a una persona <b>en sus desplazamientos</b>, o en el traslado de un objeto.","<b>Estática</b>: dispositivo organizado para custodiar a una persona en un <b>lugar fijo</b>."]},
+  {h:"Fundamentos",l:["Crear una <b>zona de seguridad</b>: reduce el porcentaje de peligros y transmite sensación de seguridad y tranquilidad.","Proteger <b>sin juzgar</b> a la persona y <b>sin implicarse emocionalmente</b>, para no reducir la efectividad.","<b>Anticipación a los riesgos</b>: la previsión es el principal factor de eficacia.","Medidas preventivas: <b>eliminar</b> los riesgos, <b>anticiparse</b> al agresor previniendo su acción, y <b>ensayar y evaluar</b> el plan de seguridad."]},
+  {h:"Causas que justifican la protección",l:["Políticas, ideológicas, psicológicas, religiosas, raciales, personales y <b>monetarias o económicas</b>."]}]},
+ {id:"1.5",n:"5",t:"Fuentes de peligro y gestión de riesgos",c:[
+  {h:"Peligro",l:["Situación —<b>acción o condición</b>— que ostenta el <b>potencial de producir un daño</b> sobre una persona o cosa.","Forma más común y efectiva de detectarlo: asignar valores a la <b>posibilidad</b> y a la <b>seriedad</b> mediante una <b>escala numérica</b>; los más serios reciben los valores más altos."]},
+  {h:"Clasificación de riesgos",l:["<b>Naturales</b>: inundaciones, rayos, incendios, terremotos.","<b>Tecnológicos</b>: fallos en instalaciones, interrupción eléctrica o de agua, fuego, explosión de equipos.","<b>Por accidente</b>: heridas a personas o daños en algún edificio.","<b>Por malas acciones o comportamiento de personas</b>: intrusión, asalto, robo, amenaza de bomba, atentados, vandalismo, disturbios civiles y huelgas."]},
+  {h:"Medidas ante cualquier riesgo",l:["Organizar y coordinar el <b>sistema interno de seguridad</b> mediante manuales que designen funciones y responsabilidades.","Implantar <b>barreras físicas</b> suficientes.","Instalar <b>sistemas de alarma</b> en domicilio y lugar de trabajo.","<b>Detectores automáticos</b> contra incendios que avisen a los servicios de extinción.","Contar con un <b>equipo bien formado y equipado</b>.","Buscar el <b>equilibrio</b>: alto riesgo → movimiento formal protocolario; riesgo bajo → movimientos más informales."]}]},
+ {id:"1.6",n:"6",t:"La protección integral y las medidas de la Ley 5/2014",c:[
+  {h:"Protección integral",l:["Servicio cuyo objetivo es un <b>entorno seguro</b> mediante un dispositivo que <b>neutralice</b> los peligros; debe ser <b>preventivo y disuasorio</b>, y permitir controlar y reaccionar mediante <b>neutralización, cobertura y evacuación</b>.","Se extiende a la esfera <b>profesional y personal</b>, y cada una se cubre desde la protección dinámica y la estática.","Se fundamenta en <b>dos aspectos</b>: <b>la prevención</b> (actuaciones para evitar un suceso) y <b>la protección</b> (actuaciones para neutralizar el suceso <b>ya acontecido</b>, con medios humanos y técnicos, para salvar la vida)."]},
+  {h:"Medidas de seguridad de la Ley 5/2014",l:["<b>Física</b>: impedir o dificultar el acceso mediante barreras físicas.","<b>Electrónica</b>: detectar o advertir amenazas mediante dispositivos electrónicos.","<b>Informática</b>: integridad, confidencialidad y disponibilidad de los sistemas de información.","<b>Organizativa</b>: planificación de cometidos y funciones; p. ej. departamentos de seguridad y planes de seguridad.","<b>Personal</b>: prestación de servicios de seguridad distintos de los anteriores.","Las medidas cuentan con evaluación de organismos de certificación acreditados y tienen <b>vigencia indefinida</b>, salvo deterioro o nueva instalación."]}]},
+ {id:"1.7",n:"7",t:"Protección dinámica: teoría esférica y círculos concéntricos",c:[
+  {h:"Teoría esférica",l:["Consiste en abrir un <b>espacio contenido en una esfera</b> cuyo <b>centro es la persona protegida</b>.","Planifica las acciones en <b>tres planos</b>: <b>aéreo</b>, <b>superficial</b> y <b>subterráneo</b>."]},
+  {h:"Teoría de los círculos concéntricos",l:["Un círculo rodeado por <b>tres círculos concéntricos</b> en torno al protegido; cada uno presta servicio dentro de la esfera de su propio cometido. Sirve de base para un <b>dispositivo de seguridad integral</b>.","<b>1er círculo (interior)</b>: <b>escolta personal</b>. Las personas más próximas. Misión: <b>cubrir y proteger</b> del ataque y realizar una <b>rápida evacuación</b> a lugar seguro. La distancia depende de la situación concreta.","<b>2º círculo</b>: <b>puestos de seguridad</b>. Guardan cierta distancia pero mantienen al protegido <b>dentro de su campo de observación</b>.","<b>3er círculo</b>: <b>patrullas móviles y grupos de información</b>. <b>No controlan ni vigilan</b> al protegido, pero están dentro del dispositivo por si ocurriera una desgracia."]}]},
+ {id:"1.8",n:"8",t:"Escalones, niveles de seguridad y evaluación",c:[
+  {h:"Tres niveles o escalones",l:["<b>Puestos de vigilancia</b>: observar una zona específica; fijos o móviles. Funciones: observar el área señalada, observar a las personas del perímetro y <b>comunicar cualquier novedad o sospecha a un superior</b>.","<b>Puestos de revisión y control</b>: hacen de <b>filtro</b> hacia un área restringida. Funciones: controlar el área restringida, no permitir entrada a personas, vehículos u objetos no autorizados o amenazantes, y seleccionar al personal que puede entrar.","<b>Puestos especiales de seguridad</b>: se asignan al miembro con una <b>función específica</b> dentro del dispositivo."]},
+  {h:"Evaluación de dispositivos",l:["Valorar los <b>factores internos y externos</b> que afecten a la operatividad del agente.","Estudio de los riesgos según su <b>gravedad</b> (magnitud del daño) y su <b>probabilidad</b>.","Estudio del entorno: estudio de la ciudad, reconocimiento de la zona e itinerarios viables, <b>cuartos seguros</b> y <b>centros de asistencia</b>.","<b>Cuartos seguros</b>: acceso rápido y fácil, buenas comunicaciones, capacidad de defensa, estar limitado y facilidad para prestar primeros auxilios.","<b>Centros de asistencia</b>: conocer horarios, medios materiales y cercanía (hospitales, centros de salud, puestos de la Cruz Roja)."]}]},
+ {id:"1.9",n:"9",t:"Coordinación con el Departamento de Seguridad y con las FCS",c:[
+  {h:"Planes de seguridad",l:["Se elaboran <b>conjuntamente</b> con el departamento de seguridad; comprenden todas las medidas frente a cualquier riesgo, <b>real o imaginario</b>.","<b>Temporales</b>: actividades <b>no habituales</b> (p. ej. un viaje); los escoltas se coordinan con el departamento de seguridad del lugar de destino.","<b>Permanentes</b>: recorridos habituales; coordinación <b>más protocolizada</b> y evaluación constante.","En crisis o emergencia las acciones deben estar <b>totalmente coordinadas</b>: el público entra en crisis e histeria y dificulta el dispositivo."]},
+  {h:"Artículos de coordinación (Ley 5/2014)",l:["<b>Art. 14</b>: colaboración profesional. Comunicar a las FCS, <b>tan pronto como sea posible</b>, circunstancias relevantes y hechos delictivos, poniendo a su disposición presuntos delincuentes, instrumentos, efectos y pruebas.","<b>Art. 15</b>: acceso a la información por las FCS. Cesiones de datos y acceso a los sistemas en <b>tiempo real</b> cuando sea necesario para prevenir un <b>peligro real</b> para la seguridad pública o reprimir infracciones penales.","<b>Art. 16</b>: coordinación y participación. Se constituyen <b>comisiones mixtas</b> de seguridad privada (nacionales, autonómicas o provinciales), con carácter <b>consultivo y de colaboración</b>.","Las FCS pueden facilitar información para la evaluación de riesgos; si contiene <b>datos personales</b>, solo en caso de <b>peligro real</b> o para evitar infracciones penales."]},
+  {h:"Estructura de la Ley 5/2014",l:["Art. 1 Objeto · 2 Definiciones · 3 Ámbito de aplicación · 4 Fines · 5 Actividades de seguridad privada · 6 Actividades compatibles · 7 Actividades excluidas · 8 Principios rectores · 9 Contratación y comunicación de servicios · 10 Prohibiciones · 11 Registro Nacional de Seguridad Privada.","<b>Fines</b> (art. 4): <b>satisfacer</b> las necesidades legítimas de los usuarios, <b>contribuir</b> a garantizar la seguridad pública y <b>complementar</b> el monopolio de la seguridad del Estado.","<b>Actividades excluidas</b> (art. 7): la <b>autoprotección</b>, sin contraprestación ni servicio a terceros."]}]},
+ {id:"1.10",n:"10",t:"Técnicas de protección en movimiento",c:[
+  {h:"Secuencia ante una agresión",l:["<b>1. Avisar del ataque</b>: especificar el <b>tipo de agresión</b>, el <b>agresor</b> y la <b>dirección</b> por la que viene. Se avisa a los compañeros por cualquier medio (walkie talkie o señales).","<b>2. Cobertura</b> corporal: su objetivo es <b>disminuir la superficie de blanco y la silueta</b> del protegido.","<b>3. Evacuación</b>: traslado y alejamiento rápido del lugar de peligro a otro <b>de seguridad previamente establecido</b>. Ningún agente realizará otra maniobra que no sea cubrir o evacuar.","<b>4. Neutralizar</b>: solo una vez puesto a salvo el protegido. Ir <b>lo más rápido posible hacia el arma</b> del atacante y <b>no hacia el cuerpo</b>, colocándose <b>delante del agresor</b> para cortar la línea directa con el protegido.","El <b>desplazamiento a pie</b> es de mucho riesgo por el enlentecimiento de la cobertura y la evacuación.","<b>Cápsulas de protección</b>: sin regla fija, es recomendable que estén formadas por <b>1 a 5 miembros</b>."]},
+  {h:"Edificios, escaleras y ascensores",l:["<b>Edificios</b>: inspección completa <b>antes</b> de la llegada, localizando una habitación utilizable como <b>espacio de seguridad</b>.","<b>Escaleras</b>: el protegido va <b>lo más cerca posible de la pared</b>, el escolta próximo a él y el resto alrededor <b>formando un círculo</b>. Las <b>mecánicas</b> son más peligrosas por los espacios abiertos a ambos lados.","<b>Ascensores</b>: entrañan bastante peligro; revisión minuciosa del <b>espacio, hueco entre ascensor y techo, cables y maquinaria</b>. El protegido va <b>siempre acompañado de un escolta</b>; el resto del equipo <b>sube por las escaleras</b> y controla la salida."]},
+  {h:"Líneas de recibimiento y de control",l:["<b>Recibimiento</b>: control previo de la zona. La personalidad ocupa <b>posición fija</b> y el escolta se sitúa <b>tras ella</b>; el resto en distintos puntos de la sala y <b>uno en la entrada</b> del local.","<b>Líneas de control</b>: <b>dos escoltas delante y dos detrás</b> del protegido; todos observan y controlan <b>las manos</b> de quienes saludan. Con multitud, puestos a lo largo del tramo con equipos ópticos que retransmiten amenazas y vigilan paquetes y personas sospechosas.","<b>Evacuaciones</b>: operaciones <b>anticipadamente diseñadas</b> con pasos estandarizados. Se establece un <b>jefe</b>, que se sitúa <b>más próximo</b> a la persona a evacuar y la guía; el resto abre camino o conduce al protegido al vehículo."]}]},
+ {id:"1.11",n:"11",t:"Protección estática y coordinación de servicios",c:[
+  {h:"Protección estática",l:["Dispositivo organizado para custodiar a una persona en un <b>lugar fijo</b>: lugar de trabajo o residencia <b>habitual u ocasional</b>.","Se planifica con la <b>teoría simplificada de los círculos concéntricos</b>: el espacio se divide únicamente en <b>interior y exterior</b>.","<b>Interior</b>: habitaciones, escaleras, ascensores, puertas de entrada, patios, sótanos, terrazas.","<b>Exterior</b>: la <b>periferia</b> del inmueble; características del barrio y de sus habitantes, lugares desde los que se puede observar el edificio y puntos donde ocultar explosivos (<b>papeleras o buzones</b>).","Reglas generales: <b>identificar</b> a quienes accedan hasta la persona, <b>controlar al servicio doméstico</b> y <b>comprobar todo paquete o correo</b> que llegue."]},
+  {h:"Coordinación de servicios",l:["El número de servicios depende del <b>riesgo de agresión</b> existente.","Cuando hay varios equipos (domicilio, trabajo…), la coordinación la realiza la <b>sala de operaciones</b> u órgano que reciba y analice la información de ambos.","Los jefes de cada servicio deben mantener contacto e información <b>continua y recíproca</b> con el coordinador.","<b>Avanzada</b>: acción de <b>requisar el lugar</b> por un miembro del equipo <b>antes de la entrada</b> del protegido en lugares no explorados. Misión: <b>obtener información del destino y establecer un perímetro de seguridad</b>."]}]}
+]},
+{ud:2,titulo:"Actuación en vehículos",bloques:[
+ {id:"2.1",n:"1",t:"Características del vehículo de seguridad",c:[
+  {h:"Condiciones que debe reunir",l:["<b>Cómodo</b>: capacidad para el invitado, el conductor y un miembro del equipo de seguridad.","<b>Aire acondicionado</b>: permite el <b>cierre total</b> si se ataca con algún tipo de gas.","<b>Seguro y rápido</b>, para circular por todo tipo de carreteras.","Completamente <b>blindado</b>: carrocería, cristales, bajos y neumáticos.","Suficiente <b>potencia</b>, manteniendo buena <b>relación potencia/peso</b>.","En grandes dispositivos, <b>otro vehículo para los escoltas</b> de características similares, con buen sistema de comunicación entre ambos y acceso/abandono fácil."]},
+  {h:"Aspectos exigidos (Real Decreto)",l:["<b>Sistema de bloqueo</b>: accionado directa (pulsador) o indirectamente (apertura de puertas), <b>corta la inyección de combustible</b> y acciona <b>alarma acústica y luminosa</b>. Retardo entre activación y acción de <b>2 minutos como máximo</b>.","<b>Rejilla metálica</b> en el interior del tubo del depósito de combustible, para impedir la introducción de elementos extraños.","<b>Sistema de protección del depósito</b> de combustible.","<b>Cierre especial de la caja</b> mediante candado o cerradura de seguridad."]}]},
+ {id:"2.2",n:"2",t:"El conductor y la requisa del vehículo",c:[
+  {h:"Características del conductor",l:["Debe haber recibido <b>entrenamiento de conducción de alta seguridad</b>. A veces es uno de los propios escoltas.","Conocimientos exigidos: conocer <b>a la perfección el vehículo</b> —posibilidades, rendimiento y mecánica— y conocer los <b>itinerarios programados y alternativos</b>.","Factores que condicionan la conducción: <b>límites personales</b> (capacidad de reacción, concentración, reflejos), <b>límites del vehículo</b> (características técnicas) y <b>límites externos</b> (pavimento, tráfico, meteorología)."]},
+  {h:"Cápsulas de seguridad sobre vehículos",l:["Revisión <b>diaria</b> del vehículo para controlar que no haya manipulaciones, sabotajes o trampas ocultas.","<b>Requisa exterior</b>: completa, <b>sistemática y preestablecida</b>. Se buscan artefactos adosados y manipulaciones de cables, cerraduras, líquidos…","<b>Requisa interior</b>: asientos, bandeja trasera, guantera.","Por último se revisan <b>motor y maletero</b>.","La realiza el <b>equipo de seguridad con ayuda del conductor</b>, apoyándose en <b>perros adiestrados, espejos especiales o detectores de explosivos</b>."]}]},
+ {id:"2.3",n:"3",t:"Conducción evasiva y maniobras",c:[
+  {h:"Conducción evasiva",l:["Busca <b>llegar lo más rápido posible al destino evitando las situaciones de peligro</b>, consiguiendo mejor rendimiento del vehículo. Su finalidad es la <b>destreza y pericia</b> para evitar emboscadas y evadirse con una simple maniobra.","<b>Ofensiva</b>: aprovechar <b>peso, potencia y velocidad</b> para afrontar el ataque de <b>forma activa</b>, llegando a <b>colisionar</b> con el obstáculo.","<b>Defensiva</b>: <b>evitar colisionar</b> con vehículos o materiales; varía la trayectoria mediante un <b>giro de 180 grados</b>."]},
+  {h:"Las cuatro maniobras",l:["<b>Maniobra en Y</b>: giro de 180º en la calzada; se reduce velocidad, se gira el volante del lado derecho al izquierdo, se echa marcha atrás y se vuelve a girar para invertir el sentido.","<b>Vuelta corta</b>: parecida; primero se <b>para el vehículo</b> y el giro se hace <b>marcha atrás</b>.","<b>California</b>: giro con el volante <b>hacia la izquierda</b> ayudándose del <b>freno de mano</b>, que hace <b>derrapar</b> el coche.","<b>Giro en J</b>: se mantiene el sentido de dirección pero se cambia el de la marcha: iniciar <b>marcha atrás</b> a cierta velocidad, girar rápido, frenar bloqueando las ruedas delanteras y engranar la primera para salir hacia adelante.","La maniobra en <b>Y</b> y la <b>California</b> se usan <b>solo cuando no hay tiempo suficiente para reaccionar</b>.","Ante <b>barricadas</b>, si el vehículo tiene mayor envergadura y potencia, se puede <b>embestir</b> a uno de los otros vehículos. Conviene circular por el <b>carril medio o más próximo a la calzada</b> para poder maniobrar."]}]},
+ {id:"2.4",n:"4",t:"Normas de seguridad en la conducción",c:[
+  {h:"Reglas básicas",l:["Mantener los <b>cristales subidos</b> y las <b>puertas aseguradas</b>.","<b>No recoger ni auxiliar a extraños</b>.","Conducir por <b>vías amplias y bien iluminadas</b>, identificando personas u objetos sospechosos.","Detenerse <b>solo</b> ante un miembro de la fuerza pública <b>previamente identificado mostrando su placa</b>.","<b>Revisar el vehículo antes</b> de comenzar el trayecto.","<b>No bajar del coche al protegido</b> hasta comprobar que no corre ningún peligro.","Realizar <b>rutas aleatorias previamente estudiadas</b>.","Con varios escoltas en el operativo, viajar en <b>vehículos separados y en caravana</b>."]}]},
+ {id:"2.5",n:"5",t:"Caravanas: clasificación y posiciones",c:[
+  {h:"Concepto",l:["<b>Caravana</b>: conjunto de vehículos utilizados para desplazar a la persona protegida y a todo su personal de seguridad. <b>Cuantos más vehículos, más complicada y problemática</b>.","Mínimo para considerarla caravana: el <b>coche del protegido</b> y el <b>coche de los escoltas</b>."]},
+  {h:"Clasificación (según conocimiento del itinerario)",l:["<b>Informales</b>: el itinerario <b>no es de dominio público</b>; solo lo conocen el protegido y su equipo de seguridad.","<b>Formales</b>: el itinerario es <b>conocido por todos</b>."]},
+  {h:"Tipos de vehículo",l:["<b>Coche piloto</b>: viaja el equipo de seguridad y un <b>Policía local</b>.","<b>Coche VIP</b>: el protegido, sus acompañantes y el <b>Jefe del Equipo de seguridad</b>.","<b>Coche adicional</b>: mismas prestaciones que el VIP; se usa <b>si el coche VIP se estropea</b>.","<b>Coche escolta</b>: el resto de componentes del equipo."]},
+  {h:"Posiciones",l:["<b>1 coche de escolta</b>: el VE va <b>detrás</b> del VIP.","<b>2 coches de escolta</b>: <b>uno delante y otro detrás</b> del VIP.","<b>3 coches de escolta</b>: uno <b>delante</b> y <b>dos detrás</b>.","Dentro del coche del protegido: el <b>jefe de seguridad delante, al lado del conductor</b>; el protegido y los acompañantes <b>detrás</b>. El resto de escoltas en otro vehículo <b>justo detrás</b>."]}]},
+ {id:"2.6",n:"6",t:"Itinerarios",c:[
+  {h:"Definición y clases",l:["<b>Itinerario</b>: ruta o recorrido con <b>dirección y descripción concreta</b> que permite llegar hasta el lugar deseado; se busca el <b>más seguro</b>.","<b>Principal</b>: el elegido para un desplazamiento determinado tras estudiar el resto de caminos; <b>no es siempre el mismo</b> (mañana puede ser alternativo).","<b>Alternativo</b>: los que pueden <b>sustituir al principal</b> si este no pudiera usarse.","<b>De evacuación</b>: variante del principal para acudir a un <b>centro de urgencia o asistencial</b> previamente programado, en la mayor brevedad.","<b>De fuga</b>: variación del principal o del alternativo para dirigirse a <b>puntos seguros elegidos de antemano</b>."]},
+  {h:"Puntos de peligro urbanos",l:["Llegada y salida del itinerario, <b>semáforos</b> (paradas peligrosas por posible intrusión), pasos de peatones, tráfico, obras en la vía, vehículos aparcados o <b>en doble fila</b> sospechosos y contenedores.","Establecer <b>puntos seguros</b> a lo largo del itinerario y tener preestablecidos los <b>centros asistenciales</b>."]},
+  {h:"Estudio por tramos",l:["Aspectos: <b>nombre y anchura de la calle</b>, carriles, aceras, bordillos y suelo, y <b>posibilidad de realizar maniobras</b>.","Lo realizan <b>los escoltas con anterioridad a la salida</b> y debe <b>revisarse cada 5 meses</b> según el grado de peligrosidad."]}]},
+ {id:"2.7",n:"7",t:"Funciones, medios y entorno del escolta",c:[
+  {h:"El escolta",l:["Profesional de la seguridad —<b>pública o privada</b>— especializado en la <b>protección de personalidades</b>. Debe pertenecer a las FCS del Estado o a una empresa de seguridad privada.","Función principal: <b>proteger a las personas</b>; debe estar mentalizado para el ataque con arma de fuego y su dedicación ha de ser <b>plena</b>. Los escoltas privados <b>pueden llevar armas de fuego</b>.","<b>Guardaespaldas</b>: persona <b>no profesional y no habilitada</b> contratada por un particular; <b>no puede portar armas</b> ni realizar las funciones propias del escolta."]},
+  {h:"Habilidades y competencias (Mora, 2008)",l:["<b>Prácticas</b>: mantenimiento físico, entrenamiento habitual en defensa personal policial, tácticas policiales, conducción ofensiva-evasiva policial, capacidad de asunción de responsabilidades, fuerza y equilibrio mental.","<b>Teóricas</b>: detección de explosivos, primeros auxilios, conocimientos culturales y protocolarios.","<b>Perceptivas</b>: capacidad de relación con el entorno, eficacia en la observación y capacidad de rememoración y retentiva."]},
+  {h:"Medios y vestuario",l:["Prendas cómodas y <b>calzado antideslizante</b>; gafas de sol o de vista con <b>montura y cristales orgánicos</b>.","<b>Chaleco antibalas</b>: absorbe el impacto de balas al torso y esquirlas de explosiones; con <b>placas metálicas o cerámicas</b> protege también de disparos de fusil.","<b>Spray defensivo de gel</b>, <b>navaja</b>, <b>preservativos</b> (taponar de forma aséptica heridas de bala evitando la hemorragia).","<b>Bastón extensible corto</b>, <b>inhibidores de frecuencia</b> (impiden la transmisión radioeléctrica emitiendo mayor potencia que el emisor).","<b>Kubotán</b>: cilindro de metal, plástico o madera de unos <b>14 cm</b> y 1,5 de grosor; estabiliza el puño, se aplica en puntos de presión o da ventaja sobre muñecas y dedos.","<b>Armas semiautomáticas</b> de gran poder de munición, colocadas de forma discreta y de rápida extracción. <b>Vehículos blindados</b>.","Comunicación entre escoltas: <b>intercomunicadores</b> y <b>Código Fonético Internacional</b>."]},
+  {h:"Relación con el entorno",l:["El <b>entorno</b> abarca al propio protegido, su familia, su círculo de amistades, el personal que trabaje para él, el público y la <b>prensa</b>.","Conocer costumbres y personalidad del protegido, y su círculo de amigos y familia, con la <b>mayor discreción posible</b>: los ataques suelen ir dirigidos hacia ellos.","Con la prensa y el resto de personas, actitud <b>más firme y controlada</b>; el escolta permanece <b>correcto y en un segundo plano</b> para no dar mala prensa al protegido."]}]},
+ {id:"2.8",n:"8",t:"Valores éticos en seguridad",c:[
+  {h:"Los seis valores",l:["<b>Espíritu de servicio</b>: encaminar los esfuerzos al mantenimiento del orden y la seguridad del protegido.","<b>Conciencia de grupo</b>: cooperación, coordinación y solidaridad entre compañeros y con otras entidades públicas y privadas.","<b>Honor</b>: orgullo de ostentar el uniforme que los identifica; responsabilidad con el servicio y con la población.","<b>Disciplina consciente</b>: respetar las directrices de los superiores, normas y protocolos. Con varios escoltas siempre habrá un <b>Jefe de Seguridad</b> por encima.","<b>Excelencia en las labores</b>: no cometer ni tolerar actos de corrupción; atender con respeto, cortesía, eficiencia y eficacia.","<b>Respeto legal</b>: comunicar toda irregularidad legal a los organismos competentes, actuando bajo los principios de <b>racionalidad y proporcionalidad</b>."]}]}
+]}
+];
+
+/* ============================ DATOS: FICHAS ============================ */
+const FICHAS=[
+{u:1,q:"¿Qué es la seguridad privada?",a:"La forma en que los <b>agentes privados</b> contribuyen a la reducción de posibles riesgos, ofreciendo una seguridad <b>adicional</b> más allá de la que provee la seguridad pública. Es una medida de <b>anticipación y prevención</b>."},
+{u:1,q:"Protección vs. seguridad",a:"La <b>protección</b> es la acción y efecto de proteger: un sistema integrado por medidas aplicables en función de lo que se quiera proteger. Es un término <b>más específico</b> que seguridad, porque busca aplicar medidas concretas."},
+{u:1,q:"Las tres técnicas de protección",a:"<ul><li><b>Integral</b>: cubre esfera profesional y personal (incluye dinámica y estática)</li><li><b>Dinámica</b>: protege en los desplazamientos</li><li><b>Estática</b>: custodia en un lugar fijo</li></ul>"},
+{u:1,q:"Requisitos de habilitación: los plazos que caen en el examen",a:"<ul><li><b>18</b> años (mayor de edad)</li><li>No sancionado: <b>2</b> años (grave) / <b>4</b> años (muy grave)</li><li>No separado de FCS o FFAA: <b>2</b> años</li><li>No condenado por intromisión ilegítima: <b>5</b> años</li></ul>"},
+{u:1,q:"¿Quién habilita al personal de seguridad privada?",a:"La <b>Dirección General de la Policía</b>, <b>excepto</b> los guardas rurales y sus especialidades, que corresponden a la <b>Dirección General de la Guardia Civil</b>. La habilita el Ministerio del Interior mediante tarjeta de identidad profesional."},
+{u:1,q:"Congruencia vs. proporcionalidad",a:"<b>Congruencia</b>: aplicar medidas de seguridad e investigación <b>proporcionadas y adecuadas a los riesgos</b>.<br><b>Proporcionalidad</b>: en el uso de las <b>técnicas y medios</b> de defensa e investigación."},
+{u:1,q:"Los 9 principios básicos de actuación",a:"Legalidad · Integridad · Protección · Dignidad · Corrección · Congruencia · Proporcionalidad · Reserva profesional · Colaboración con las FCS."},
+{u:1,q:"¿Qué es el peligro y cómo se mide?",a:"Situación —<b>acción o condición</b>— con potencial de producir un daño sobre una persona o cosa. Se detecta asignando valores a la <b>posibilidad</b> y a la <b>seriedad</b> mediante una <b>escala numérica</b>: a los más serios, los valores más altos."},
+{u:1,q:"Clasificación de riesgos",a:"<ul><li><b>Naturales</b>: inundaciones, rayos, incendios, terremotos</li><li><b>Tecnológicos</b>: fallos de instalaciones, corte eléctrico o de agua, fuego, explosión de equipos</li><li><b>Por accidente</b></li><li><b>Por malas acciones o comportamiento de personas</b>: intrusión, asalto, robo, amenaza de bomba, atentados, vandalismo, disturbios, huelgas</li></ul>"},
+{u:1,q:"Los dos pilares de la protección integral",a:"<b>Prevención</b>: actuaciones para <b>evitar</b> un suceso.<br><b>Protección</b>: actuaciones para <b>neutralizar el suceso ya acontecido</b>, con medios humanos y técnicos, con el fin de salvar la vida."},
+{u:1,q:"Las 5 medidas de seguridad de la Ley 5/2014",a:"<b>Física</b> (barreras) · <b>Electrónica</b> (detección) · <b>Informática</b> (integridad, confidencialidad y disponibilidad) · <b>Organizativa</b> (planificación, departamentos y planes) · <b>Personal</b>."},
+{u:1,q:"Teoría esférica de la protección",a:"Abrir un <b>espacio contenido en una esfera</b> cuyo <b>centro es la persona protegida</b>. Planifica la actuación en <b>tres planos</b>: <b>aéreo</b>, <b>superficial</b> y <b>subterráneo</b>."},
+{u:1,q:"Los tres círculos concéntricos",a:"<ul><li><b>1º (interior)</b>: escolta personal → cubrir, proteger y evacuar</li><li><b>2º</b>: puestos de seguridad → mantienen al protegido en su campo de observación</li><li><b>3º</b>: patrullas móviles y grupos de información → no vigilan al protegido</li></ul>"},
+{u:1,q:"Los 3 escalones o niveles de seguridad",a:"<b>Puestos de vigilancia</b> (observar y comunicar) · <b>Puestos de revisión y control</b> (filtro de acceso a área restringida) · <b>Puestos especiales de seguridad</b> (función específica dentro del dispositivo)."},
+{u:1,q:"¿Qué debe tener un cuarto seguro?",a:"Acceso <b>rápido y fácil</b>, buenas <b>comunicaciones</b>, <b>capacidad de defensa</b>, estar <b>limitado</b> y facilidad para prestar <b>primeros auxilios</b>."},
+{u:1,q:"Planes de seguridad temporales vs. permanentes",a:"<b>Temporales</b>: actividades no habituales, como un viaje; hay que coordinarse con el departamento de seguridad del lugar de destino.<br><b>Permanentes</b>: recorridos habituales; coordinación <b>más protocolizada</b> y evaluación constante."},
+{u:1,q:"Secuencia de actuación ante una agresión",a:"<b>1.</b> Avisar del ataque (tipo de agresión, agresor y dirección) · <b>2.</b> Cobertura (reducir superficie de blanco y silueta) · <b>3.</b> Evacuación al lugar seguro preestablecido · <b>4.</b> Neutralizar: ir <b>al arma</b>, no al cuerpo, situándose delante del agresor."},
+{u:1,q:"¿De cuántos miembros consta una cápsula de protección?",a:"No hay regla fija, pero es recomendable que esté formada de <b>uno a cinco miembros</b>."},
+{u:1,q:"Protección en escaleras y ascensores",a:"<b>Escaleras</b>: el protegido lo más cerca posible de la <b>pared</b>, el escolta próximo y el resto formando un <b>círculo</b>. Las mecánicas son más peligrosas.<br><b>Ascensor</b>: revisar espacio, hueco entre ascensor y techo, cables y maquinaria; el protegido va siempre con un escolta y el resto <b>sube por las escaleras</b>."},
+{u:1,q:"Líneas de control: colocación",a:"<b>Dos escoltas delante y dos detrás</b> del protegido, observando y controlando <b>las manos</b> de las personas que saludan."},
+{u:1,q:"Protección estática: interior y exterior",a:"<b>Interior</b>: habitaciones, escaleras, ascensores, puertas de entrada, patios, sótanos, terrazas.<br><b>Exterior</b>: periferia del inmueble, barrio y sus habitantes, puntos de observación y lugares donde ocultar explosivos (papeleras, buzones)."},
+{u:1,q:"¿Qué es una avanzada?",a:"La acción de <b>requisar el lugar</b> por un miembro del equipo <b>antes de la entrada</b> del protegido en lugares no explorados. Su misión: obtener información del destino y <b>establecer un perímetro de seguridad</b>."},
+{u:2,q:"Aspectos exigidos a un vehículo de seguridad (RD)",a:"<ul><li><b>Sistema de bloqueo</b> que corta la inyección de combustible + alarma acústica y luminosa (retardo máx. <b>2 minutos</b>)</li><li><b>Rejilla metálica</b> en el tubo del depósito</li><li>Sistema de <b>protección del depósito</b></li><li><b>Cierre especial de la caja</b>: candado o cerradura de seguridad</li></ul>"},
+{u:2,q:"¿Por qué debe llevar aire acondicionado el vehículo?",a:"Para permitir el <b>cierre total</b> del vehículo si fuese atacado con algún tipo de <b>gas</b>."},
+{u:2,q:"Factores que condicionan la conducción",a:"<b>Límites personales</b> (reacción, concentración, reflejos) · <b>Límites del vehículo</b> (características técnicas) · <b>Límites externos</b> (pavimento, tráfico, meteorología)."},
+{u:2,q:"Requisa del vehículo: orden",a:"<b>Exterior</b> (sistemática y preestablecida: artefactos adosados, cables, cerraduras, líquidos) → <b>interior</b> (asientos, bandeja trasera, guantera) → <b>motor y maletero</b>. Con perros adiestrados, espejos especiales o detectores de explosivos."},
+{u:2,q:"Conducción ofensiva vs. defensiva",a:"<b>Ofensiva</b>: aprovechar peso, potencia y velocidad para afrontar el ataque de forma <b>activa</b>, llegando a <b>colisionar</b>.<br><b>Defensiva</b>: <b>evitar colisionar</b>, variando la trayectoria mediante un <b>giro de 180º</b>."},
+{u:2,q:"Las 4 maniobras evasivas",a:"<b>En Y</b> (giro de 180º con marcha atrás intermedia) · <b>Vuelta corta</b> (se para el coche y se gira marcha atrás) · <b>California</b> (volante a la izquierda + freno de mano → derrape) · <b>Giro en J</b> (marcha atrás y giro de 180º para salir hacia delante)."},
+{u:2,q:"¿Qué maniobras se usan solo si no hay tiempo para reaccionar?",a:"La maniobra en <b>Y</b> y la <b>California</b>."},
+{u:2,q:"¿Cuándo hay caravana y cómo se clasifica?",a:"Hay caravana con, como mínimo, el <b>coche del protegido</b> y el <b>coche de los escoltas</b>.<br><b>Informales</b>: itinerario solo conocido por protegido y equipo.<br><b>Formales</b>: itinerario conocido por todos."},
+{u:2,q:"Los cuatro tipos de coche",a:"<b>Piloto</b> (equipo de seguridad + Policía local) · <b>VIP</b> (protegido, acompañantes y Jefe del Equipo) · <b>Adicional</b> (mismas prestaciones que el VIP, por si se estropea) · <b>Escolta</b> (resto del equipo)."},
+{u:2,q:"Posición de los coches de escolta",a:"<b>1 escolta</b>: detrás del VIP. <b>2 escoltas</b>: uno delante y otro detrás. <b>3 escoltas</b>: uno delante y dos detrás."},
+{u:2,q:"Ubicación dentro del coche del protegido",a:"<b>Conductor</b> y, a su lado, el <b>Jefe de seguridad</b> de la cápsula, delante. <b>Detrás</b>: el protegido y sus acompañantes. El resto de escoltas, en otro vehículo justo detrás."},
+{u:2,q:"Los cuatro tipos de itinerario",a:"<b>Principal</b> (el elegido tras estudiar el resto) · <b>Alternativo</b> (sustituye al principal) · <b>De evacuación</b> (a un centro de urgencia o asistencial) · <b>De fuga</b> (a puntos seguros elegidos de antemano)."},
+{u:2,q:"¿Cada cuánto se revisan los itinerarios?",a:"Cada <b>5 meses</b>. El estudio lo realizan <b>los escoltas con anterioridad a la salida</b>, valorando el grado de peligrosidad."},
+{u:2,q:"Puntos de peligro urbanos",a:"Llegada y salida del itinerario, <b>semáforos</b>, pasos de peatones, tráfico, obras en la vía, vehículos aparcados o en <b>doble fila</b> sospechosos y contenedores."},
+{u:2,q:"Escolta vs. guardaespaldas",a:"El <b>escolta</b> es un profesional habilitado, de seguridad pública o privada, y <b>puede portar armas de fuego</b>. El <b>guardaespaldas</b> es una persona <b>no profesional ni habilitada</b> contratada por un particular: <b>no puede portar armas</b> ni ejercer funciones de escolta."},
+{u:2,q:"El kubotán",a:"Arma de defensa personal: cilindro de metal, plástico o madera de unos <b>14 cm</b> y 1,5 de grosor. Usos: <b>estabilizar el puño</b>, aplicarlo en <b>puntos de presión</b> y ganar ventaja sobre <b>muñecas o dedos</b> del atacante."},
+{u:2,q:"¿Para qué llevan preservativos los escoltas?",a:"Para <b>taponar de forma aséptica heridas de bala</b>, evitando la hemorragia."},
+{u:2,q:"¿Cómo se comunican los escoltas de un dispositivo?",a:"Mediante <b>intercomunicadores</b> y usando el <b>Código Fonético Internacional</b>."},
+{u:2,q:"Los 6 valores éticos en seguridad",a:"Espíritu de servicio · Conciencia de grupo · Honor · Disciplina consciente · Excelencia en las labores · Respeto legal."},
+{u:2,q:"¿Qué abarca el entorno del protegido?",a:"A <b>él mismo</b>, su <b>familia</b>, su <b>círculo de amistades</b>, el <b>personal</b> que trabaje para él, el <b>público</b> en general y la <b>prensa</b> si es un personaje público."}
+];
+
+/* ============================ DATOS: TEST ============================ */
+const PREGUNTAS=[
+{u:1,q:"¿Qué requisitos son necesarios para la habilitación de profesionales de la seguridad privada?",o:["Formación previa","Ser ciudadano del mundo","Carecer de antecedentes penales"],c:[0,2],w:"Art. 28 de la Ley 5/2014. La nacionalidad exigida es la de un Estado de la UE, del EEE o de un tercer Estado con convenio: no vale «ciudadano del mundo».",src:"Autoevaluación UD1 · 1"},
+{u:1,q:"¿Qué principio de actuación implica la aplicación de las medidas de seguridad y de investigación de manera proporcionada a los riesgos?",o:["Corrección","Proporcionalidad","Congruencia"],c:[2],w:"<b>Congruencia</b> = medidas adecuadas y proporcionadas <b>a los riesgos</b>. La <b>proporcionalidad</b> se refiere al uso de las técnicas y medios de defensa.",src:"Autoevaluación UD1 · 2"},
+{u:1,q:"¿Qué teoría consiste en abrir un espacio contenido en una esfera cuyo centro sería la persona protegida?",o:["Teoría esférica de la protección","Teoría de los círculos concéntricos","Teoría estática de la protección"],c:[0],w:"La teoría esférica actúa en tres planos: aéreo, superficial y subterráneo.",src:"Autoevaluación UD1 · 3"},
+{u:1,q:"Completa: «La ______ es un sistema integrado por medidas aplicables en función de lo que se quiera proteger».",o:["Seguridad","Protección","Actuación"],c:[1],w:"La protección es más específica que la seguridad: aplica medidas concretas para garantizarla.",src:"Autoevaluación UD1 · 4"},
+{u:1,q:"«La evacuación tiene el objetivo de disminuir la superficie de blanco y silueta del protegido».",o:["Verdadero","Falso"],c:[1],w:"Falso: ese es el objetivo de la <b>cobertura</b> corporal. La evacuación es el traslado y alejamiento rápido a un lugar de seguridad previamente establecido.",src:"Autoevaluación UD1 · 5"},
+{u:2,q:"¿Con qué aspectos debe contar un vehículo de seguridad?",o:["Sistema de bloqueo","Televisiones en todos sus asientos","Rejilla metálica en el interior del tubo del combustible"],c:[0,2],w:"También: sistema de protección del depósito y cierre especial de la caja con candado o cerradura de seguridad.",src:"Autoevaluación UD2 · 1"},
+{u:2,q:"Completa: «La conducción ______ tiene por objetivo evitar colisionar con vehículos o materiales, evitando así los obstáculos».",o:["Ofensiva","Defensiva","Agresiva"],c:[1],w:"La defensiva evita la colisión variando la trayectoria con un giro de 180º. La ofensiva sí llega a colisionar.",src:"Autoevaluación UD2 · 2"},
+{u:2,q:"Indica una de las normas de seguridad a seguir en la conducción de vehículos:",o:["Mantener los cristales bajados","Auxiliar a personas que lo necesiten","Revisar el vehículo antes del trayecto"],c:[2],w:"Los cristales van <b>subidos</b> y las puertas aseguradas, y <b>no</b> se recoge ni auxilia a extraños.",src:"Autoevaluación UD2 · 3"},
+{u:2,q:"¿En qué posición se sitúan los coches de escolta respecto al coche VIP cuando hay dos coches de escolta?",o:["Ambos por delante del coche VIP","Uno delante y otro detrás del coche VIP","Ambos detrás del coche VIP"],c:[1],w:"Con 1 escolta va detrás; con 2, uno delante y otro detrás; con 3, uno delante y dos detrás.",src:"Autoevaluación UD2 · 4"},
+{u:2,q:"«El itinerario de evacuación nos permite dirigirnos a uno de los puntos seguros elegidos de antemano».",o:["Verdadero","Falso"],c:[1],w:"Falso: eso es el itinerario <b>de fuga</b>. El de evacuación lleva a un centro de urgencia o asistencial previamente programado.",src:"Autoevaluación UD2 · 5"},
+
+{u:1,q:"Según la Ley 5/2014, ¿quién habilita a los guardas rurales?",o:["La Dirección General de la Policía","La Dirección General de la Guardia Civil","El órgano autonómico competente"],c:[1],w:"Todo el personal lo habilita la DG de la Policía <b>excepto</b> guardas rurales y sus especialidades (guardas de caza y guardapescas marítimos)."},
+{u:1,q:"¿Cuánto tiempo debe haber transcurrido sin haber sido sancionado por una infracción MUY GRAVE en materia de seguridad privada?",o:["2 años","4 años","5 años"],c:[1],w:"2 años para infracción grave y 4 años para muy grave. No confundir con los 5 años por condena por intromisión ilegítima."},
+{u:1,q:"¿Qué ocurre si el personal habilitado pierde alguno de los requisitos?",o:["Se suspende la habilitación durante 6 meses","Se extingue la habilitación y se cancela de oficio la inscripción en el Registro Nacional","Debe repetir únicamente las pruebas psicotécnicas"],c:[1],w:"La pérdida de un requisito produce la extinción de la habilitación y la cancelación de oficio de la inscripción."},
+{u:1,q:"¿Cuáles de estos son personal de seguridad privada según la Ley 5/2014?",o:["Escoltas privados","Detectives privados","Porteros y conserjes"],c:[0,1],w:"Porteros, conserjes y personal auxiliar análogo realizan funciones de información y control de accesos, <b>fuera</b> del ámbito de la ley (art. 6, actividades compatibles)."},
+{u:1,q:"La actividad de seguridad privada respecto de la seguridad pública es:",o:["Independiente y autónoma","Complementaria y subordinada","Sustitutiva en zonas rurales"],c:[1],w:"Art. 1 de la Ley 5/2014: todas estas actividades tienen consideración de complementarias y subordinadas respecto de la seguridad pública."},
+{u:1,q:"Los fines de la seguridad privada según el art. 4 de la Ley 5/2014 son:",o:["Satisfacer las necesidades legítimas de los usuarios","Contribuir a garantizar la seguridad pública","Complementar el monopolio de la seguridad del Estado"],c:[0,1,2],w:"Los tres. El tercero integra funcionalmente sus medios como recurso externo de la seguridad pública."},
+{u:1,q:"¿Qué actividad queda EXCLUIDA del ámbito de la Ley 5/2014?",o:["La autoprotección sin contraprestación ni servicio a terceros","La investigación privada","El acompañamiento y defensa de personas físicas determinadas"],c:[0],w:"Art. 7: las actuaciones de autoprotección, dirigidas al entorno personal o patrimonial propio y sin contraprestación."},
+{u:1,q:"¿Qué técnica de protección abarca tanto la esfera profesional como la personal del protegido?",o:["Dinámica","Estática","Integral"],c:[2],w:"La protección integral contempla tanto la dinámica como la estática, y cubre todos los aspectos de la persona."},
+{u:1,q:"Uno de los principales fundamentos de la protección es:",o:["La anticipación a los riesgos","La implicación emocional con el protegido","La improvisación ante el ataque"],c:[0],w:"La previsión es uno de los principales factores de eficacia. Además, hay que proteger sin juzgar y <b>sin implicarse emocionalmente</b>."},
+{u:1,q:"Señala medidas preventivas recomendables según el manual:",o:["Eliminar los riesgos","Anticiparse al agresor previniendo su posible acción","Ensayar y evaluar el plan de seguridad"],c:[0,1,2],w:"Las tres son las medidas preventivas que cita el manual dentro de los fundamentos de la protección."},
+{u:1,q:"¿Cuál de estas NO es una causa que justifique la protección de una persona según el manual?",o:["Causas religiosas","Causas deportivas","Causas monetarias o económicas"],c:[1],w:"Las causas son: políticas, ideológicas, psicológicas, religiosas, raciales, personales y monetarias o económicas."},
+{u:1,q:"«Intrusión de extraños, asalto, robo, amenaza de bomba, vandalismo o huelgas» son riesgos:",o:["Tecnológicos","Por accidente","Por malas acciones o comportamiento de personas"],c:[2],w:"Los tecnológicos son fallos de instalaciones, corte eléctrico o de agua, fuego y explosión de equipos."},
+{u:1,q:"¿Cómo se detecta de forma más común y efectiva que un peligro provoque daños concretos?",o:["Asignando valores numéricos a la posibilidad y a la seriedad del peligro","Consultando el histórico de incidentes del barrio","Preguntando al protegido su percepción de riesgo"],c:[0],w:"Escala numérica: a los peligros más serios, los valores más altos."},
+{u:1,q:"La protección integral se fundamenta en dos aspectos principales:",o:["La prevención y la protección","La cobertura y la evacuación","La vigilancia y el control"],c:[0],w:"Prevención = evitar el suceso. Protección = neutralizar el suceso ya acontecido para salvar la vida."},
+{u:1,q:"Las medidas orientadas a detectar o advertir una amenaza mediante dispositivos son medidas de seguridad:",o:["Física","Electrónica","Organizativa"],c:[1],w:"Física = barreras. Organizativa = planificación de funciones, departamentos y planes de seguridad."},
+{u:1,q:"La creación y funcionamiento de departamentos de seguridad y la elaboración de planes de seguridad son medidas de seguridad:",o:["Personal","Informática","Organizativa"],c:[2],w:"La organizativa se dirige a evitar amenazas mediante disposición, programación o planificación de cometidos y funciones."},
+{u:1,q:"En la teoría esférica, los tres planos de actuación son:",o:["Aéreo, superficial y subterráneo","Interior, intermedio y exterior","Frontal, lateral y posterior"],c:[0],w:"El centro de la esfera es la persona protegida."},
+{u:1,q:"¿Quién ocupa el primer círculo en la teoría de los círculos concéntricos?",o:["Los puestos de seguridad","El escolta personal","Las patrullas móviles"],c:[1],w:"1º escolta personal (cubrir, proteger y evacuar); 2º puestos de seguridad; 3º patrullas móviles y grupos de información."},
+{u:1,q:"En el tercer círculo concéntrico se sitúan dispositivos que:",o:["Vigilan permanentemente al protegido","No controlan ni vigilan al protegido pero están para una posible actuación","Sustituyen al escolta personal en los relevos"],c:[1],w:"Son las patrullas móviles y grupos de información, el círculo más alejado."},
+{u:1,q:"La misión principal del escolta del primer círculo es:",o:["Cubrir y proteger del ataque y realizar una rápida evacuación","Filtrar el acceso al área restringida","Observar el perímetro e informar al superior"],c:[0],w:"El filtro de acceso corresponde a los puestos de revisión y control; la observación del perímetro, a los puestos de vigilancia."},
+{u:1,q:"¿Qué puesto supone realizar un filtro entre las personas que intentan acceder a un área restringida?",o:["Puestos de vigilancia","Puestos de revisión y control","Puestos especiales de seguridad"],c:[1],w:"Identifican a personas, vehículos u objetos y seleccionan quién entra en el área de seguridad."},
+{u:1,q:"El estudio de los riesgos en la evaluación del dispositivo se hace en función de:",o:["Su gravedad (magnitud del daño) y la probabilidad de que sucedan","El coste económico de las medidas","El número de escoltas disponibles"],c:[0],w:"Además se estudia el entorno: ciudad, zona, itinerarios, cuartos seguros y centros de asistencia."},
+{u:1,q:"Un cuarto seguro debe reunir:",o:["Acceso rápido y fácil y buenas comunicaciones","Capacidad de defensa y estar limitado","Ser un espacio amplio y abierto al público"],c:[0,1],w:"También facilidad para prestar los primeros auxilios. Nunca abierto al público."},
+{u:1,q:"Un plan de seguridad temporal se realiza cuando:",o:["La persona realiza actividades no habituales, como un viaje","Se trata de los recorridos habituales del protegido","Se produce un cambio de escolta"],c:[0],w:"En los permanentes (recorridos habituales) la coordinación es más protocolizada."},
+{u:1,q:"El art. 14 de la Ley 5/2014 regula:",o:["La colaboración profesional con las FCS","El acceso a la información por las FCS","La coordinación y participación"],c:[0],w:"Art. 15 = acceso a la información; art. 16 = coordinación y participación (comisiones mixtas)."},
+{u:1,q:"Las comisiones mixtas de seguridad privada previstas en el art. 16 tienen carácter:",o:["Ejecutivo y sancionador","Consultivo y de colaboración","Judicial"],c:[1],w:"Pueden ser nacionales, autonómicas o provinciales; su composición y funciones se determinan reglamentariamente."},
+{u:1,q:"Ante una agresión, la primera acción del escolta incluye avisar del ataque especificando:",o:["El tipo de agresión, el agresor y la dirección por la que viene","El número de heridos y su gravedad","La matrícula del vehículo del agresor"],c:[0],w:"El aviso a los compañeros se da por cualquier medio: walkie talkie o señales."},
+{u:1,q:"Una vez puesto a salvo el protegido, para neutralizar al agresor hay que ir:",o:["Hacia el cuerpo del atacante","Hacia el arma del atacante, colocándose delante del agresor","Hacia el vehículo de huida"],c:[1],w:"Se corta así la línea directa con el protegido."},
+{u:1,q:"Se recomienda que las cápsulas de protección estén formadas por:",o:["De uno a cinco miembros","De cinco a diez miembros","Exactamente cuatro miembros"],c:[0],w:"No hay regla fija, pero de 1 a 5 es lo recomendable."},
+{u:1,q:"En una escalera, ¿por dónde va la persona protegida?",o:["Por el centro de la escalera","Lo más cerca posible de la pared","Detrás de todo el dispositivo"],c:[1],w:"El escolta se sitúa próximo a ella y el resto del dispositivo alrededor formando un círculo."},
+{u:1,q:"En un ascensor, ¿qué hace el resto del equipo de seguridad?",o:["Sube en el mismo ascensor","Sube por las escaleras y controla la salida","Espera en el vestíbulo"],c:[1],w:"El protegido va siempre acompañado de algún escolta dentro del ascensor."},
+{u:1,q:"En un acto de recibimiento, el escolta se sitúa:",o:["Delante de la personalidad","Tras la personalidad, que ocupa una posición fija","En la puerta del local exclusivamente"],c:[1],w:"El resto se reparte por la sala y es conveniente que uno se sitúe en la entrada del local."},
+{u:1,q:"En las líneas de control, los escoltas deben observar especialmente:",o:["Las manos de las personas que saludan","El calzado de los asistentes","Las cámaras de los periodistas"],c:[0],w:"Se colocan dos delante y dos detrás del protegido."},
+{u:1,q:"En una evacuación, el jefe del equipo se sitúa:",o:["Cerrando la formación","Más próximo a la persona a evacuar, guiándola","En el vehículo, esperando"],c:[1],w:"El resto abre camino apartando a quienes dificulten el paso, o conduce al protegido al vehículo."},
+{u:1,q:"La protección estática se planifica dividiendo el espacio en:",o:["Tres círculos concéntricos","Interior y exterior (teoría simplificada)","Aéreo, superficial y subterráneo"],c:[1],w:"Es la teoría simplificada de los círculos concéntricos aplicada al lugar fijo."},
+{u:1,q:"Dentro de la protección estática exterior hay que vigilar especialmente:",o:["Las terrazas y sótanos del inmueble","Papeleras y buzones, por poder ocultar explosivos","La bandeja trasera del vehículo"],c:[1],w:"Terrazas y sótanos pertenecen al interior; la bandeja trasera es de la requisa del vehículo."},
+{u:1,q:"¿Qué es la avanzada?",o:["El primer escolta de la formación a pie","La acción de requisar el lugar antes de la entrada del protegido","El vehículo que abre la caravana"],c:[1],w:"Su misión es obtener información del lugar de destino y establecer un perímetro de seguridad."},
+{u:1,q:"La coordinación entre varios servicios que protegen a una misma persona la realiza:",o:["El escolta más antiguo","La sala de operaciones u órgano conocedor de esos servicios","La Comisión Mixta provincial"],c:[1],w:"Los jefes de cada servicio mantienen con el coordinador información continua y recíproca."},
+
+{u:2,q:"El sistema de bloqueo del vehículo debe tener un retardo entre activación y acción de:",o:["30 segundos como máximo","2 minutos como máximo","5 minutos como máximo"],c:[1],w:"Corta la inyección de combustible y acciona alarma acústica y luminosa."},
+{u:2,q:"El blindaje completo del vehículo incluye:",o:["Carrocería y cristales","Bajos y neumáticos","Solo las puertas laterales"],c:[0,1],w:"Debe estar completamente blindado: carrocería, cristales, bajos y neumáticos."},
+{u:2,q:"¿Qué conocimientos se exigen al conductor del vehículo de seguridad?",o:["Conocer a la perfección el vehículo y su mecánica","Conocer los itinerarios programados y alternativos","Poseer licencia de armas de guerra"],c:[0,1],w:"Debe haber recibido entrenamiento de conducción de alta seguridad."},
+{u:2,q:"La capacidad de reacción, la concentración y los reflejos del conductor son:",o:["Límites externos","Límites del vehículo","Límites personales"],c:[2],w:"Los externos los impone el entorno (pavimento, tráfico, meteorología)."},
+{u:2,q:"¿Cada cuánto debe revisarse el vehículo para detectar manipulaciones o sabotajes?",o:["Diariamente","Semanalmente","Antes de cada mes"],c:[0],w:"Además, la requisa exterior debe ser completa, sistemática y preestablecida."},
+{u:2,q:"La requisa interior del vehículo incluye:",o:["Asientos, bandeja trasera y guantera","Bajos y neumáticos","Únicamente el maletero"],c:[0],w:"Por último se revisan el motor y el maletero."},
+{u:2,q:"La conducción evasiva busca:",o:["Llegar lo más rápido posible al destino evitando las situaciones de peligro","Circular siempre por debajo del límite legal","Provocar la colisión con cualquier obstáculo"],c:[0],w:"Su finalidad es la destreza y pericia para evitar emboscadas y evadirse con una simple maniobra."},
+{u:2,q:"¿En qué maniobra se utiliza el freno de mano para hacer derrapar el coche?",o:["Maniobra en Y","Maniobra California","Giro en J"],c:[1],w:"En la California se gira el volante hacia la izquierda ayudándose del freno de mano."},
+{u:2,q:"¿Qué maniobra consiste en parar el vehículo y realizar el giro marcha atrás?",o:["Vuelta corta","Giro en J","Maniobra California"],c:[0],w:"Es parecida a la maniobra en Y, pero primero se detiene el vehículo."},
+{u:2,q:"El giro en J consiste en:",o:["Mantener el sentido de dirección cambiando el de la marcha, iniciando marcha atrás","Girar 90 grados aprovechando un cruce","Embestir lateralmente al vehículo atacante"],c:[0],w:"Se frena bloqueando las ruedas delanteras y se engrana la primera para salir hacia adelante."},
+{u:2,q:"¿Por qué carril conviene circular para poder realizar las maniobras evasivas con comodidad?",o:["Por el arcén","Por el carril medio o más próximo a la calzada","Por el carril de la derecha siempre"],c:[1],w:"Ante barricadas, si el vehículo tiene mayor envergadura y potencia, se puede embestir a otro vehículo."},
+{u:2,q:"Señala las normas de seguridad correctas en la conducción:",o:["No recoger ni auxiliar a extraños","Detenerse solo ante fuerza pública identificada con su placa","No bajar del coche al protegido hasta comprobar que no hay peligro"],c:[0,1,2],w:"También: cristales subidos, puertas aseguradas, vías amplias e iluminadas y rutas aleatorias previamente estudiadas."},
+{u:2,q:"Cuando hay varios escoltas en el mismo operativo:",o:["Viajan todos en el coche del protegido","Viajan en vehículos separados y en caravana","Se desplazan a pie por delante del vehículo"],c:[1],w:"En el coche del protegido solo van el conductor, el jefe de seguridad, el protegido y sus acompañantes."},
+{u:2,q:"Se considera que hay caravana cuando, como mínimo, hay:",o:["Tres vehículos","El coche del protegido y el coche de los escoltas","Un coche piloto y un coche adicional"],c:[1],w:"Cuantos más vehículos conformen la caravana, más complicada y problemática será."},
+{u:2,q:"Una caravana informal es aquella en la que:",o:["El itinerario es conocido por todos","El itinerario solo lo conocen el protegido y su equipo de seguridad","No se emplean vehículos blindados"],c:[1],w:"La formal es aquella cuyo itinerario es conocido por todos."},
+{u:2,q:"En el coche piloto viajan:",o:["El protegido y sus acompañantes","El equipo de seguridad y un Policía local","Solo el jefe del equipo"],c:[1],w:"En el coche VIP van el protegido, sus acompañantes y el Jefe del Equipo de seguridad."},
+{u:2,q:"¿Para qué sirve el coche adicional?",o:["Para transportar el equipamiento pesado","Para sustituir al coche VIP si se estropea, con las mismas prestaciones","Para abrir la caravana"],c:[1],w:"El que abre la caravana en su caso es el coche piloto."},
+{u:2,q:"Con tres coches de escolta, la disposición es:",o:["Uno delante y dos detrás del VIP","Los tres detrás del VIP","Dos delante y uno detrás"],c:[0],w:"Con uno: detrás. Con dos: uno delante y otro detrás."},
+{u:2,q:"¿Dónde se sitúa el jefe de seguridad de la cápsula dentro del coche del protegido?",o:["En la parte trasera, junto al protegido","En la parte delantera, al lado del conductor","En el coche escolta"],c:[1],w:"En la parte trasera van el protegido y, si los hubiese, sus acompañantes."},
+{u:2,q:"El itinerario que permite acudir a un centro de urgencia o asistencial previamente programado es el:",o:["De fuga","De evacuación","Alternativo"],c:[1],w:"El de fuga lleva a puntos seguros elegidos de antemano; el alternativo sustituye al principal."},
+{u:2,q:"Sobre el itinerario principal es correcto afirmar que:",o:["Es siempre el mismo para un mismo destino","Se elige tras estudiar el resto de caminos y puede ser alternativo otro día","Solo lo decide el protegido"],c:[1],w:"Lo elige el equipo de protección tras cerciorarse de que es el más seguro para ese trayecto."},
+{u:2,q:"¿Cuáles son puntos de peligro urbanos en un itinerario?",o:["Los semáforos","Los vehículos aparcados o en doble fila sospechosos","Los contenedores"],c:[0,1,2],w:"También la llegada y salida del itinerario, los pasos de peatones, el tráfico y las obras en la vía."},
+{u:2,q:"El estudio de los itinerarios por tramos tiene en cuenta:",o:["Nombre y anchura de la calle, carriles, aceras, bordillos y suelo","La posibilidad de realizar maniobras","El horario de apertura de los comercios"],c:[0,1],w:"Lo realizan los escoltas con anterioridad a la salida."},
+{u:2,q:"¿Con qué frecuencia deben revisarse los itinerarios?",o:["Cada 5 meses","Cada 5 semanas","Cada año"],c:[0],w:"Se revisan teniendo en cuenta el grado de peligrosidad que tengan."},
+{u:2,q:"El guardaespaldas, a diferencia del escolta:",o:["Puede portar armas de fuego","No es profesional ni está habilitado y no puede portar armas","Solo actúa en protección estática"],c:[1],w:"El escolta es profesional de la seguridad pública o privada y puede llevar armas de fuego."},
+{u:2,q:"Según Mora (2008), la detección de explosivos y los primeros auxilios son competencias:",o:["Prácticas","Teóricas","Perceptivas"],c:[1],w:"Las perceptivas son la relación con el entorno, la eficacia en la observación y la rememoración y retentiva."},
+{u:2,q:"La capacidad de rememoración y retentiva es una cualidad:",o:["Práctica","Teórica","Perceptiva"],c:[2],w:"Junto con la capacidad de relación con el entorno y la eficacia en la observación."},
+{u:2,q:"El chaleco antibalas protege también de disparos de fusil cuando:",o:["Se moja previamente","Se le agregan placas metálicas o cerámicas","Se lleva bajo la camisa"],c:[1],w:"Absorbe el impacto de balas al torso y esquirlas de explosiones."},
+{u:2,q:"El kubotán mide aproximadamente:",o:["7 cm","14 cm","25 cm"],c:[1],w:"Cilindro de metal, plástico o madera de unos 14 cm y 1,5 de grosor; no necesita mucho entrenamiento."},
+{u:2,q:"El inhibidor de frecuencia es un dispositivo que:",o:["Amplifica la señal de los intercomunicadores","Impide o dificulta la transmisión radioeléctrica emitiendo mayor potencia que el emisor","Detecta explosivos por resonancia"],c:[1],w:"Actúa sobre un determinado rango de frecuencias."},
+{u:2,q:"¿Qué se usa para taponar de forma aséptica una herida de bala?",o:["Preservativos","Gasas de algodón hidrófilo","Cinta americana"],c:[0],w:"Es uno de los materiales que el manual incluye entre los que utilizan los escoltas."},
+{u:2,q:"Los escoltas de un dispositivo se comunican mediante:",o:["Intercomunicadores y el Código Fonético Internacional","Señales luminosas exclusivamente","Mensajería del teléfono personal"],c:[0],w:"Especialmente importante cuando ocurre algún incidente."},
+{u:2,q:"El entorno del protegido incluye:",o:["Su familia y su círculo de amistades","El personal que trabaja para él y la prensa","Únicamente a él mismo"],c:[0,1],w:"Los ataques suelen ir dirigidos hacia el círculo de familiares y amigos cercanos."},
+{u:2,q:"Ante la prensa, el escolta debe:",o:["Mantener una actitud firme y controlada, permaneciendo en un segundo plano","Responder en nombre del protegido","Impedir cualquier grabación por la fuerza"],c:[0],w:"La finalidad es no dar mala prensa al protegido."},
+{u:2,q:"«Respetar las directrices de los superiores, cumpliendo normas y protocolos» corresponde al valor ético de:",o:["Honor","Disciplina consciente","Excelencia en las labores"],c:[1],w:"Cuando el dispositivo cuente con varios escoltas siempre habrá un Jefe de Seguridad por encima."},
+{u:2,q:"«No cometer ni tolerar actos de corrupción y atender al usuario con respeto y cortesía» es el valor de:",o:["Excelencia en las labores","Espíritu de servicio","Conciencia de grupo"],c:[0],w:"La conciencia de grupo es la cooperación y solidaridad entre compañeros y entidades."},
+{u:2,q:"El valor ético de respeto legal implica:",o:["Comunicar toda irregularidad legal a los organismos competentes","Actuar bajo los principios de racionalidad y proporcionalidad","Obedecer cualquier orden del protegido"],c:[0,1],w:"El escolta actúa siempre conforme a la legislación, no a las instrucciones particulares del protegido."},
+{u:2,q:"El orgullo de ostentar el uniforme que identifica al escolta corresponde al valor de:",o:["Honor","Dignidad","Espíritu de servicio"],c:[0],w:"Quienes llevan el uniforme tienen responsabilidad con el servicio y con el resto de la población."}
+];
+
+/* ============================ DATOS: ORAL ============================ */
+const ORAL=[
+{ud:1,q:"Explíqueme qué es la protección integral y en qué se fundamenta.",p:["Servicio de protección cuyo <b>objetivo</b> es establecer un entorno seguro mediante un dispositivo que <b>neutralice los peligros</b>.","El dispositivo tiene carácter <b>preventivo y disuasorio</b>: permite controlar y reaccionar mediante <b>neutralización, cobertura y evacuación</b>.","Se extiende a la esfera <b>profesional y personal</b> del protegido; cada una se aborda desde la protección <b>dinámica y estática</b>.","Se fundamenta en <b>dos aspectos</b>: la <b>prevención</b> (evitar el suceso) y la <b>protección</b> (neutralizar el suceso ya acontecido, con medios humanos y técnicos, para salvar la vida).","Cierre: un buen sistema de protección llega a ser <b>disuasorio</b> y hace desistir al agresor de sus intenciones."]},
+{ud:1,q:"Enumere los principios básicos de actuación del personal de seguridad privada.",p:["<b>Legalidad</b> · <b>Integridad</b> · <b>Protección</b> · <b>Dignidad</b> · <b>Corrección</b> · <b>Congruencia</b> · <b>Proporcionalidad</b> · <b>Reserva profesional</b> · <b>Colaboración</b> con las FCS.","Truco para no perderse: los cinco primeros son de <b>conducta</b>; congruencia y proporcionalidad son de <b>medida</b>; reserva y colaboración son de <b>relación</b>.","Añadir: el personal está obligado a <b>auxiliar y colaborar</b> especialmente con las FCS y a guardar <b>rigurosa reserva profesional</b>, facilitando datos solo a quien le haya contratado y a los órganos judiciales y policiales competentes."]},
+{ud:1,q:"Desarrolle la teoría de los círculos concéntricos.",p:["Un círculo rodeado por <b>tres círculos concéntricos</b> alrededor del protegido; cada uno presta servicio dentro de la esfera de su propio cometido y sirve de base para un <b>dispositivo integral</b>.","<b>1er círculo o interior</b>: el <b>escolta personal</b>, las personas más próximas. La distancia depende de la situación concreta. Misión: <b>cubrir y proteger</b> de un ataque y realizar una <b>rápida evacuación</b> a lugar seguro.","<b>2º círculo</b>: <b>puestos de seguridad</b>; guardan cierta distancia pero tienen al protegido <b>dentro de su campo de observación</b>.","<b>3er círculo</b>: <b>patrullas móviles y grupos de información</b>; <b>no controlan ni vigilan</b> al protegido, pero están dentro del dispositivo por si ocurriera una desgracia.","Enlazar con la <b>teoría esférica</b> (planos aéreo, superficial y subterráneo) y con la teoría <b>simplificada</b> (interior/exterior) usada en la protección estática."]},
+{ud:1,q:"¿Qué requisitos generales exige la Ley 5/2014 para obtener la habilitación?",p:["Ser <b>mayor de edad</b>; <b>capacidad física y aptitud psicológica</b>; <b>nacionalidad</b> UE, EEE o tercer Estado con convenio; <b>formación previa</b>.","<b>Carecer de antecedentes penales</b> por delitos dolosos.","No sancionado por infracción <b>grave en 2 años</b> ni <b>muy grave en 4 años</b>; no <b>separado del servicio</b> de FCS o FFAA en 2 años; no <b>condenado</b> por intromisión ilegítima en honor, intimidad, imagen o secreto de las comunicaciones en <b>5 años</b>.","<b>Superar las pruebas</b> de comprobación del Ministerio del Interior.","Añadir: la habilita la <b>DG de la Policía</b> (guardas rurales, la <b>Guardia Civil</b>) y la <b>pérdida de un requisito extingue</b> la habilitación con cancelación de oficio en el Registro Nacional."]},
+{ud:1,q:"¿Cómo actúa usted desde que se produce la agresión hasta que termina el incidente?",p:["<b>1. Aviso</b>: comunico el ataque a los compañeros por walkie o señales, especificando <b>tipo de agresión, agresor y dirección</b> de la que procede.","<b>2. Cobertura</b>: cubro corporalmente al protegido para <b>disminuir su superficie de blanco y su silueta</b>.","<b>3. Evacuación</b>: traslado y alejo rápidamente al protegido al <b>lugar seguro previamente establecido</b>. Ningún miembro del equipo hace otra maniobra que no sea cubrir o evacuar.","<b>4. Neutralización</b>: solo con el protegido a salvo. Voy <b>al arma</b> del atacante, no al cuerpo, colocándome <b>delante del agresor</b> para cortar la línea directa con el protegido.","Recordar que el desplazamiento <b>a pie</b> es el de mayor riesgo por el enlentecimiento de la cobertura y la evacuación."]},
+{ud:1,q:"Explique la protección en interior de edificios, escaleras y ascensores.",p:["<b>Edificios</b>: inspección completa <b>antes</b> de la llegada del protegido, localizando una habitación que sirva de <b>espacio de seguridad</b>.","<b>Escaleras</b>: inspección previa. El protegido va <b>pegado a la pared</b>, el escolta próximo y el resto <b>formando un círculo</b>; la distancia depende de las dimensiones de la escalera. Las <b>mecánicas</b> son más peligrosas por los espacios abiertos a los lados.","<b>Ascensores</b>: entrañan bastante peligro. Revisión minuciosa de <b>espacio, hueco entre ascensor y techo, cables y maquinaria</b>. El protegido va <b>siempre con un escolta</b> y el resto <b>sube por las escaleras</b> para controlar la salida."]},
+{ud:2,q:"¿Qué características debe reunir el vehículo y qué exige el Real Decreto?",p:["Características: <b>cómodo</b>, con <b>aire acondicionado</b> (permite el cierre total ante un ataque con gas), <b>seguro y rápido</b>, completamente <b>blindado</b> (carrocería, cristales, bajos y neumáticos) y con <b>potencia</b> suficiente en buena relación potencia/peso.","Requisitos del RD: <b>sistema de bloqueo</b> que corta la inyección de combustible y acciona alarma acústica y luminosa, con retardo máximo de <b>2 minutos</b>; <b>rejilla metálica</b> en el tubo del depósito; <b>protección del depósito</b>; <b>cierre especial de la caja</b> con candado o cerradura de seguridad.","En grandes dispositivos, <b>vehículo aparte para los escoltas</b>, de características similares, con buen sistema de comunicación entre ambos."]},
+{ud:2,q:"Diferencie conducción ofensiva y defensiva y describa las maniobras.",p:["Ambas son <b>conducción evasiva</b>: llegar lo más rápido posible al destino evitando las situaciones de peligro, con la destreza necesaria para evitar emboscadas.","<b>Ofensiva</b>: aprovecha <b>peso, potencia y velocidad</b> para afrontar el ataque de forma <b>activa</b>, llegando a <b>colisionar</b> con el obstáculo.","<b>Defensiva</b>: su objetivo es <b>evitar la colisión</b>, variando la trayectoria mediante un <b>giro de 180º</b>.","Maniobras: <b>en Y</b> (reducir, girar de derecha a izquierda, marcha atrás y volver a girar), <b>vuelta corta</b> (parar y girar marcha atrás), <b>California</b> (volante a la izquierda + freno de mano, derrapando) y <b>giro en J</b> (marcha atrás, giro rápido, bloqueo de ruedas delanteras y primera para salir adelante).","La <b>Y</b> y la <b>California</b> se usan <b>solo cuando no hay tiempo para reaccionar</b>. Conviene circular por el <b>carril medio o más próximo a la calzada</b>."]},
+{ud:2,q:"Clasifique las caravanas y explique la posición de los vehículos.",p:["<b>Caravana</b>: conjunto de vehículos para desplazar al protegido y a todo su personal de seguridad. Mínimo: <b>coche del protegido + coche de escoltas</b>. Cuantos más vehículos, más problemática.","Según el itinerario: <b>informales</b> (itinerario no público, solo conocido por protegido y equipo) y <b>formales</b> (conocido por todos).","Vehículos: <b>piloto</b> (equipo de seguridad y un Policía local), <b>VIP</b> (protegido, acompañantes y Jefe del Equipo), <b>adicional</b> (mismas prestaciones que el VIP, por avería) y <b>escolta</b> (resto del equipo).","Posiciones: 1 escolta → <b>detrás</b>; 2 escoltas → <b>uno delante y otro detrás</b>; 3 escoltas → <b>uno delante y dos detrás</b>.","Dentro del coche VIP: <b>conductor y jefe de seguridad delante</b>; <b>protegido y acompañantes detrás</b>."]},
+{ud:2,q:"Tipos de itinerario y estudio previo.",p:["<b>Principal</b>: el elegido para un desplazamiento concreto tras estudiar el resto y comprobar que es el más seguro; puede ser alternativo otro día.","<b>Alternativo</b>: sustituye al principal si este no puede usarse.","<b>De evacuación</b>: variante del principal para acudir a un <b>centro de urgencia o asistencial</b> previamente programado.","<b>De fuga</b>: variación del principal o del alternativo para dirigirse a <b>puntos seguros elegidos de antemano</b>.","Estudio: se determinan los <b>puntos de peligro urbanos</b> (llegada y salida, semáforos, pasos de peatones, tráfico, obras, vehículos en doble fila, contenedores), se fijan <b>puntos seguros</b> y <b>centros asistenciales</b>. Por tramos se valora <b>nombre y anchura de la calle, carriles, aceras, bordillos, suelo y posibilidad de maniobras</b>. Lo hacen <b>los escoltas antes de la salida</b> y se revisa <b>cada 5 meses</b>."]},
+{ud:2,q:"Funciones del escolta, diferencia con el guardaespaldas y valores éticos.",p:["El <b>escolta</b> es un profesional de la seguridad <b>pública o privada</b> especializado en protección de personalidades; pertenece a las FCS del Estado o a una empresa de seguridad privada. Su función principal es <b>proteger a las personas</b>, con dedicación <b>plena</b>, mentalizado para el ataque con arma de fuego; los escoltas privados <b>pueden portar armas</b>.","El <b>guardaespaldas</b> es una persona <b>no profesional y no habilitada</b> contratada por un particular: <b>no puede portar armas</b> ni ejercer las funciones propias del escolta.","Habilidades (Mora, 2008): <b>prácticas</b> (físico, defensa personal, tácticas, conducción ofensiva-evasiva, asunción de responsabilidades, equilibrio mental), <b>teóricas</b> (explosivos, primeros auxilios, protocolo) y <b>perceptivas</b> (relación con el entorno, observación, retentiva).","<b>Valores éticos</b>: espíritu de servicio, conciencia de grupo, honor, disciplina consciente, excelencia en las labores y respeto legal."]}
+];
+
+/* ============================ ESTADO ============================ */
+const KEY="uf2676:v1";
+let S={done:{},best:null,wrong:[]};
+try{const raw=localStorage.getItem(KEY); if(raw) S=Object.assign(S,JSON.parse(raw));}catch(e){}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(S));}catch(e){}}
+
+const ALL_BLOCKS=TEMARIO.flatMap(u=>u.bloques.map(b=>b.id));
+function updHud(){
+  const n=ALL_BLOCKS.filter(id=>S.done[id]).length, t=ALL_BLOCKS.length, pct=Math.round(n/t*100);
+  const C=2*Math.PI*27;
+  const arc=document.getElementById("ringArc");
+  arc.setAttribute("stroke-dasharray",C.toFixed(1));
+  arc.setAttribute("stroke-dashoffset",(C*(1-pct/100)).toFixed(1));
+  document.getElementById("ringTxt").textContent=pct+"%";
+  document.getElementById("hudDone").textContent=n+" / "+t;
+}
+
+/* ============================ TABS ============================ */
+const TABS=[["temario","Temario",ALL_BLOCKS.length],["fichas","Fichas",FICHAS.length],["test","Test",PREGUNTAS.length],["oral","Oral",ORAL.length],["chuleta","Chuleta",""]];
+const tabsEl=document.getElementById("tabs");
+TABS.forEach(([id,label,n],i)=>{
+  const b=document.createElement("button");
+  b.className="tab";b.type="button";b.setAttribute("role","tab");b.dataset.t=id;
+  b.setAttribute("aria-selected",i===0?"true":"false");
+  b.innerHTML=label+(n?'<span class="n">'+n+'</span>':'');
+  b.onclick=()=>go(id);
+  tabsEl.appendChild(b);
+});
+function go(id){
+  document.querySelectorAll(".tab").forEach(t=>t.setAttribute("aria-selected",String(t.dataset.t===id)));
+  TABS.forEach(([t])=>{document.getElementById("p-"+t).hidden=(t!==id);});
+  window.scrollTo({top:0,behavior:"instant"});
+}
+
+/* ============================ TEMARIO ============================ */
+function renderTemario(){
+  const p=document.getElementById("p-temario");
+  let h='<p class="lead">Todo el manual comprimido en '+ALL_BLOCKS.length+' bloques. Marca el círculo de cada bloque cuando lo domines: el contador de arriba lleva la cuenta.</p>';
+  h+='<div class="bar"><button class="btn ghost" id="openAll" type="button">Abrir todo</button><button class="btn ghost" id="closeAll" type="button">Cerrar todo</button><span class="spacer"></span><button class="btn ghost" id="resetProg" type="button">Reiniciar progreso</button></div>';
+  TEMARIO.forEach(u=>{
+    h+='<div class="ud-head"><span class="k">UD'+u.ud+'</span><h2>'+u.titulo+'</h2></div><div class="blocks">';
+    u.bloques.forEach(b=>{
+      h+='<article class="block'+(S.done[b.id]?" done":"")+'" data-id="'+b.id+'" data-open="0">'+
+        '<button class="bh" type="button" data-act="toggle"><span class="num">'+u.ud+'.'+b.n+'</span>'+
+        '<span class="t">'+b.t+'</span><span class="mark" data-act="mark" role="button" tabindex="0" aria-label="Marcar como dominado">&#10003;</span>'+
+        '<span class="caret">&#9656;</span></button>'+
+        '<div class="bbody" hidden>';
+      b.c.forEach(s=>{h+='<h4>'+s.h+'</h4><ul>'+s.l.map(x=>'<li>'+x+'</li>').join('')+'</ul>';});
+      h+='</div></article>';
+    });
+    h+='</div>';
+  });
+  p.innerHTML=h;
+  p.querySelectorAll(".block").forEach(bl=>{
+    bl.querySelector(".bh").addEventListener("click",e=>{
+      if(e.target.closest('[data-act="mark"]')){
+        const id=bl.dataset.id; S.done[id]=!S.done[id]; bl.classList.toggle("done",!!S.done[id]); save(); updHud(); return;
+      }
+      const open=bl.dataset.open==="1"; bl.dataset.open=open?"0":"1";
+      bl.querySelector(".bbody").hidden=open;
+    });
+  });
+  document.getElementById("openAll").onclick=()=>p.querySelectorAll(".block").forEach(b=>{b.dataset.open="1";b.querySelector(".bbody").hidden=false;});
+  document.getElementById("closeAll").onclick=()=>p.querySelectorAll(".block").forEach(b=>{b.dataset.open="0";b.querySelector(".bbody").hidden=true;});
+  document.getElementById("resetProg").onclick=()=>{S.done={};save();updHud();renderTemario();};
+}
+
+/* ============================ FICHAS ============================ */
+let fDeck=[],fIdx=0,fFilter=0;
+function buildDeck(){
+  fDeck=FICHAS.map((f,i)=>({...f,i})).filter(f=>!fFilter||f.u===fFilter);
+  fIdx=0;
+}
+function shuffle(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
+function renderFichas(){
+  const p=document.getElementById("p-fichas");
+  p.innerHTML='<p class="lead">Pregunta delante, respuesta detrás. Pulsa la ficha o la barra espaciadora para girarla; flechas &larr; &rarr; para moverte.</p>'+
+   '<div class="bar" id="fbar">'+
+   '<button class="chip" data-f="0" aria-pressed="true">Todas</button>'+
+   '<button class="chip" data-f="1" aria-pressed="false">UD1 Protección integral</button>'+
+   '<button class="chip" data-f="2" aria-pressed="false">UD2 Vehículos</button>'+
+   '<span class="spacer"></span><button class="btn ghost" id="shuf" type="button">Barajar</button></div>'+
+   '<div class="deck"><div class="card" id="card" data-flip="0" tabindex="0" role="button" aria-label="Girar ficha"><div class="card-in">'+
+   '<div class="face front"><span class="lbl" id="fLbl"></span><div class="q" id="fQ"></div><span class="lbl" style="opacity:.6">Pulsa para ver la respuesta</span></div>'+
+   '<div class="face back"><span class="lbl">Respuesta</span><div class="a" id="fA"></div></div>'+
+   '</div></div>'+
+   '<div class="deck-nav"><button class="btn ghost" id="prev" type="button">&larr; Anterior</button>'+
+   '<span class="counter" id="fCount"></span>'+
+   '<button class="btn" id="next" type="button">Siguiente &rarr;</button></div></div>';
+  buildDeck();paint();
+  p.querySelectorAll("#fbar .chip").forEach(c=>c.onclick=()=>{
+    fFilter=+c.dataset.f;
+    p.querySelectorAll("#fbar .chip").forEach(x=>x.setAttribute("aria-pressed",String(x===c)));
+    buildDeck();paint();
+  });
+  document.getElementById("shuf").onclick=()=>{shuffle(fDeck);fIdx=0;paint();};
+  document.getElementById("prev").onclick=()=>{fIdx=(fIdx-1+fDeck.length)%fDeck.length;paint();};
+  document.getElementById("next").onclick=()=>{fIdx=(fIdx+1)%fDeck.length;paint();};
+  const card=document.getElementById("card");
+  card.onclick=()=>card.dataset.flip=card.dataset.flip==="1"?"0":"1";
+  card.onkeydown=e=>{if(e.key===" "||e.key==="Enter"){e.preventDefault();card.click();}};
+}
+function paint(){
+  const f=fDeck[fIdx];if(!f)return;
+  document.getElementById("card").dataset.flip="0";
+  document.getElementById("fLbl").textContent="UD"+f.u;
+  document.getElementById("fQ").innerHTML=f.q;
+  document.getElementById("fA").innerHTML=f.a;
+  document.getElementById("fCount").textContent=(fIdx+1)+" / "+fDeck.length;
+}
+document.addEventListener("keydown",e=>{
+  if(document.getElementById("p-fichas").hidden)return;
+  if(e.key==="ArrowRight"){fIdx=(fIdx+1)%fDeck.length;paint();}
+  if(e.key==="ArrowLeft"){fIdx=(fIdx-1+fDeck.length)%fDeck.length;paint();}
+});
+
+/* ============================ TEST ============================ */
+let tSet=[],tIdx=0,tSel=[],tAnswered=false,tScore=0,tFails=[],tCfg={ud:0,len:10};
+function renderTestHome(){
+  const p=document.getElementById("p-test");
+  const best=S.best?('Mejor marca: <b>'+S.best.pct+'%</b> ('+S.best.hits+'/'+S.best.total+')'):'Aún sin marca registrada';
+  const pend=S.wrong.length;
+  p.innerHTML='<p class="lead">Test de respuesta múltiple. Algunas preguntas tienen <b>más de una opción correcta</b> — se avisa en cada una. Corrección inmediata con la explicación del manual.</p>'+
+  '<div class="bar"><span class="hint">Unidad</span>'+
+  '<button class="chip" data-ud="0" aria-pressed="true">Todo</button>'+
+  '<button class="chip" data-ud="1" aria-pressed="false">UD1</button>'+
+  '<button class="chip" data-ud="2" aria-pressed="false">UD2</button></div>'+
+  '<div class="bar"><span class="hint">Preguntas</span>'+
+  '<button class="chip" data-len="10" aria-pressed="true">10</button>'+
+  '<button class="chip" data-len="20" aria-pressed="false">20</button>'+
+  '<button class="chip" data-len="999" aria-pressed="false">Todas</button></div>'+
+  '<div class="bar"><button class="btn" id="start" type="button">Empezar test</button>'+
+  (pend?'<button class="btn ghost" id="startFails" type="button">Repasar mis '+pend+' falladas</button>':'')+
+  '<span class="spacer"></span><span class="hint">'+best+'</span></div>';
+  p.querySelectorAll("[data-ud]").forEach(c=>c.onclick=()=>{tCfg.ud=+c.dataset.ud;p.querySelectorAll("[data-ud]").forEach(x=>x.setAttribute("aria-pressed",String(x===c)));});
+  p.querySelectorAll("[data-len]").forEach(c=>c.onclick=()=>{tCfg.len=+c.dataset.len;p.querySelectorAll("[data-len]").forEach(x=>x.setAttribute("aria-pressed",String(x===c)));});
+  document.getElementById("start").onclick=()=>startTest(null);
+  const sf=document.getElementById("startFails"); if(sf) sf.onclick=()=>startTest(S.wrong.slice());
+  }
+function startTest(onlyIdx){
+  let pool=PREGUNTAS.map((q,i)=>({...q,i}));
+  if(onlyIdx){pool=pool.filter(q=>onlyIdx.includes(q.i));}
+  else{
+    if(tCfg.ud)pool=pool.filter(q=>q.u===tCfg.ud);
+    shuffle(pool);
+    if(tCfg.len<pool.length)pool=pool.slice(0,tCfg.len);
+  }
+  tSet=pool;tIdx=0;tScore=0;tFails=[];tSel=[];tAnswered=false;
+  paintQ();
+}
+function paintQ(){
+  const p=document.getElementById("p-test");
+  const q=tSet[tIdx];
+  const multi=q.c.length>1;
+  let h='<div class="progress"><i style="width:'+((tIdx)/tSet.length*100)+'%"></i></div>';
+  h+='<div class="qcard"><div class="qmeta"><span class="pill">UD'+q.u+'</span>'+
+     '<span class="pill">'+(tIdx+1)+' de '+tSet.length+'</span>'+
+     (multi?'<span class="pill multi">Respuesta múltiple</span>':'')+
+     (q.src?'<span>'+q.src+'</span>':'')+
+     '<span class="spacer"></span><span>Aciertos: '+tScore+'</span></div>';
+  h+='<div class="qtext">'+q.q+'</div><div class="opts" id="opts">';
+  q.o.forEach((o,i)=>{h+='<button class="opt" type="button" data-i="'+i+'"><span class="k">'+"abc"[i]+')</span><span>'+o+'</span></button>';});
+  h+='</div><div id="fb"></div>';
+  h+='<div class="bar" style="margin:16px 0 0"><button class="btn" id="check" type="button">'+(multi?"Comprobar":"Comprobar")+'</button>'+
+     '<button class="btn ghost" id="skip" type="button">Saltar</button></div></div>';
+  p.innerHTML=h;
+  tSel=[];tAnswered=false;
+  p.querySelectorAll(".opt").forEach(b=>b.onclick=()=>{
+    if(tAnswered)return;
+    const i=+b.dataset.i;
+    if(multi){
+      const k=tSel.indexOf(i); if(k>=0)tSel.splice(k,1);else tSel.push(i);
+      b.classList.toggle("sel");
+    }else{
+      tSel=[i];p.querySelectorAll(".opt").forEach(x=>x.classList.remove("sel"));b.classList.add("sel");
+    }
+  });
+  document.getElementById("check").onclick=()=>{if(!tAnswered)check();else nextQ();};
+  document.getElementById("skip").onclick=()=>{if(!tAnswered){registerFail(q);} nextQ();};
+}
+function check(){
+  const q=tSet[tIdx];const p=document.getElementById("p-test");
+  if(!tSel.length)return;
+  tAnswered=true;
+  const ok=tSel.length===q.c.length && tSel.every(i=>q.c.includes(i));
+  p.querySelectorAll(".opt").forEach(b=>{
+    const i=+b.dataset.i;b.disabled=true;b.classList.remove("sel");
+    if(q.c.includes(i)){b.classList.add("right");b.querySelector(".k").classList.add("right");}
+    else if(tSel.includes(i)){b.classList.add("wrong");b.querySelector(".k").classList.add("wrong");}
+  });
+  if(ok)tScore++;else registerFail(q);
+  document.getElementById("fb").innerHTML='<div class="why"><b>'+(ok?"Correcto.":"Incorrecto.")+'</b> '+q.w+'</div>';
+  document.getElementById("check").textContent=(tIdx+1===tSet.length)?"Ver resultado":"Siguiente";
+}
+function registerFail(q){
+  tFails.push(q);
+  if(!S.wrong.includes(q.i)){S.wrong.push(q.i);save();}
+}
+function nextQ(){
+  const q=tSet[tIdx];
+  if(tAnswered){
+    const ok=tSel.length===q.c.length&&tSel.every(i=>q.c.includes(i));
+    if(ok){const k=S.wrong.indexOf(q.i); if(k>=0){S.wrong.splice(k,1);save();}}
+  }
+  tIdx++;
+  if(tIdx>=tSet.length)result();else paintQ();
+}
+function result(){
+  const p=document.getElementById("p-test");
+  const pct=Math.round(tScore/tSet.length*100);
+  if(!S.best||pct>S.best.pct){S.best={pct:pct,hits:tScore,total:tSet.length};save();}
+  let h='<div class="ud-head"><span class="k">Resultado</span><h2>'+(pct>=75?"Apto":"A repasar")+'</h2></div>';
+  h+='<div class="score">'+
+     '<div class="stat"><div class="v">'+pct+'%</div><div class="l">Nota</div></div>'+
+     '<div class="stat ok"><div class="v">'+tScore+'</div><div class="l">Aciertos</div></div>'+
+     '<div class="stat mal"><div class="v">'+(tSet.length-tScore)+'</div><div class="l">Fallos</div></div>'+
+     '<div class="stat"><div class="v">'+S.wrong.length+'</div><div class="l">Falladas pendientes</div></div></div>';
+  if(tFails.length){
+    h+='<h3 style="margin:18px 0 8px;font-size:var(--f-md);text-transform:uppercase;letter-spacing:.04em">Lo que has fallado</h3><div class="review">';
+    tFails.forEach(q=>{h+='<div class="rev"><div class="rq">'+q.q+'</div><div class="ra"><b>'+q.c.map(i=>"abc"[i]+') '+q.o[i]).join(" · ")+'</b><br>'+q.w+'</div></div>';});
+    h+='</div>';
+  }else{h+='<div class="aviso">Pleno. Cambia de unidad o pon el test en «Todas» para subir la dificultad.</div>';}
+  h+='<div class="bar" style="margin-top:20px"><button class="btn" id="again" type="button">Otro test</button>'+
+     (tFails.length?'<button class="btn ghost" id="redo" type="button">Repetir solo las falladas</button>':'')+'</div>';
+  p.innerHTML=h;
+  document.getElementById("again").onclick=renderTestHome;
+  const r=document.getElementById("redo"); if(r) r.onclick=()=>startTest(tFails.map(q=>q.i));
+}
+
+/* ============================ ORAL ============================ */
+function renderOral(){
+  const p=document.getElementById("p-oral");
+  let h='<p class="lead">Simulacro de examen oral: lee la pregunta, responde en voz alta y luego despliega el guion. El guion está ordenado como conviene contestar — definición, clasificación, detalle y cierre.</p><div class="oral">';
+  ORAL.forEach((o,i)=>{
+    h+='<article class="oq"><button type="button" data-i="'+i+'"><span class="qi">'+String(i+1).padStart(2,"0")+'</span>'+
+       '<span class="qt">'+o.q+'</span><span class="st">UD'+o.ud+' · ver guion</span></button>'+
+       '<div class="oa" hidden><ul>'+o.p.map(x=>'<li>'+x+'</li>').join('')+'</ul></div></article>';
+  });
+  h+='</div>';
+  p.innerHTML=h;
+  p.querySelectorAll(".oq > button").forEach(b=>b.onclick=()=>{
+    const a=b.nextElementSibling;a.hidden=!a.hidden;
+    b.querySelector(".st").textContent="UD"+ORAL[+b.dataset.i].ud+(a.hidden?" · ver guion":" · ocultar");
+  });
+}
+
+/* ============================ CHULETA ============================ */
+const CIRC=[
+ {n:"1er círculo · interior",who:"Escolta personal",d:"Las personas más próximas al protegido; la distancia depende de la situación concreta. Misión: cubrir y proteger de un ataque y realizar una rápida evacuación a lugar seguro."},
+ {n:"2º círculo",who:"Puestos de seguridad",d:"Guardan cierta distancia con el protegido, pero lo mantienen dentro de su campo de observación."},
+ {n:"3er círculo",who:"Patrullas móviles y grupos de información",d:"El más alejado. No controlan ni vigilan al protegido, pero están dentro del dispositivo para una posible actuación si ocurriese alguna desgracia."}
+];
+function renderChuleta(){
+  const p=document.getElementById("p-chuleta");
+  let h='<p class="lead">Las listas numeradas que caen sí o sí. Si te preguntan «cuántos» o «cuáles», sale de aquí.</p>';
+  h+='<div class="diagram"><svg viewBox="0 0 240 240" role="img" aria-label="Diagrama de los tres círculos concéntricos">'+
+     '<circle class="d-ring" data-c="2" cx="120" cy="120" r="112" fill="var(--azul-soft)" stroke="var(--azul)" stroke-width="1.5"></circle>'+
+     '<circle class="d-ring" data-c="1" cx="120" cy="120" r="80" fill="var(--surface-2)" stroke="var(--azul)" stroke-width="1.5"></circle>'+
+     '<circle class="d-ring" data-c="0" cx="120" cy="120" r="48" fill="var(--ambar-soft)" stroke="var(--ambar)" stroke-width="1.5"></circle>'+
+     '<circle cx="120" cy="120" r="20" fill="var(--azul)"></circle>'+
+     '<text x="120" y="124" text-anchor="middle" fill="var(--surface)" font-family="IBM Plex Mono, monospace" font-size="11">VIP</text>'+
+     '<text x="120" y="90" text-anchor="middle" fill="var(--ambar)" font-family="IBM Plex Mono, monospace" font-size="12">1</text>'+
+     '<text x="120" y="58" text-anchor="middle" fill="var(--azul)" font-family="IBM Plex Mono, monospace" font-size="12">2</text>'+
+     '<text x="120" y="26" text-anchor="middle" fill="var(--azul)" font-family="IBM Plex Mono, monospace" font-size="12">3</text>'+
+     '</svg><div class="d-info"><h4 id="cN"></h4><div class="who" id="cW"></div><p id="cD"></p>'+
+     '<div class="d-legend" id="cLeg"></div></div></div>';
+
+  h+='<div class="grid2" style="margin-top:16px">';
+  h+=ref("Teoría esférica","3 planos",["Plano <b>aéreo</b>","Plano <b>superficial</b>","Plano <b>subterráneo</b>"],true);
+  h+=ref("Escalones o niveles de seguridad","3 puestos",["<b>Puestos de vigilancia</b> — observar y comunicar novedades al superior","<b>Puestos de revisión y control</b> — filtro de acceso al área restringida","<b>Puestos especiales de seguridad</b> — función específica dentro del dispositivo"],true);
+  h+=ref("Técnicas de protección","3 tipos",["<b>Integral</b> — todos los aspectos: esfera profesional y personal","<b>Dinámica</b> — desplazamientos o traslado de un objeto","<b>Estática</b> — lugar fijo"],false);
+  h+=ref("Medidas de seguridad (Ley 5/2014)","5 medidas",["<b>Física</b> — barreras","<b>Electrónica</b> — detección","<b>Informática</b> — integridad, confidencialidad y disponibilidad","<b>Organizativa</b> — departamentos y planes de seguridad","<b>Personal</b> — resto de servicios"],false);
+  h+=ref("Principios de actuación","9 principios",["Legalidad","Integridad","Protección","Dignidad","Corrección","<b>Congruencia</b> — medidas proporcionadas a los <b>riesgos</b>","<b>Proporcionalidad</b> — uso de <b>técnicas y medios</b>","Reserva profesional","Colaboración con las FCS"],true);
+  h+=ref("Clasificación de riesgos","4 clases",["<b>Naturales</b>","<b>Tecnológicos</b>","<b>Por accidente</b>","<b>Por malas acciones o comportamiento de personas</b>"],false);
+  h+=ref("Secuencia ante agresión","4 pasos",["<b>Avisar</b> del ataque: tipo, agresor y dirección","<b>Cobertura</b>: reducir superficie de blanco y silueta","<b>Evacuación</b> al lugar seguro preestablecido","<b>Neutralizar</b>: al arma, no al cuerpo"],true);
+  h+=ref("Maniobras evasivas","4 maniobras",["<b>En Y</b> — 180º con marcha atrás intermedia","<b>Vuelta corta</b> — parar y girar marcha atrás","<b>California</b> — freno de mano, derrape","<b>Giro en J</b> — marcha atrás y salir hacia delante","<i>Y</i> y <i>California</i>: solo si no hay tiempo para reaccionar"],true);
+  h+=ref("Vehículos de la caravana","4 coches",["<b>Piloto</b> — equipo de seguridad + Policía local","<b>VIP</b> — protegido, acompañantes y Jefe del Equipo","<b>Adicional</b> — repuesto del VIP","<b>Escolta</b> — resto del equipo"],true);
+  h+=ref("Itinerarios","4 tipos",["<b>Principal</b>","<b>Alternativo</b>","<b>De evacuación</b> — centro de urgencia o asistencial","<b>De fuga</b> — puntos seguros elegidos de antemano"],true);
+  h+=ref("Valores éticos en seguridad","6 valores",["Espíritu de servicio","Conciencia de grupo","Honor","Disciplina consciente","Excelencia en las labores","Respeto legal"],true);
+  h+=ref("Cifras que preguntan","Números",["<b>2 minutos</b> — retardo máximo del sistema de bloqueo","<b>1 a 5</b> — miembros de una cápsula de protección","<b>5 meses</b> — revisión de los itinerarios","<b>14 cm</b> — longitud del kubotán","<b>2 / 4 / 5 años</b> — sanción grave / muy grave / condena por intromisión ilegítima","<b>18 años</b> — edad mínima para la habilitación"],false);
+  h+='</div>';
+
+  h+='<div class="ref" style="margin-top:16px"><h3>Posición de los coches</h3><div class="cnt">Sentido de la marcha hacia arriba</div><div class="caravana">'+
+     conv("1 coche de escolta",["VIP","VE"])+conv("2 coches de escolta",["VE","VIP","VE"])+conv("3 coches de escolta",["VE","VIP","VE","VE"])+
+     '</div></div>';
+
+  h+='<div class="aviso" style="margin-top:16px"><b>Fe de erratas del manual.</b> En la página 17 el manual cita «Ley 5/2014, de <s>14</s> de abril». La fecha correcta —y la que repite el propio manual en el resto de páginas— es <b>Ley 5/2014, de 4 de abril, de Seguridad Privada</b>. Si te lo preguntan, di <b>4 de abril</b>.</div>';
+  p.innerHTML=h;
+
+  const leg=document.getElementById("cLeg");
+  CIRC.forEach((c,i)=>{
+    const b=document.createElement("button");b.type="button";b.dataset.c=i;
+    b.innerHTML='<span class="sw" style="background:'+(i===0?"var(--ambar)":"var(--azul)")+';opacity:'+(1-i*0.3)+'"></span>'+c.n;
+    b.onclick=()=>selCirc(i);leg.appendChild(b);
+  });
+  p.querySelectorAll(".d-ring").forEach(r=>r.onclick=()=>selCirc(+r.dataset.c));
+  selCirc(0);
+}
+function selCirc(i){
+  const c=CIRC[i];
+  document.getElementById("cN").textContent=c.n;
+  document.getElementById("cW").textContent=c.who;
+  document.getElementById("cD").innerHTML=c.d;
+  document.querySelectorAll("#cLeg button").forEach(b=>b.setAttribute("aria-pressed",String(+b.dataset.c===i)));
+}
+function ref(t,cnt,items,ordered){
+  const tag=ordered?"ol":"ul";
+  return '<div class="ref"><h3>'+t+'</h3><div class="cnt">'+cnt+'</div><'+tag+'>'+items.map(x=>'<li>'+x+'</li>').join('')+'</'+tag+'></div>';
+}
+function conv(cap,cars){
+  return '<div class="conv"><div class="cap">'+cap+'</div>'+
+    cars.slice().reverse().map(c=>'<div class="car '+(c==="VIP"?"vip":"ve")+'">'+c+'</div>').join('<div class="arrow">&#9650;</div>')+
+    '</div>';
+}
+
+/* ============================ TEMA ============================ */
+document.getElementById("themeBtn").onclick=()=>{
+  const r=document.documentElement;
+  const cur=r.getAttribute("data-theme");
+  const dark=cur?cur==="dark":matchMedia("(prefers-color-scheme:dark)").matches;
+  r.setAttribute("data-theme",dark?"light":"dark");
+};
+
+/* ============================ INIT ============================ */
+renderTemario();renderFichas();renderTestHome();renderOral();renderChuleta();updHud();
+try{if(!localStorage.getItem(KEY))document.getElementById("savedNote").textContent="Tu progreso se guarda en este navegador";}catch(e){document.getElementById("savedNote").textContent="Progreso no guardado (almacenamiento bloqueado)";}
+</script>
+
+</body>
+</html>
