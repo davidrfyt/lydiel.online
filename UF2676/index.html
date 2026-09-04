@@ -227,11 +227,55 @@ section.panel[hidden]{display:none!important}
 .conv .car.ve{background:var(--surface-2);color:var(--ink-2)}
 .conv .cap{font-family:var(--mono);font-size:10px;color:var(--muted);margin-top:4px;text-align:center;order:-1}
 .conv .arrow{color:var(--muted);font-size:12px}
+
+/* ---------- puerta de acceso ---------- */
+#gate{position:fixed;inset:0;z-index:50;background:var(--bg);display:grid;place-items:center;padding:24px}
+#gate[hidden]{display:none!important}
+.gate-card{width:100%;max-width:460px;background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:30px 28px;box-shadow:var(--shadow)}
+.gate-card .eyebrow{margin-bottom:10px}
+.gate-card h2{font-size:var(--f-xl);text-transform:uppercase;letter-spacing:.02em;line-height:1.1;margin-bottom:8px}
+.gate-card p{color:var(--muted);font-size:var(--f-sm);margin:0 0 18px;max-width:44ch}
+.gate-field{display:flex;flex-direction:column;gap:7px;margin-bottom:14px}
+.gate-field label{font-family:var(--mono);font-size:var(--f-xs);letter-spacing:.1em;text-transform:uppercase;color:var(--ambar)}
+.gate-field input{font-family:var(--mono);font-size:var(--f-md);background:var(--surface-2);border:1px solid var(--line);border-radius:8px;padding:11px 13px;color:var(--ink);letter-spacing:.04em}
+.gate-field input:focus{outline:2px solid var(--ambar);outline-offset:1px;border-color:var(--ambar)}
+.gate-row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.gate-err{color:var(--mal);font-size:var(--f-sm);min-height:20px;margin:10px 0 0}
+.gate-note{margin-top:18px;padding-top:14px;border-top:1px solid var(--line-soft);font-size:var(--f-xs);color:var(--muted);line-height:1.5}
+.gate-note b{color:var(--ink-2)}
+.link{background:none;border:0;padding:0;color:var(--azul);cursor:pointer;font-size:var(--f-sm);text-decoration:underline;text-underline-offset:3px}
+.link:hover{color:var(--ambar)}
+/* estado de sincronizacion */
+.sync{display:inline-flex;align-items:center;gap:6px;font-family:var(--mono);font-size:10px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.sync .dot{width:7px;height:7px;border-radius:50%;background:var(--muted);flex:0 0 auto}
+.sync[data-s="ok"] .dot{background:var(--ok)} .sync[data-s="ok"]{color:var(--ok)}
+.sync[data-s="wait"] .dot{background:var(--ambar)} .sync[data-s="wait"]{color:var(--ambar)}
+.sync[data-s="err"] .dot{background:var(--mal)} .sync[data-s="err"]{color:var(--mal)}
+.who-chip{font-family:var(--mono);font-size:var(--f-xs);color:var(--ink-2);background:var(--surface-2);border:1px solid var(--line-soft);border-radius:999px;padding:3px 10px;max-width:150px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;display:inline-block;vertical-align:middle}
 footer{margin-top:44px;padding-top:16px;border-top:1px solid var(--line);color:var(--muted);font-size:var(--f-xs);display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
 </style>
 </head>
 <body>
 
+<div id="gate">
+  <div class="gate-card">
+    <div class="eyebrow"><span>UF2676</span><b>Tecnicas de proteccion de personas</b></div>
+    <h2>Identifica tu progreso</h2>
+    <p>Escribe tu token de estudio. El progreso, la mejor nota y las preguntas falladas quedan asociados a el, no a este navegador: usa el mismo token en el movil y sigues donde lo dejaste.</p>
+    <div class="gate-field">
+      <label for="gateInput">Token</label>
+      <input id="gateInput" type="text" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="p. ej. david-escolta-2026">
+    </div>
+    <div class="gate-row">
+      <button class="btn" id="gateGo" type="button">Entrar</button>
+      <button class="link" id="gateGen" type="button">Generar uno al azar</button>
+    </div>
+    <p class="gate-err" id="gateErr"></p>
+    <div class="gate-note">
+      <b>Esto no es una contrasena.</b> Es la etiqueta de tu progreso. Cualquiera que escriba tu mismo token vera tus marcas, asi que elige algo que no sea obvio. La pagina es publica: el token identifica, no protege.
+    </div>
+  </div>
+</div>
 <header class="top">
   <div class="top-in">
     <div class="brand">
@@ -249,7 +293,7 @@ footer{margin-top:44px;padding-top:16px;border-top:1px solid var(--line);color:v
       <div class="hud-txt">
         <b id="hudDone">0 / 0</b>
         temas dominados
-        <div style="margin-top:8px"><button class="theme-btn" id="themeBtn" type="button">Tema</button></div>
+        <div style="margin-top:8px;display:flex;gap:6px;flex-wrap:wrap;align-items:center"><button class="theme-btn" id="themeBtn" type="button">Tema</button><button class="theme-btn" id="outBtn" type="button">Salir</button></div><div style="margin-top:8px;display:flex;gap:8px;align-items:center;flex-wrap:wrap"><span class="who-chip" id="whoChip">-</span><span class="sync" id="syncBadge" data-s="local"><span class="dot"></span><span id="syncTxt">local</span></span></div>
       </div>
     </div>
   </div>
@@ -497,11 +541,115 @@ const ORAL=[
 {ud:2,q:"Funciones del escolta, diferencia con el guardaespaldas y valores éticos.",p:["El <b>escolta</b> es un profesional de la seguridad <b>pública o privada</b> especializado en protección de personalidades; pertenece a las FCS del Estado o a una empresa de seguridad privada. Su función principal es <b>proteger a las personas</b>, con dedicación <b>plena</b>, mentalizado para el ataque con arma de fuego; los escoltas privados <b>pueden portar armas</b>.","El <b>guardaespaldas</b> es una persona <b>no profesional y no habilitada</b> contratada por un particular: <b>no puede portar armas</b> ni ejercer las funciones propias del escolta.","Habilidades (Mora, 2008): <b>prácticas</b> (físico, defensa personal, tácticas, conducción ofensiva-evasiva, asunción de responsabilidades, equilibrio mental), <b>teóricas</b> (explosivos, primeros auxilios, protocolo) y <b>perceptivas</b> (relación con el entorno, observación, retentiva).","<b>Valores éticos</b>: espíritu de servicio, conciencia de grupo, honor, disciplina consciente, excelencia en las labores y respeto legal."]}
 ];
 
-/* ============================ ESTADO ============================ */
-const KEY="uf2676:v1";
+/* ============================ CONFIG ============================ */
+/* Pega aqui la URL de tu Worker de Cloudflare, sin barra final.
+   Ejemplo: "https://uf2676.davidrfyt.workers.dev"
+   Si se deja vacio, el progreso se guarda solo en este navegador. */
+const CONFIG={SYNC_URL:""};
+
+/* ============================ ESTADO / TOKEN ============================ */
+const TKEY="uf2676:token";
+const LEGACY="uf2676:v1";
+const TOKEN_RE=/^[A-Za-z0-9_-]{6,64}$/;
+let TOKEN=null;
 let S={done:{},best:null,wrong:[]};
-try{const raw=localStorage.getItem(KEY); if(raw) S=Object.assign(S,JSON.parse(raw));}catch(e){}
-function save(){try{localStorage.setItem(KEY,JSON.stringify(S));}catch(e){}}
+let pushTimer=null;
+
+function lsGet(k){try{return localStorage.getItem(k);}catch(e){return null;}}
+function lsSet(k,v){try{localStorage.setItem(k,v);}catch(e){}}
+function lsDel(k){try{localStorage.removeItem(k);}catch(e){}}
+function slotKey(){return "uf2676:p:"+TOKEN;}
+
+function setSync(state,txt){
+  const b=document.getElementById("syncBadge");
+  if(!b)return;
+  b.dataset.s=state;
+  document.getElementById("syncTxt").textContent=txt;
+}
+
+function save(){
+  lsSet(slotKey(),JSON.stringify(S));
+  if(!CONFIG.SYNC_URL)return;
+  setSync("wait","guardando");
+  clearTimeout(pushTimer);
+  pushTimer=setTimeout(push,800);
+}
+
+async function push(){
+  if(!CONFIG.SYNC_URL||!TOKEN)return;
+  try{
+    const r=await fetch(CONFIG.SYNC_URL+"/p/"+encodeURIComponent(TOKEN),{
+      method:"PUT",headers:{"Content-Type":"application/json"},
+      body:JSON.stringify({done:S.done,best:S.best,wrong:S.wrong})
+    });
+    if(!r.ok)throw new Error("HTTP "+r.status);
+    setSync("ok","sincronizado");
+  }catch(e){
+    setSync("err","sin conexion");
+  }
+}
+
+async function pull(){
+  if(!CONFIG.SYNC_URL||!TOKEN)return null;
+  try{
+    const r=await fetch(CONFIG.SYNC_URL+"/p/"+encodeURIComponent(TOKEN),{method:"GET"});
+    if(!r.ok)throw new Error("HTTP "+r.status);
+    return await r.json();
+  }catch(e){return null;}
+}
+
+function hasData(o){
+  return !!o && ((o.done&&Object.keys(o.done).length)||o.best||(o.wrong&&o.wrong.length));
+}
+
+async function unlock(token){
+  TOKEN=token;
+  lsSet(TKEY,token);
+  document.getElementById("whoChip").textContent=token;
+  document.getElementById("whoChip").title="Token de estudio: "+token;
+
+  /* 1. lo que haya en este navegador para ese token */
+  let local=null;
+  try{const raw=lsGet(slotKey()); if(raw)local=JSON.parse(raw);}catch(e){}
+  /* 2. progreso antiguo sin token, se migra una sola vez */
+  if(!hasData(local)){
+    try{const raw=lsGet(LEGACY); if(raw){local=JSON.parse(raw);lsDel(LEGACY);}}catch(e){}
+  }
+
+  if(CONFIG.SYNC_URL){
+    setSync("wait","conectando");
+    const remoto=await pull();
+    if(hasData(remoto)){
+      S={done:remoto.done||{},best:remoto.best||null,wrong:remoto.wrong||[]};
+      setSync("ok","sincronizado");
+    }else if(hasData(local)){
+      S={done:local.done||{},best:local.best||null,wrong:local.wrong||[]};
+      await push();
+    }else{
+      S={done:{},best:null,wrong:[]};
+      setSync(remoto===null?"err":"ok",remoto===null?"sin conexion":"sincronizado");
+    }
+  }else{
+    if(hasData(local))S={done:local.done||{},best:local.best||null,wrong:local.wrong||[]};
+    else S={done:{},best:null,wrong:[]};
+    setSync("local","solo este equipo");
+  }
+
+  lsSet(slotKey(),JSON.stringify(S));
+  document.getElementById("gate").hidden=true;
+  boot();
+}
+
+function lock(){
+  clearTimeout(pushTimer);
+  lsDel(TKEY);
+  TOKEN=null;
+  S={done:{},best:null,wrong:[]};
+  document.getElementById("gate").hidden=false;
+  const i=document.getElementById("gateInput");
+  i.value="";i.focus();
+  document.getElementById("gateErr").textContent="";
+}
 
 const ALL_BLOCKS=TEMARIO.flatMap(u=>u.bloques.map(b=>b.id));
 function updHud(){
@@ -820,9 +968,44 @@ document.getElementById("themeBtn").onclick=()=>{
   r.setAttribute("data-theme",dark?"light":"dark");
 };
 
+/* ============================ PUERTA ============================ */
+function genToken(){
+  const a="abcdefghijkmnpqrstuvwxyz23456789";
+  let t="";for(let i=0;i<14;i++)t+=a[Math.floor(Math.random()*a.length)];
+  return t.slice(0,5)+"-"+t.slice(5,9)+"-"+t.slice(9);
+}
+function tryUnlock(){
+  const i=document.getElementById("gateInput");
+  const err=document.getElementById("gateErr");
+  const v=i.value.trim();
+  if(!v){err.textContent="Escribe un token o genera uno.";i.focus();return;}
+  if(!TOKEN_RE.test(v)){err.textContent="Entre 6 y 64 caracteres. Solo letras, numeros, guion y guion bajo.";i.focus();return;}
+  err.textContent="";
+  document.getElementById("gateGo").textContent="Entrando...";
+  unlock(v).finally(()=>{document.getElementById("gateGo").textContent="Entrar";});
+}
+document.getElementById("gateGo").onclick=tryUnlock;
+document.getElementById("gateInput").addEventListener("keydown",e=>{if(e.key==="Enter")tryUnlock();});
+document.getElementById("gateGen").onclick=()=>{
+  const i=document.getElementById("gateInput");
+  i.value=genToken();i.focus();
+  document.getElementById("gateErr").textContent="";
+};
+document.getElementById("outBtn").onclick=lock;
+
 /* ============================ INIT ============================ */
-renderTemario();renderFichas();renderTestHome();renderOral();renderChuleta();updHud();
-try{if(!localStorage.getItem(KEY))document.getElementById("savedNote").textContent="Tu progreso se guarda en este navegador";}catch(e){document.getElementById("savedNote").textContent="Progreso no guardado (almacenamiento bloqueado)";}
+let booted=false;
+function boot(){
+  renderTemario();renderFichas();renderTestHome();renderOral();renderChuleta();updHud();
+  booted=true;
+  document.getElementById("savedNote").textContent=
+    CONFIG.SYNC_URL?("Progreso guardado en el token "+TOKEN):("Progreso guardado en este navegador, token "+TOKEN);
+}
+(function start(){
+  const t=lsGet(TKEY);
+  if(t&&TOKEN_RE.test(t)){unlock(t);}
+  else{document.getElementById("gate").hidden=false;document.getElementById("gateInput").focus();}
+})();
 </script>
 
 </body>
