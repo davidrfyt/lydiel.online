@@ -279,91 +279,6 @@ const TEMAS = [
 },
 
 /* ============ MF0081 — UF2676 ============ */
-{
-  id: "t08", mod: "mf0081", n: 1, t: "UF2676 · La protección integral",
-  c: [
-    { h: "Conceptos y técnicas", l: [
-      "<b>Seguridad privada</b>: forma en que los agentes privados contribuyen a reducir riesgos; seguridad <b>adicional</b> a la pública, <b>complementaria y subordinada</b> a ella.",
-      "<b>Protección</b>: acción y efecto de proteger. Sistema de medidas aplicables en función de lo que se requiera proteger. Más específico que seguridad.",
-      "<b>Integral</b>: cubre todos los aspectos, esfera profesional y personal; contempla dinámica y estática.",
-      "<b>Dinámica</b>: dispositivo para proteger en los <b>desplazamientos</b> o el traslado de un objeto.",
-      "<b>Estática</b>: dispositivo para custodiar en un <b>lugar fijo</b>."
-    ]},
-    { h: "Habilitación (art. 28 Ley 5/2014)", l: [
-      "<b>Mayor de edad</b> (18 años), capacidad física y aptitud psicológica, nacionalidad UE/EEE o tercer Estado con convenio, formación previa.",
-      "<b>Carecer de antecedentes penales</b> por delitos dolosos.",
-      "No sancionado <b>2 años</b> (grave) ni <b>4 años</b> (muy grave); no separado de FCS o FFAA en <b>2 años</b>; no condenado por intromisión ilegítima en <b>5 años</b>.",
-      "Habilita la <b>Dirección General de la Policía</b>, excepto guardas rurales, que corresponde a la <b>Guardia Civil</b>.",
-      "La pérdida de un requisito <b>extingue</b> la habilitación y cancela de oficio la inscripción en el Registro Nacional."
-    ]},
-    { h: "Principios de actuación", l: [
-      "Legalidad, integridad, protección, dignidad, corrección.",
-      "<b>Congruencia</b>: medidas proporcionadas y adecuadas <b>a los riesgos</b>.",
-      "<b>Proporcionalidad</b>: en el uso de las <b>técnicas y medios</b> de defensa e investigación.",
-      "Reserva profesional y colaboración con las Fuerzas y Cuerpos de Seguridad."
-    ]},
-    { h: "Riesgos y protección integral", l: [
-      "<b>Peligro</b>: acción o condición con potencial de producir daño. Se detecta asignando valores a la <b>posibilidad</b> y la <b>seriedad</b> en escala numérica.",
-      "Riesgos: <b>naturales</b>, <b>tecnológicos</b>, <b>por accidente</b> y <b>por malas acciones o comportamiento de personas</b>.",
-      "La protección integral se fundamenta en la <b>prevención</b> (evitar el suceso) y la <b>protección</b> (neutralizar el suceso ya acontecido).",
-      "Medidas de seguridad de la Ley 5/2014: <b>física, electrónica, informática, organizativa y personal</b>."
-    ]},
-    { h: "Teorías de la protección dinámica", l: [
-      "<b>Teoría esférica</b>: espacio contenido en una esfera cuyo centro es el protegido; tres planos: <b>aéreo, superficial y subterráneo</b>.",
-      "<b>Círculos concéntricos</b>: <b>1º</b> escolta personal (cubrir, proteger y evacuar), <b>2º</b> puestos de seguridad (protegido en su campo de observación), <b>3º</b> patrullas móviles y grupos de información (no vigilan al protegido).",
-      "Escalones o niveles: <b>puestos de vigilancia</b>, <b>puestos de revisión y control</b> y <b>puestos especiales de seguridad</b>.",
-      "<b>Cuartos seguros</b>: acceso rápido y fácil, buenas comunicaciones, capacidad de defensa, estar limitado y facilidad para primeros auxilios."
-    ]},
-    { h: "Protección en movimiento y estática", l: [
-      "Secuencia ante agresión: <b>avisar</b> (tipo, agresor y dirección), <b>cobertura</b> (reducir superficie de blanco y silueta), <b>evacuación</b> al lugar seguro preestablecido y <b>neutralizar</b> yendo al arma, no al cuerpo.",
-      "Cápsulas de protección: recomendable de <b>1 a 5 miembros</b>.",
-      "Escaleras: el protegido va pegado a la <b>pared</b>; el resto forma círculo. Ascensor: el protegido siempre con un escolta y el resto sube por las escaleras.",
-      "<b>Líneas de control</b>: dos escoltas delante y dos detrás, observando <b>las manos</b>.",
-      "Protección estática: se divide en <b>interior</b> y <b>exterior</b>. <b>Avanzada</b>: requisar el lugar antes de la entrada del protegido."
-    ]}
-  ]
-},
-{
-  id: "t09", mod: "mf0081", n: 2, t: "UF2676 · Actuación en vehículos",
-  c: [
-    { h: "El vehículo de seguridad", l: [
-      "Cómodo, con <b>aire acondicionado</b> (permite el cierre total ante ataque con gas), seguro y rápido, completamente <b>blindado</b> (carrocería, cristales, bajos y neumáticos) y con buena relación potencia/peso.",
-      "<b>Sistema de bloqueo</b>: corta la inyección de combustible y acciona alarma acústica y luminosa, con retardo de <b>2 minutos como máximo</b>.",
-      "<b>Rejilla metálica</b> en el interior del tubo del depósito.",
-      "<b>Sistema de protección del depósito</b> de combustible.",
-      "<b>Cierre especial de la caja</b> mediante candado o cerradura de seguridad."
-    ]},
-    { h: "Conductor y requisa", l: [
-      "Entrenamiento de <b>conducción de alta seguridad</b>; conocer el vehículo y su mecánica y los itinerarios programados y alternativos.",
-      "Factores: <b>límites personales</b> (reacción, concentración, reflejos), <b>del vehículo</b> (características técnicas) y <b>externos</b> (pavimento, tráfico, meteorología).",
-      "Revisión <b>diaria</b>. Requisa exterior sistemática y preestablecida, requisa interior (asientos, bandeja trasera, guantera) y por último motor y maletero.",
-      "Apoyo con perros adiestrados, espejos especiales o detectores de explosivos."
-    ]},
-    { h: "Conducción evasiva", l: [
-      "<b>Ofensiva</b>: aprovecha peso, potencia y velocidad para afrontar el ataque de forma activa, llegando a <b>colisionar</b>.",
-      "<b>Defensiva</b>: <b>evita colisionar</b>, variando la trayectoria con un giro de <b>180 grados</b>.",
-      "Maniobras: <b>en Y</b>, <b>vuelta corta</b>, <b>California</b> (freno de mano, derrape) y <b>giro en J</b>.",
-      "La <b>Y</b> y la <b>California</b> se usan solo cuando <b>no hay tiempo</b> para reaccionar.",
-      "Circular por el <b>carril medio o más próximo a la calzada</b> para poder maniobrar."
-    ]},
-    { h: "Normas de conducción", l: [
-      "Cristales subidos y puertas aseguradas.",
-      "<b>No recoger ni auxiliar a extraños</b>.",
-      "Vías amplias y bien iluminadas.",
-      "Detenerse <b>solo</b> ante fuerza pública identificada con su placa.",
-      "Revisar el vehículo antes del trayecto y no bajar al protegido hasta comprobar que no hay peligro.",
-      "Rutas aleatorias previamente estudiadas; varios escoltas viajan en <b>vehículos separados y en caravana</b>."
-    ]},
-    { h: "Caravanas e itinerarios", l: [
-      "<b>Caravana</b>: mínimo el coche del protegido y el de los escoltas. <b>Informales</b> (itinerario no público) y <b>formales</b> (conocido por todos).",
-      "Coches: <b>piloto</b> (equipo + Policía local), <b>VIP</b> (protegido, acompañantes y Jefe del Equipo), <b>adicional</b> (repuesto del VIP) y <b>escolta</b>.",
-      "Posiciones: 1 escolta <b>detrás</b>; 2 escoltas <b>uno delante y otro detrás</b>; 3 escoltas <b>uno delante y dos detrás</b>.",
-      "Itinerarios: <b>principal</b>, <b>alternativo</b>, <b>de evacuación</b> (centro de urgencia o asistencial) y <b>de fuga</b> (puntos seguros elegidos de antemano).",
-      "El estudio lo hacen los escoltas antes de la salida y se revisa <b>cada 5 meses</b>.",
-      "Valores éticos: espíritu de servicio, conciencia de grupo, honor, disciplina consciente, excelencia en las labores y respeto legal."
-    ]}
-  ]
-},
 
 /* ============ MF0082 ============ */
 {
@@ -934,6 +849,383 @@ const TEMAS = [
     ]}
   ]
 },
+/* ============ UF2676 · Protección de personas (MF0081) ============ */
+{
+  id: "t23", mod: "mf0081", n: 1, t: "UF2676 · Seguridad, seguridad privada y protección",
+  c: [
+    { h: "Conceptos", l: [
+      "<b>Seguridad</b>: no es solo un valor jurídico, normativo o político; también es un <b>valor social</b>. Pilar de la sociedad, base de la libertad y la igualdad.",
+      "<b>Seguridad privada</b>: forma en que los <b>agentes privados</b> contribuyen a reducir riesgos. Ofrecen seguridad <b>adicional</b> a la que provee la seguridad pública. Es medida de <b>anticipación y prevención</b>.",
+      "<b>Protección</b>: acción y efecto de proteger. Sistema diseñado e integrado por <b>medidas aplicables en función de lo que se requiera proteger</b>. Término <b>más específico</b> que seguridad."
+    ]},
+    { h: "Encaje constitucional", l: [
+      "Art. <b>149.1.29ª</b> CE: competencia exclusiva del Estado en seguridad pública.",
+      "Art. <b>104</b> CE: misión de las Fuerzas y Cuerpos de Seguridad, bajo dependencia del Gobierno: proteger el libre ejercicio de derechos y libertades y garantizar la seguridad ciudadana.",
+      "Las actividades de seguridad privada son <b>complementarias y subordinadas</b> respecto de la seguridad pública."
+    ]},
+    { h: "Nivel de seguridad", l: [
+      "Depende de la <b>eficiencia de las medidas</b> y de <b>factores externos o internos</b> de la zona donde el hombre desarrolla su actividad."
+    ]}
+  ]
+},
+{
+  id: "t24", mod: "mf0081", n: 2, t: "UF2676 · Personal de seguridad privada y habilitación",
+  c: [
+    { h: "Quién puede ejercer (Ley 5/2014)", l: [
+      "Vigilantes de seguridad y su especialidad de <b>vigilantes de explosivos</b>.",
+      "<b>Escoltas privados</b>.",
+      "Guardas rurales y sus especialidades: guardas de caza y guardapescas marítimos.",
+      "Jefes de seguridad, directores de seguridad y detectives privados."
+    ]},
+    { h: "Habilitación", l: [
+      "La otorga el <b>Ministerio del Interior</b>; la tarjeta de identidad profesional es el <b>documento público de acreditación</b>.",
+      "Habilita la <b>Dirección General de la Policía</b>, <b>excepto</b> guardas rurales y sus especialidades → <b>Dirección General de la Guardia Civil</b>.",
+      "Solo se ejercen las funciones para las que se esté habilitado.",
+      "La <b>pérdida de un requisito</b> extingue la habilitación y cancela de oficio la inscripción en el Registro Nacional."
+    ]},
+    { h: "Requisitos generales (art. 28)", l: [
+      "<b>Mayor de edad</b> (18 años cumplidos al presentarse a las pruebas).",
+      "<b>Capacidad física</b> y <b>aptitud psicológica</b>.",
+      "<b>Nacionalidad</b> de un Estado de la UE, del EEE, o de un tercer Estado con convenio con España.",
+      "Poseer la <b>formación previa</b> requerida.",
+      "<b>Carecer de antecedentes penales</b> por delitos dolosos.",
+      "No haber sido sancionado en los <b>2 años</b> anteriores por infracción <b>grave</b>, ni en los <b>4 años</b> por <b>muy grave</b>, en materia de seguridad privada.",
+      "No haber sido <b>separado del servicio</b> en las FCS o FFAA en los <b>2 años</b> anteriores.",
+      "No haber sido <b>condenado</b> por intromisión ilegítima en honor, intimidad, propia imagen o secreto de las comunicaciones en los <b>5 años</b> anteriores.",
+      "Superar las <b>pruebas de comprobación</b> que establezca el Ministerio del Interior."
+    ]}
+  ]
+},
+{
+  id: "t25", mod: "mf0081", n: 3, t: "UF2676 · Principios básicos de actuación",
+  c: [
+    { h: "Los nueve principios", l: [
+      "<b>Legalidad</b>: solo medios y acciones conforme al ordenamiento jurídico vigente.",
+      "<b>Integridad</b>: cumplir diligentemente los deberes, oponiéndose a todo acto de corrupción.",
+      "<b>Protección</b>: desarrollar efectivamente sus responsabilidades, sin inhibición ante hechos ilícitos o peligrosos.",
+      "<b>Dignidad</b> en el ejercicio de sus funciones.",
+      "<b>Corrección</b>: conducta irreprochable, evitando abuso, arbitrariedad o violencia.",
+      "<b>Congruencia</b>: medidas <b>proporcionadas y adecuadas a los riesgos</b>.",
+      "<b>Proporcionalidad</b> en el uso de las técnicas y medios de defensa e investigación.",
+      "<b>Reserva profesional</b> sobre los hechos que conozca.",
+      "<b>Colaboración</b> con las FCS, observando las instrucciones policiales concretas."
+    ]},
+    { h: "Ojo en el examen", l: [
+      "<b>Congruencia</b> = medidas proporcionadas <b>a los riesgos</b>. <b>Proporcionalidad</b> = uso de <b>técnicas y medios</b> de defensa. Se confunden siempre."
+    ]}
+  ]
+},
+{
+  id: "t26", mod: "mf0081", n: 4, t: "UF2676 · Técnicas y fundamentos de la protección",
+  c: [
+    { h: "Las tres técnicas", l: [
+      "<b>Integral</b>: cobertura en <b>todos los aspectos</b> de la persona, esfera profesional <b>y</b> personal. Contempla la dinámica y la estática.",
+      "<b>Dinámica</b>: dispositivo organizado para proteger a una persona <b>en sus desplazamientos</b>, o en el traslado de un objeto.",
+      "<b>Estática</b>: dispositivo organizado para custodiar a una persona en un <b>lugar fijo</b>."
+    ]},
+    { h: "Fundamentos", l: [
+      "Crear una <b>zona de seguridad</b>: reduce el porcentaje de peligros y transmite sensación de seguridad y tranquilidad.",
+      "Proteger <b>sin juzgar</b> a la persona y <b>sin implicarse emocionalmente</b>, para no reducir la efectividad.",
+      "<b>Anticipación a los riesgos</b>: la previsión es el principal factor de eficacia.",
+      "Medidas preventivas: <b>eliminar</b> los riesgos, <b>anticiparse</b> al agresor previniendo su acción, y <b>ensayar y evaluar</b> el plan de seguridad."
+    ]},
+    { h: "Causas que justifican la protección", l: [
+      "Políticas, ideológicas, psicológicas, religiosas, raciales, personales y <b>monetarias o económicas</b>."
+    ]}
+  ]
+},
+{
+  id: "t27", mod: "mf0081", n: 5, t: "UF2676 · Fuentes de peligro y gestión de riesgos",
+  c: [
+    { h: "Peligro", l: [
+      "Situación —<b>acción o condición</b>— que ostenta el <b>potencial de producir un daño</b> sobre una persona o cosa.",
+      "Forma más común y efectiva de detectarlo: asignar valores a la <b>posibilidad</b> y a la <b>seriedad</b> mediante una <b>escala numérica</b>; los más serios reciben los valores más altos."
+    ]},
+    { h: "Clasificación de riesgos", l: [
+      "<b>Naturales</b>: inundaciones, rayos, incendios, terremotos.",
+      "<b>Tecnológicos</b>: fallos en instalaciones, interrupción eléctrica o de agua, fuego, explosión de equipos.",
+      "<b>Por accidente</b>: heridas a personas o daños en algún edificio.",
+      "<b>Por malas acciones o comportamiento de personas</b>: intrusión, asalto, robo, amenaza de bomba, atentados, vandalismo, disturbios civiles y huelgas."
+    ]},
+    { h: "Medidas ante cualquier riesgo", l: [
+      "Organizar y coordinar el <b>sistema interno de seguridad</b> mediante manuales que designen funciones y responsabilidades.",
+      "Implantar <b>barreras físicas</b> suficientes.",
+      "Instalar <b>sistemas de alarma</b> en domicilio y lugar de trabajo.",
+      "<b>Detectores automáticos</b> contra incendios que avisen a los servicios de extinción.",
+      "Contar con un <b>equipo bien formado y equipado</b>.",
+      "Buscar el <b>equilibrio</b>: alto riesgo → movimiento formal protocolario; riesgo bajo → movimientos más informales."
+    ]}
+  ]
+},
+{
+  id: "t28", mod: "mf0081", n: 6, t: "UF2676 · La protección integral y las medidas de la Ley 5/2014",
+  c: [
+    { h: "Protección integral", l: [
+      "Servicio cuyo objetivo es un <b>entorno seguro</b> mediante un dispositivo que <b>neutralice</b> los peligros; debe ser <b>preventivo y disuasorio</b>, y permitir controlar y reaccionar mediante <b>neutralización, cobertura y evacuación</b>.",
+      "Se extiende a la esfera <b>profesional y personal</b>, y cada una se cubre desde la protección dinámica y la estática.",
+      "Se fundamenta en <b>dos aspectos</b>: <b>la prevención</b> (actuaciones para evitar un suceso) y <b>la protección</b> (actuaciones para neutralizar el suceso <b>ya acontecido</b>, con medios humanos y técnicos, para salvar la vida)."
+    ]},
+    { h: "Medidas de seguridad de la Ley 5/2014", l: [
+      "<b>Física</b>: impedir o dificultar el acceso mediante barreras físicas.",
+      "<b>Electrónica</b>: detectar o advertir amenazas mediante dispositivos electrónicos.",
+      "<b>Informática</b>: integridad, confidencialidad y disponibilidad de los sistemas de información.",
+      "<b>Organizativa</b>: planificación de cometidos y funciones; p. ej. departamentos de seguridad y planes de seguridad.",
+      "<b>Personal</b>: prestación de servicios de seguridad distintos de los anteriores.",
+      "Las medidas cuentan con evaluación de organismos de certificación acreditados y tienen <b>vigencia indefinida</b>, salvo deterioro o nueva instalación."
+    ]}
+  ]
+},
+{
+  id: "t29", mod: "mf0081", n: 7, t: "UF2676 · Protección dinámica: teoría esférica y círculos concéntricos",
+  c: [
+    { h: "Teoría esférica", l: [
+      "Consiste en abrir un <b>espacio contenido en una esfera</b> cuyo <b>centro es la persona protegida</b>.",
+      "Planifica las acciones en <b>tres planos</b>: <b>aéreo</b>, <b>superficial</b> y <b>subterráneo</b>."
+    ]},
+    { h: "Teoría de los círculos concéntricos", l: [
+      "Un círculo rodeado por <b>tres círculos concéntricos</b> en torno al protegido; cada uno presta servicio dentro de la esfera de su propio cometido. Sirve de base para un <b>dispositivo de seguridad integral</b>.",
+      "<b>1er círculo (interior)</b>: <b>escolta personal</b>. Las personas más próximas. Misión: <b>cubrir y proteger</b> del ataque y realizar una <b>rápida evacuación</b> a lugar seguro. La distancia depende de la situación concreta.",
+      "<b>2º círculo</b>: <b>puestos de seguridad</b>. Guardan cierta distancia pero mantienen al protegido <b>dentro de su campo de observación</b>.",
+      "<b>3er círculo</b>: <b>patrullas móviles y grupos de información</b>. <b>No controlan ni vigilan</b> al protegido, pero están dentro del dispositivo por si ocurriera una desgracia."
+    ]}
+  ]
+},
+{
+  id: "t30", mod: "mf0081", n: 8, t: "UF2676 · Escalones, niveles de seguridad y evaluación",
+  c: [
+    { h: "Tres niveles o escalones", l: [
+      "<b>Puestos de vigilancia</b>: observar una zona específica; fijos o móviles. Funciones: observar el área señalada, observar a las personas del perímetro y <b>comunicar cualquier novedad o sospecha a un superior</b>.",
+      "<b>Puestos de revisión y control</b>: hacen de <b>filtro</b> hacia un área restringida. Funciones: controlar el área restringida, no permitir entrada a personas, vehículos u objetos no autorizados o amenazantes, y seleccionar al personal que puede entrar.",
+      "<b>Puestos especiales de seguridad</b>: se asignan al miembro con una <b>función específica</b> dentro del dispositivo."
+    ]},
+    { h: "Evaluación de dispositivos", l: [
+      "Valorar los <b>factores internos y externos</b> que afecten a la operatividad del agente.",
+      "Estudio de los riesgos según su <b>gravedad</b> (magnitud del daño) y su <b>probabilidad</b>.",
+      "Estudio del entorno: estudio de la ciudad, reconocimiento de la zona e itinerarios viables, <b>cuartos seguros</b> y <b>centros de asistencia</b>.",
+      "<b>Cuartos seguros</b>: acceso rápido y fácil, buenas comunicaciones, capacidad de defensa, estar limitado y facilidad para prestar primeros auxilios.",
+      "<b>Centros de asistencia</b>: conocer horarios, medios materiales y cercanía (hospitales, centros de salud, puestos de la Cruz Roja)."
+    ]}
+  ]
+},
+{
+  id: "t31", mod: "mf0081", n: 9, t: "UF2676 · Coordinación con el Departamento de Seguridad y con las FCS",
+  c: [
+    { h: "Planes de seguridad", l: [
+      "Se elaboran <b>conjuntamente</b> con el departamento de seguridad; comprenden todas las medidas frente a cualquier riesgo, <b>real o imaginario</b>.",
+      "<b>Temporales</b>: actividades <b>no habituales</b> (p. ej. un viaje); los escoltas se coordinan con el departamento de seguridad del lugar de destino.",
+      "<b>Permanentes</b>: recorridos habituales; coordinación <b>más protocolizada</b> y evaluación constante.",
+      "En crisis o emergencia las acciones deben estar <b>totalmente coordinadas</b>: el público entra en crisis e histeria y dificulta el dispositivo."
+    ]},
+    { h: "Artículos de coordinación (Ley 5/2014)", l: [
+      "<b>Art. 14</b>: colaboración profesional. Comunicar a las FCS, <b>tan pronto como sea posible</b>, circunstancias relevantes y hechos delictivos, poniendo a su disposición presuntos delincuentes, instrumentos, efectos y pruebas.",
+      "<b>Art. 15</b>: acceso a la información por las FCS. Cesiones de datos y acceso a los sistemas en <b>tiempo real</b> cuando sea necesario para prevenir un <b>peligro real</b> para la seguridad pública o reprimir infracciones penales.",
+      "<b>Art. 16</b>: coordinación y participación. Se constituyen <b>comisiones mixtas</b> de seguridad privada (nacionales, autonómicas o provinciales), con carácter <b>consultivo y de colaboración</b>.",
+      "Las FCS pueden facilitar información para la evaluación de riesgos; si contiene <b>datos personales</b>, solo en caso de <b>peligro real</b> o para evitar infracciones penales."
+    ]},
+    { h: "Estructura de la Ley 5/2014", l: [
+      "Art. 1 Objeto · 2 Definiciones · 3 Ámbito de aplicación · 4 Fines · 5 Actividades de seguridad privada · 6 Actividades compatibles · 7 Actividades excluidas · 8 Principios rectores · 9 Contratación y comunicación de servicios · 10 Prohibiciones · 11 Registro Nacional de Seguridad Privada.",
+      "<b>Fines</b> (art. 4): <b>satisfacer</b> las necesidades legítimas de los usuarios, <b>contribuir</b> a garantizar la seguridad pública y <b>complementar</b> el monopolio de la seguridad del Estado.",
+      "<b>Actividades excluidas</b> (art. 7): la <b>autoprotección</b>, sin contraprestación ni servicio a terceros."
+    ]}
+  ]
+},
+{
+  id: "t32", mod: "mf0081", n: 10, t: "UF2676 · Técnicas de protección en movimiento",
+  c: [
+    { h: "Secuencia ante una agresión", l: [
+      "<b>1. Avisar del ataque</b>: especificar el <b>tipo de agresión</b>, el <b>agresor</b> y la <b>dirección</b> por la que viene. Se avisa a los compañeros por cualquier medio (walkie talkie o señales).",
+      "<b>2. Cobertura</b> corporal: su objetivo es <b>disminuir la superficie de blanco y la silueta</b> del protegido.",
+      "<b>3. Evacuación</b>: traslado y alejamiento rápido del lugar de peligro a otro <b>de seguridad previamente establecido</b>. Ningún agente realizará otra maniobra que no sea cubrir o evacuar.",
+      "<b>4. Neutralizar</b>: solo una vez puesto a salvo el protegido. Ir <b>lo más rápido posible hacia el arma</b> del atacante y <b>no hacia el cuerpo</b>, colocándose <b>delante del agresor</b> para cortar la línea directa con el protegido.",
+      "El <b>desplazamiento a pie</b> es de mucho riesgo por el enlentecimiento de la cobertura y la evacuación.",
+      "<b>Cápsulas de protección</b>: sin regla fija, es recomendable que estén formadas por <b>1 a 5 miembros</b>."
+    ]},
+    { h: "Edificios, escaleras y ascensores", l: [
+      "<b>Edificios</b>: inspección completa <b>antes</b> de la llegada, localizando una habitación utilizable como <b>espacio de seguridad</b>.",
+      "<b>Escaleras</b>: el protegido va <b>lo más cerca posible de la pared</b>, el escolta próximo a él y el resto alrededor <b>formando un círculo</b>. Las <b>mecánicas</b> son más peligrosas por los espacios abiertos a ambos lados.",
+      "<b>Ascensores</b>: entrañan bastante peligro; revisión minuciosa del <b>espacio, hueco entre ascensor y techo, cables y maquinaria</b>. El protegido va <b>siempre acompañado de un escolta</b>; el resto del equipo <b>sube por las escaleras</b> y controla la salida."
+    ]},
+    { h: "Líneas de recibimiento y de control", l: [
+      "<b>Recibimiento</b>: control previo de la zona. La personalidad ocupa <b>posición fija</b> y el escolta se sitúa <b>tras ella</b>; el resto en distintos puntos de la sala y <b>uno en la entrada</b> del local.",
+      "<b>Líneas de control</b>: <b>dos escoltas delante y dos detrás</b> del protegido; todos observan y controlan <b>las manos</b> de quienes saludan. Con multitud, puestos a lo largo del tramo con equipos ópticos que retransmiten amenazas y vigilan paquetes y personas sospechosas.",
+      "<b>Evacuaciones</b>: operaciones <b>anticipadamente diseñadas</b> con pasos estandarizados. Se establece un <b>jefe</b>, que se sitúa <b>más próximo</b> a la persona a evacuar y la guía; el resto abre camino o conduce al protegido al vehículo."
+    ]}
+  ]
+},
+{
+  id: "t33", mod: "mf0081", n: 11, t: "UF2676 · Protección estática y coordinación de servicios",
+  c: [
+    { h: "Protección estática", l: [
+      "Dispositivo organizado para custodiar a una persona en un <b>lugar fijo</b>: lugar de trabajo o residencia <b>habitual u ocasional</b>.",
+      "Se planifica con la <b>teoría simplificada de los círculos concéntricos</b>: el espacio se divide únicamente en <b>interior y exterior</b>.",
+      "<b>Interior</b>: habitaciones, escaleras, ascensores, puertas de entrada, patios, sótanos, terrazas.",
+      "<b>Exterior</b>: la <b>periferia</b> del inmueble; características del barrio y de sus habitantes, lugares desde los que se puede observar el edificio y puntos donde ocultar explosivos (<b>papeleras o buzones</b>).",
+      "Reglas generales: <b>identificar</b> a quienes accedan hasta la persona, <b>controlar al servicio doméstico</b> y <b>comprobar todo paquete o correo</b> que llegue."
+    ]},
+    { h: "Coordinación de servicios", l: [
+      "El número de servicios depende del <b>riesgo de agresión</b> existente.",
+      "Cuando hay varios equipos (domicilio, trabajo…), la coordinación la realiza la <b>sala de operaciones</b> u órgano que reciba y analice la información de ambos.",
+      "Los jefes de cada servicio deben mantener contacto e información <b>continua y recíproca</b> con el coordinador.",
+      "<b>Avanzada</b>: acción de <b>requisar el lugar</b> por un miembro del equipo <b>antes de la entrada</b> del protegido en lugares no explorados. Misión: <b>obtener información del destino y establecer un perímetro de seguridad</b>."
+    ]}
+  ]
+},
+{
+  id: "t34", mod: "mf0081", n: 12, t: "UF2676 · Características del vehículo de seguridad",
+  c: [
+    { h: "Condiciones que debe reunir", l: [
+      "<b>Cómodo</b>: capacidad para el invitado, el conductor y un miembro del equipo de seguridad.",
+      "<b>Aire acondicionado</b>: permite el <b>cierre total</b> si se ataca con algún tipo de gas.",
+      "<b>Seguro y rápido</b>, para circular por todo tipo de carreteras.",
+      "Completamente <b>blindado</b>: carrocería, cristales, bajos y neumáticos.",
+      "Suficiente <b>potencia</b>, manteniendo buena <b>relación potencia/peso</b>.",
+      "En grandes dispositivos, <b>otro vehículo para los escoltas</b> de características similares, con buen sistema de comunicación entre ambos y acceso/abandono fácil."
+    ]},
+    { h: "Aspectos exigidos (Real Decreto)", l: [
+      "<b>Sistema de bloqueo</b>: accionado directa (pulsador) o indirectamente (apertura de puertas), <b>corta la inyección de combustible</b> y acciona <b>alarma acústica y luminosa</b>. Retardo entre activación y acción de <b>2 minutos como máximo</b>.",
+      "<b>Rejilla metálica</b> en el interior del tubo del depósito de combustible, para impedir la introducción de elementos extraños.",
+      "<b>Sistema de protección del depósito</b> de combustible.",
+      "<b>Cierre especial de la caja</b> mediante candado o cerradura de seguridad."
+    ]}
+  ]
+},
+{
+  id: "t35", mod: "mf0081", n: 13, t: "UF2676 · El conductor y la requisa del vehículo",
+  c: [
+    { h: "Características del conductor", l: [
+      "Debe haber recibido <b>entrenamiento de conducción de alta seguridad</b>. A veces es uno de los propios escoltas.",
+      "Conocimientos exigidos: conocer <b>a la perfección el vehículo</b> —posibilidades, rendimiento y mecánica— y conocer los <b>itinerarios programados y alternativos</b>.",
+      "Factores que condicionan la conducción: <b>límites personales</b> (capacidad de reacción, concentración, reflejos), <b>límites del vehículo</b> (características técnicas) y <b>límites externos</b> (pavimento, tráfico, meteorología)."
+    ]},
+    { h: "Cápsulas de seguridad sobre vehículos", l: [
+      "Revisión <b>diaria</b> del vehículo para controlar que no haya manipulaciones, sabotajes o trampas ocultas.",
+      "<b>Requisa exterior</b>: completa, <b>sistemática y preestablecida</b>. Se buscan artefactos adosados y manipulaciones de cables, cerraduras, líquidos…",
+      "<b>Requisa interior</b>: asientos, bandeja trasera, guantera.",
+      "Por último se revisan <b>motor y maletero</b>.",
+      "La realiza el <b>equipo de seguridad con ayuda del conductor</b>, apoyándose en <b>perros adiestrados, espejos especiales o detectores de explosivos</b>."
+    ]}
+  ]
+},
+{
+  id: "t36", mod: "mf0081", n: 14, t: "UF2676 · Conducción evasiva y maniobras",
+  c: [
+    { h: "Conducción evasiva", l: [
+      "Busca <b>llegar lo más rápido posible al destino evitando las situaciones de peligro</b>, consiguiendo mejor rendimiento del vehículo. Su finalidad es la <b>destreza y pericia</b> para evitar emboscadas y evadirse con una simple maniobra.",
+      "<b>Ofensiva</b>: aprovechar <b>peso, potencia y velocidad</b> para afrontar el ataque de <b>forma activa</b>, llegando a <b>colisionar</b> con el obstáculo.",
+      "<b>Defensiva</b>: <b>evitar colisionar</b> con vehículos o materiales; varía la trayectoria mediante un <b>giro de 180 grados</b>."
+    ]},
+    { h: "Las cuatro maniobras", l: [
+      "<b>Maniobra en Y</b>: giro de 180º en la calzada; se reduce velocidad, se gira el volante del lado derecho al izquierdo, se echa marcha atrás y se vuelve a girar para invertir el sentido.",
+      "<b>Vuelta corta</b>: parecida; primero se <b>para el vehículo</b> y el giro se hace <b>marcha atrás</b>.",
+      "<b>California</b>: giro con el volante <b>hacia la izquierda</b> ayudándose del <b>freno de mano</b>, que hace <b>derrapar</b> el coche.",
+      "<b>Giro en J</b>: se mantiene el sentido de dirección pero se cambia el de la marcha: iniciar <b>marcha atrás</b> a cierta velocidad, girar rápido, frenar bloqueando las ruedas delanteras y engranar la primera para salir hacia adelante.",
+      "La maniobra en <b>Y</b> y la <b>California</b> se usan <b>solo cuando no hay tiempo suficiente para reaccionar</b>.",
+      "Ante <b>barricadas</b>, si el vehículo tiene mayor envergadura y potencia, se puede <b>embestir</b> a uno de los otros vehículos. Conviene circular por el <b>carril medio o más próximo a la calzada</b> para poder maniobrar."
+    ]}
+  ]
+},
+{
+  id: "t37", mod: "mf0081", n: 15, t: "UF2676 · Normas de seguridad en la conducción",
+  c: [
+    { h: "Reglas básicas", l: [
+      "Mantener los <b>cristales subidos</b> y las <b>puertas aseguradas</b>.",
+      "<b>No recoger ni auxiliar a extraños</b>.",
+      "Conducir por <b>vías amplias y bien iluminadas</b>, identificando personas u objetos sospechosos.",
+      "Detenerse <b>solo</b> ante un miembro de la fuerza pública <b>previamente identificado mostrando su placa</b>.",
+      "<b>Revisar el vehículo antes</b> de comenzar el trayecto.",
+      "<b>No bajar del coche al protegido</b> hasta comprobar que no corre ningún peligro.",
+      "Realizar <b>rutas aleatorias previamente estudiadas</b>.",
+      "Con varios escoltas en el operativo, viajar en <b>vehículos separados y en caravana</b>."
+    ]}
+  ]
+},
+{
+  id: "t38", mod: "mf0081", n: 16, t: "UF2676 · Caravanas: clasificación y posiciones",
+  c: [
+    { h: "Concepto", l: [
+      "<b>Caravana</b>: conjunto de vehículos utilizados para desplazar a la persona protegida y a todo su personal de seguridad. <b>Cuantos más vehículos, más complicada y problemática</b>.",
+      "Mínimo para considerarla caravana: el <b>coche del protegido</b> y el <b>coche de los escoltas</b>."
+    ]},
+    { h: "Clasificación (según conocimiento del itinerario)", l: [
+      "<b>Informales</b>: el itinerario <b>no es de dominio público</b>; solo lo conocen el protegido y su equipo de seguridad.",
+      "<b>Formales</b>: el itinerario es <b>conocido por todos</b>."
+    ]},
+    { h: "Tipos de vehículo", l: [
+      "<b>Coche piloto</b>: viaja el equipo de seguridad y un <b>Policía local</b>.",
+      "<b>Coche VIP</b>: el protegido, sus acompañantes y el <b>Jefe del Equipo de seguridad</b>.",
+      "<b>Coche adicional</b>: mismas prestaciones que el VIP; se usa <b>si el coche VIP se estropea</b>.",
+      "<b>Coche escolta</b>: el resto de componentes del equipo."
+    ]},
+    { h: "Posiciones", l: [
+      "<b>1 coche de escolta</b>: el VE va <b>detrás</b> del VIP.",
+      "<b>2 coches de escolta</b>: <b>uno delante y otro detrás</b> del VIP.",
+      "<b>3 coches de escolta</b>: uno <b>delante</b> y <b>dos detrás</b>.",
+      "Dentro del coche del protegido: el <b>jefe de seguridad delante, al lado del conductor</b>; el protegido y los acompañantes <b>detrás</b>. El resto de escoltas en otro vehículo <b>justo detrás</b>."
+    ]}
+  ]
+},
+{
+  id: "t39", mod: "mf0081", n: 17, t: "UF2676 · Itinerarios",
+  c: [
+    { h: "Definición y clases", l: [
+      "<b>Itinerario</b>: ruta o recorrido con <b>dirección y descripción concreta</b> que permite llegar hasta el lugar deseado; se busca el <b>más seguro</b>.",
+      "<b>Principal</b>: el elegido para un desplazamiento determinado tras estudiar el resto de caminos; <b>no es siempre el mismo</b> (mañana puede ser alternativo).",
+      "<b>Alternativo</b>: los que pueden <b>sustituir al principal</b> si este no pudiera usarse.",
+      "<b>De evacuación</b>: variante del principal para acudir a un <b>centro de urgencia o asistencial</b> previamente programado, en la mayor brevedad.",
+      "<b>De fuga</b>: variación del principal o del alternativo para dirigirse a <b>puntos seguros elegidos de antemano</b>."
+    ]},
+    { h: "Puntos de peligro urbanos", l: [
+      "Llegada y salida del itinerario, <b>semáforos</b> (paradas peligrosas por posible intrusión), pasos de peatones, tráfico, obras en la vía, vehículos aparcados o <b>en doble fila</b> sospechosos y contenedores.",
+      "Establecer <b>puntos seguros</b> a lo largo del itinerario y tener preestablecidos los <b>centros asistenciales</b>."
+    ]},
+    { h: "Estudio por tramos", l: [
+      "Aspectos: <b>nombre y anchura de la calle</b>, carriles, aceras, bordillos y suelo, y <b>posibilidad de realizar maniobras</b>.",
+      "Lo realizan <b>los escoltas con anterioridad a la salida</b> y debe <b>revisarse cada 5 meses</b> según el grado de peligrosidad."
+    ]}
+  ]
+},
+{
+  id: "t40", mod: "mf0081", n: 18, t: "UF2676 · Funciones, medios y entorno del escolta",
+  c: [
+    { h: "El escolta", l: [
+      "Profesional de la seguridad —<b>pública o privada</b>— especializado en la <b>protección de personalidades</b>. Debe pertenecer a las FCS del Estado o a una empresa de seguridad privada.",
+      "Función principal: <b>proteger a las personas</b>; debe estar mentalizado para el ataque con arma de fuego y su dedicación ha de ser <b>plena</b>. Los escoltas privados <b>pueden llevar armas de fuego</b>.",
+      "<b>Guardaespaldas</b>: persona <b>no profesional y no habilitada</b> contratada por un particular; <b>no puede portar armas</b> ni realizar las funciones propias del escolta."
+    ]},
+    { h: "Habilidades y competencias (Mora, 2008)", l: [
+      "<b>Prácticas</b>: mantenimiento físico, entrenamiento habitual en defensa personal policial, tácticas policiales, conducción ofensiva-evasiva policial, capacidad de asunción de responsabilidades, fuerza y equilibrio mental.",
+      "<b>Teóricas</b>: detección de explosivos, primeros auxilios, conocimientos culturales y protocolarios.",
+      "<b>Perceptivas</b>: capacidad de relación con el entorno, eficacia en la observación y capacidad de rememoración y retentiva."
+    ]},
+    { h: "Medios y vestuario", l: [
+      "Prendas cómodas y <b>calzado antideslizante</b>; gafas de sol o de vista con <b>montura y cristales orgánicos</b>.",
+      "<b>Chaleco antibalas</b>: absorbe el impacto de balas al torso y esquirlas de explosiones; con <b>placas metálicas o cerámicas</b> protege también de disparos de fusil.",
+      "<b>Spray defensivo de gel</b>, <b>navaja</b>, <b>preservativos</b> (taponar de forma aséptica heridas de bala evitando la hemorragia).",
+      "<b>Bastón extensible corto</b>, <b>inhibidores de frecuencia</b> (impiden la transmisión radioeléctrica emitiendo mayor potencia que el emisor).",
+      "<b>Kubotán</b>: cilindro de metal, plástico o madera de unos <b>14 cm</b> y 1,5 de grosor; estabiliza el puño, se aplica en puntos de presión o da ventaja sobre muñecas y dedos.",
+      "<b>Armas semiautomáticas</b> de gran poder de munición, colocadas de forma discreta y de rápida extracción. <b>Vehículos blindados</b>.",
+      "Comunicación entre escoltas: <b>intercomunicadores</b> y <b>Código Fonético Internacional</b>."
+    ]},
+    { h: "Relación con el entorno", l: [
+      "El <b>entorno</b> abarca al propio protegido, su familia, su círculo de amistades, el personal que trabaje para él, el público y la <b>prensa</b>.",
+      "Conocer costumbres y personalidad del protegido, y su círculo de amigos y familia, con la <b>mayor discreción posible</b>: los ataques suelen ir dirigidos hacia ellos.",
+      "Con la prensa y el resto de personas, actitud <b>más firme y controlada</b>; el escolta permanece <b>correcto y en un segundo plano</b> para no dar mala prensa al protegido."
+    ]}
+  ]
+},
+{
+  id: "t41", mod: "mf0081", n: 19, t: "UF2676 · Valores éticos en seguridad",
+  c: [
+    { h: "Los seis valores", l: [
+      "<b>Espíritu de servicio</b>: encaminar los esfuerzos al mantenimiento del orden y la seguridad del protegido.",
+      "<b>Conciencia de grupo</b>: cooperación, coordinación y solidaridad entre compañeros y con otras entidades públicas y privadas.",
+      "<b>Honor</b>: orgullo de ostentar el uniforme que los identifica; responsabilidad con el servicio y con la población.",
+      "<b>Disciplina consciente</b>: respetar las directrices de los superiores, normas y protocolos. Con varios escoltas siempre habrá un <b>Jefe de Seguridad</b> por encima.",
+      "<b>Excelencia en las labores</b>: no cometer ni tolerar actos de corrupción; atender con respeto, cortesía, eficiencia y eficacia.",
+      "<b>Respeto legal</b>: comunicar toda irregularidad legal a los organismos competentes, actuando bajo los principios de <b>racionalidad y proporcionalidad</b>."
+    ]}
+  ]
+}
 ];
 
 /* ---------------------------------------------------------
@@ -964,15 +1256,6 @@ const FICHAS = [
 { t:"t07", q:"Los cuatro principios de la protección física", a:"<b>Defensa en profundidad</b> (capas sucesivas), <b>zonificación</b> (áreas por nivel), <b>redundancia</b> (duplicidad de medios críticos) y <b>tiempo de reacción</b> (retardar hasta la intervención)." },
 { t:"t07", q:"Etapas del análisis de riesgos", a:"<ol><li>Identificación de <b>activos</b> a proteger</li><li>Evaluación de <b>amenazas y vulnerabilidades</b></li><li>Análisis de <b>impacto</b></li><li>Propuesta de <b>medidas de mitigación</b></li></ol>" },
 { t:"t07", q:"Tipos de barreras físicas", a:"<b>Perimetrales</b>: vallas, muros, cercas electrificadas, zanjas.<br><b>Estructurales</b>: puertas, portones, cristales de seguridad.<br><b>Interiores</b>: puertas de seguridad, torniquetes, esclusas." },
-{ t:"t08", q:"Las tres técnicas de protección de personas", a:"<b>Integral</b> (esfera profesional y personal), <b>dinámica</b> (desplazamientos) y <b>estática</b> (lugar fijo)." },
-{ t:"t08", q:"Congruencia frente a proporcionalidad", a:"<b>Congruencia</b>: medidas proporcionadas y adecuadas <b>a los riesgos</b>.<br><b>Proporcionalidad</b>: en el uso de las <b>técnicas y medios</b> de defensa e investigación." },
-{ t:"t08", q:"Los tres círculos concéntricos", a:"<b>1º</b> escolta personal: cubrir, proteger y evacuar.<br><b>2º</b> puestos de seguridad: protegido dentro de su campo de observación.<br><b>3º</b> patrullas móviles y grupos de información: no vigilan al protegido." },
-{ t:"t08", q:"Plazos de la habilitación (art. 28)", a:"<b>18 años</b> de edad mínima · <b>2 años</b> sin sanción grave · <b>4 años</b> sin sanción muy grave · <b>2 años</b> desde la separación del servicio en FCS o FFAA · <b>5 años</b> sin condena por intromisión ilegítima." },
-{ t:"t08", q:"Secuencia ante una agresión", a:"<b>1.</b> Avisar (tipo de agresión, agresor y dirección) · <b>2.</b> Cobertura (reducir superficie de blanco y silueta) · <b>3.</b> Evacuación al lugar seguro preestablecido · <b>4.</b> Neutralizar, yendo <b>al arma</b> y no al cuerpo." },
-{ t:"t09", q:"Retardo máximo del sistema de bloqueo del vehículo", a:"<b>2 minutos como máximo</b> entre activación y acción. Corta la inyección de combustible y acciona alarma acústica y luminosa." },
-{ t:"t09", q:"Conducción ofensiva frente a defensiva", a:"<b>Ofensiva</b>: aprovecha peso, potencia y velocidad para afrontar el ataque de forma activa, llegando a <b>colisionar</b>.<br><b>Defensiva</b>: <b>evita colisionar</b>, variando la trayectoria con un giro de <b>180 grados</b>." },
-{ t:"t09", q:"Posición de los coches de escolta", a:"<b>1 escolta</b>: detrás del VIP.<br><b>2 escoltas</b>: uno delante y otro detrás.<br><b>3 escoltas</b>: uno delante y dos detrás." },
-{ t:"t09", q:"Los cuatro tipos de itinerario", a:"<b>Principal</b> · <b>Alternativo</b> · <b>De evacuación</b> (centro de urgencia o asistencial) · <b>De fuga</b> (puntos seguros elegidos de antemano). Se revisan <b>cada 5 meses</b>." },
 { t:"t10", q:"¿Qué condición jurídica tiene el vigilante de explosivos?", a:"<b>Agente de la autoridad</b> según la Ley 5/2014, con mayor protección penal. La <b>STS 4778/2013</b> le reconoce también condición de <b>funcionario público</b> a efectos de responsabilidad penal." },
 { t:"t10", q:"Dos límites de las funciones del vigilante (art. 32)", a:"Puede hacer controles de acceso <b>sin retener documentación</b> y puede detener infractores para entregarlos a la autoridad, pero <b>sin realizar interrogatorios</b>." },
 { t:"t10", q:"¿Qué regula el RD 130/2017 y el RD 989/2015?", a:"<b>RD 130/2017</b>: Reglamento de <b>Explosivos</b>.<br><b>RD 989/2015</b>: artículos <b>pirotécnicos y cartuchería</b> (sustituye al RD 563/2010)." },
@@ -1041,6 +1324,49 @@ const FICHAS = [
 { t:"t22", q:"Los tres tipos normales de bala", a:"<b>De plomo</b> (90 % plomo, 5 % estaño, 5 % antimonio) · <b>Blindadas</b> (plomo con forro metálico) · <b>Semiblindadas</b> (recubrimiento parcial, de punta blanda o punta dura).<br>Componentes de la bala: <b>cuerpo, culote y punta u ojiva</b>." },
 { t:"t22", q:"Calibre real y calibre nominal", a:"<b>Real</b>: se mide entre <b>dos crestas</b> diametralmente opuestas del estriado.<br><b>Nominal</b>: entre <b>dos surcos</b> opuestos; coincide con el diámetro de la bala." },
 { t:"t22", q:"Puntería, precisión y dispersión", a:"<b>Puntería</b>: encarar alza, punto de mira y eje del cañón según la distancia y situación del blanco.<br><b>Dispersión</b>: los impactos se distribuyen alrededor de un punto, con mayor densidad cerca de él, aun en idénticas condiciones de tiro." },
+/* ===== UF2676 ===== */
+{ t:"t23", q:"¿Qué es la seguridad privada?", a:"La forma en que los <b>agentes privados</b> contribuyen a la reducción de posibles riesgos, ofreciendo una seguridad <b>adicional</b> más allá de la que provee la seguridad pública. Es una medida de <b>anticipación y prevención</b>." },
+{ t:"t23", q:"Protección vs. seguridad", a:"La <b>protección</b> es la acción y efecto de proteger: un sistema integrado por medidas aplicables en función de lo que se quiera proteger. Es un término <b>más específico</b> que seguridad, porque busca aplicar medidas concretas." },
+{ t:"t26", q:"Las tres técnicas de protección", a:"<ul><li><b>Integral</b>: cubre esfera profesional y personal (incluye dinámica y estática)</li><li><b>Dinámica</b>: protege en los desplazamientos</li><li><b>Estática</b>: custodia en un lugar fijo</li></ul>" },
+{ t:"t24", q:"Requisitos de habilitación: los plazos que caen en el examen", a:"<ul><li><b>18</b> años (mayor de edad)</li><li>No sancionado: <b>2</b> años (grave) / <b>4</b> años (muy grave)</li><li>No separado de FCS o FFAA: <b>2</b> años</li><li>No condenado por intromisión ilegítima: <b>5</b> años</li></ul>" },
+{ t:"t24", q:"¿Quién habilita al personal de seguridad privada?", a:"La <b>Dirección General de la Policía</b>, <b>excepto</b> los guardas rurales y sus especialidades, que corresponden a la <b>Dirección General de la Guardia Civil</b>. La habilita el Ministerio del Interior mediante tarjeta de identidad profesional." },
+{ t:"t25", q:"Congruencia vs. proporcionalidad", a:"<b>Congruencia</b>: aplicar medidas de seguridad e investigación <b>proporcionadas y adecuadas a los riesgos</b>.<br><b>Proporcionalidad</b>: en el uso de las <b>técnicas y medios</b> de defensa e investigación." },
+{ t:"t25", q:"Los 9 principios básicos de actuación", a:"Legalidad · Integridad · Protección · Dignidad · Corrección · Congruencia · Proporcionalidad · Reserva profesional · Colaboración con las FCS." },
+{ t:"t27", q:"¿Qué es el peligro y cómo se mide?", a:"Situación —<b>acción o condición</b>— con potencial de producir un daño sobre una persona o cosa. Se detecta asignando valores a la <b>posibilidad</b> y a la <b>seriedad</b> mediante una <b>escala numérica</b>: a los más serios, los valores más altos." },
+{ t:"t27", q:"Clasificación de riesgos", a:"<ul><li><b>Naturales</b>: inundaciones, rayos, incendios, terremotos</li><li><b>Tecnológicos</b>: fallos de instalaciones, corte eléctrico o de agua, fuego, explosión de equipos</li><li><b>Por accidente</b></li><li><b>Por malas acciones o comportamiento de personas</b>: intrusión, asalto, robo, amenaza de bomba, atentados, vandalismo, disturbios, huelgas</li></ul>" },
+{ t:"t28", q:"Los dos pilares de la protección integral", a:"<b>Prevención</b>: actuaciones para <b>evitar</b> un suceso.<br><b>Protección</b>: actuaciones para <b>neutralizar el suceso ya acontecido</b>, con medios humanos y técnicos, con el fin de salvar la vida." },
+{ t:"t28", q:"Las 5 medidas de seguridad de la Ley 5/2014", a:"<b>Física</b> (barreras) · <b>Electrónica</b> (detección) · <b>Informática</b> (integridad, confidencialidad y disponibilidad) · <b>Organizativa</b> (planificación, departamentos y planes) · <b>Personal</b>." },
+{ t:"t29", q:"Teoría esférica de la protección", a:"Abrir un <b>espacio contenido en una esfera</b> cuyo <b>centro es la persona protegida</b>. Planifica la actuación en <b>tres planos</b>: <b>aéreo</b>, <b>superficial</b> y <b>subterráneo</b>." },
+{ t:"t29", q:"Los tres círculos concéntricos", a:"<ul><li><b>1º (interior)</b>: escolta personal → cubrir, proteger y evacuar</li><li><b>2º</b>: puestos de seguridad → mantienen al protegido en su campo de observación</li><li><b>3º</b>: patrullas móviles y grupos de información → no vigilan al protegido</li></ul>" },
+{ t:"t30", q:"Los 3 escalones o niveles de seguridad", a:"<b>Puestos de vigilancia</b> (observar y comunicar) · <b>Puestos de revisión y control</b> (filtro de acceso a área restringida) · <b>Puestos especiales de seguridad</b> (función específica dentro del dispositivo)." },
+{ t:"t30", q:"¿Qué debe tener un cuarto seguro?", a:"Acceso <b>rápido y fácil</b>, buenas <b>comunicaciones</b>, <b>capacidad de defensa</b>, estar <b>limitado</b> y facilidad para prestar <b>primeros auxilios</b>." },
+{ t:"t31", q:"Planes de seguridad temporales vs. permanentes", a:"<b>Temporales</b>: actividades no habituales, como un viaje; hay que coordinarse con el departamento de seguridad del lugar de destino.<br><b>Permanentes</b>: recorridos habituales; coordinación <b>más protocolizada</b> y evaluación constante." },
+{ t:"t32", q:"Secuencia de actuación ante una agresión", a:"<b>1.</b> Avisar del ataque (tipo de agresión, agresor y dirección) · <b>2.</b> Cobertura (reducir superficie de blanco y silueta) · <b>3.</b> Evacuación al lugar seguro preestablecido · <b>4.</b> Neutralizar: ir <b>al arma</b>, no al cuerpo, situándose delante del agresor." },
+{ t:"t32", q:"¿De cuántos miembros consta una cápsula de protección?", a:"No hay regla fija, pero es recomendable que esté formada de <b>uno a cinco miembros</b>." },
+{ t:"t32", q:"Protección en escaleras y ascensores", a:"<b>Escaleras</b>: el protegido lo más cerca posible de la <b>pared</b>, el escolta próximo y el resto formando un <b>círculo</b>. Las mecánicas son más peligrosas.<br><b>Ascensor</b>: revisar espacio, hueco entre ascensor y techo, cables y maquinaria; el protegido va siempre con un escolta y el resto <b>sube por las escaleras</b>." },
+{ t:"t32", q:"Líneas de control: colocación", a:"<b>Dos escoltas delante y dos detrás</b> del protegido, observando y controlando <b>las manos</b> de las personas que saludan." },
+{ t:"t33", q:"Protección estática: interior y exterior", a:"<b>Interior</b>: habitaciones, escaleras, ascensores, puertas de entrada, patios, sótanos, terrazas.<br><b>Exterior</b>: periferia del inmueble, barrio y sus habitantes, puntos de observación y lugares donde ocultar explosivos (papeleras, buzones)." },
+{ t:"t33", q:"¿Qué es una avanzada?", a:"La acción de <b>requisar el lugar</b> por un miembro del equipo <b>antes de la entrada</b> del protegido en lugares no explorados. Su misión: obtener información del destino y <b>establecer un perímetro de seguridad</b>." },
+{ t:"t34", q:"Aspectos exigidos a un vehículo de seguridad (RD)", a:"<ul><li><b>Sistema de bloqueo</b> que corta la inyección de combustible + alarma acústica y luminosa (retardo máx. <b>2 minutos</b>)</li><li><b>Rejilla metálica</b> en el tubo del depósito</li><li>Sistema de <b>protección del depósito</b></li><li><b>Cierre especial de la caja</b>: candado o cerradura de seguridad</li></ul>" },
+{ t:"t34", q:"¿Por qué debe llevar aire acondicionado el vehículo?", a:"Para permitir el <b>cierre total</b> del vehículo si fuese atacado con algún tipo de <b>gas</b>." },
+{ t:"t35", q:"Factores que condicionan la conducción", a:"<b>Límites personales</b> (reacción, concentración, reflejos) · <b>Límites del vehículo</b> (características técnicas) · <b>Límites externos</b> (pavimento, tráfico, meteorología)." },
+{ t:"t35", q:"Requisa del vehículo: orden", a:"<b>Exterior</b> (sistemática y preestablecida: artefactos adosados, cables, cerraduras, líquidos) → <b>interior</b> (asientos, bandeja trasera, guantera) → <b>motor y maletero</b>. Con perros adiestrados, espejos especiales o detectores de explosivos." },
+{ t:"t36", q:"Conducción ofensiva vs. defensiva", a:"<b>Ofensiva</b>: aprovechar peso, potencia y velocidad para afrontar el ataque de forma <b>activa</b>, llegando a <b>colisionar</b>.<br><b>Defensiva</b>: <b>evitar colisionar</b>, variando la trayectoria mediante un <b>giro de 180º</b>." },
+{ t:"t36", q:"Las 4 maniobras evasivas", a:"<b>En Y</b> (giro de 180º con marcha atrás intermedia) · <b>Vuelta corta</b> (se para el coche y se gira marcha atrás) · <b>California</b> (volante a la izquierda + freno de mano → derrape) · <b>Giro en J</b> (marcha atrás y giro de 180º para salir hacia delante)." },
+{ t:"t36", q:"¿Qué maniobras se usan solo si no hay tiempo para reaccionar?", a:"La maniobra en <b>Y</b> y la <b>California</b>." },
+{ t:"t38", q:"¿Cuándo hay caravana y cómo se clasifica?", a:"Hay caravana con, como mínimo, el <b>coche del protegido</b> y el <b>coche de los escoltas</b>.<br><b>Informales</b>: itinerario solo conocido por protegido y equipo.<br><b>Formales</b>: itinerario conocido por todos." },
+{ t:"t38", q:"Los cuatro tipos de coche", a:"<b>Piloto</b> (equipo de seguridad + Policía local) · <b>VIP</b> (protegido, acompañantes y Jefe del Equipo) · <b>Adicional</b> (mismas prestaciones que el VIP, por si se estropea) · <b>Escolta</b> (resto del equipo)." },
+{ t:"t38", q:"Posición de los coches de escolta", a:"<b>1 escolta</b>: detrás del VIP. <b>2 escoltas</b>: uno delante y otro detrás. <b>3 escoltas</b>: uno delante y dos detrás." },
+{ t:"t38", q:"Ubicación dentro del coche del protegido", a:"<b>Conductor</b> y, a su lado, el <b>Jefe de seguridad</b> de la cápsula, delante. <b>Detrás</b>: el protegido y sus acompañantes. El resto de escoltas, en otro vehículo justo detrás." },
+{ t:"t39", q:"Los cuatro tipos de itinerario", a:"<b>Principal</b> (el elegido tras estudiar el resto) · <b>Alternativo</b> (sustituye al principal) · <b>De evacuación</b> (a un centro de urgencia o asistencial) · <b>De fuga</b> (a puntos seguros elegidos de antemano)." },
+{ t:"t39", q:"¿Cada cuánto se revisan los itinerarios?", a:"Cada <b>5 meses</b>. El estudio lo realizan <b>los escoltas con anterioridad a la salida</b>, valorando el grado de peligrosidad." },
+{ t:"t39", q:"Puntos de peligro urbanos", a:"Llegada y salida del itinerario, <b>semáforos</b>, pasos de peatones, tráfico, obras en la vía, vehículos aparcados o en <b>doble fila</b> sospechosos y contenedores." },
+{ t:"t40", q:"Escolta vs. guardaespaldas", a:"El <b>escolta</b> es un profesional habilitado, de seguridad pública o privada, y <b>puede portar armas de fuego</b>. El <b>guardaespaldas</b> es una persona <b>no profesional ni habilitada</b> contratada por un particular: <b>no puede portar armas</b> ni ejercer funciones de escolta." },
+{ t:"t40", q:"El kubotán", a:"Arma de defensa personal: cilindro de metal, plástico o madera de unos <b>14 cm</b> y 1,5 de grosor. Usos: <b>estabilizar el puño</b>, aplicarlo en <b>puntos de presión</b> y ganar ventaja sobre <b>muñecas o dedos</b> del atacante." },
+{ t:"t40", q:"¿Para qué llevan preservativos los escoltas?", a:"Para <b>taponar de forma aséptica heridas de bala</b>, evitando la hemorragia." },
+{ t:"t40", q:"¿Cómo se comunican los escoltas de un dispositivo?", a:"Mediante <b>intercomunicadores</b> y usando el <b>Código Fonético Internacional</b>." },
+{ t:"t41", q:"Los 6 valores éticos en seguridad", a:"Espíritu de servicio · Conciencia de grupo · Honor · Disciplina consciente · Excelencia en las labores · Respeto legal." },
+{ t:"t40", q:"¿Qué abarca el entorno del protegido?", a:"A <b>él mismo</b>, su <b>familia</b>, su <b>círculo de amistades</b>, el <b>personal</b> que trabaje para él, el <b>público</b> en general y la <b>prensa</b> si es un personaje público." }
 ];
 
 /* ---------------------------------------------------------
@@ -1096,25 +1422,6 @@ const PREGUNTAS = [
 { t:"t07", q:"El objetivo del principio de tiempo de reacción es:", o:["Detectar la intrusión lo antes posible","Retardar el acceso no autorizado hasta la intervención de las fuerzas de seguridad","Reducir el número de vigilantes necesarios"], c:[1], w:"Por eso las barreras se diseñan para retrasar, no solo para impedir." },
 { t:"t07", q:"Primera etapa del análisis de riesgos:", o:["Análisis de impacto","Identificación de los activos a proteger","Propuesta de medidas de mitigación"], c:[1], w:"Después: evaluación de amenazas y vulnerabilidades, análisis de impacto y propuesta de medidas." },
 { t:"t07", q:"Las cercas electrificadas y las zanjas son barreras:", o:["Perimetrales","Estructurales","Interiores"], c:[0], w:"Las estructurales son puertas y cristales de seguridad; las interiores, torniquetes y esclusas." },
-/* t08 */
-{ t:"t08", q:"La seguridad privada respecto de la pública es:", o:["Independiente","Complementaria y subordinada","Sustitutiva"], c:[1], w:"Así lo establece el artículo 1 de la Ley 5/2014." },
-{ t:"t08", q:"¿Qué principio implica aplicar medidas proporcionadas a los riesgos?", o:["Proporcionalidad","Congruencia","Corrección"], c:[1], w:"La proporcionalidad se refiere al uso de las técnicas y medios de defensa e investigación." },
-{ t:"t08", q:"¿Quién habilita a los guardas rurales?", o:["La Dirección General de la Policía","La Dirección General de la Guardia Civil","El órgano autonómico competente"], c:[1], w:"El resto del personal de seguridad privada lo habilita la Dirección General de la Policía." },
-{ t:"t08", q:"Plazo sin haber sido sancionado por infracción muy grave:", o:["2 años","4 años","5 años"], c:[1], w:"2 años para la grave y 5 años sin condena por intromisión ilegítima." },
-{ t:"t08", q:"La teoría esférica de la protección actúa en los planos:", o:["Aéreo, superficial y subterráneo","Interior, intermedio y exterior","Frontal, lateral y posterior"], c:[0], w:"El centro de la esfera es la persona protegida." },
-{ t:"t08", q:"En el tercer círculo concéntrico se sitúan:", o:["El escolta personal","Los puestos de seguridad","Las patrullas móviles y grupos de información"], c:[2], w:"No controlan ni vigilan al protegido, pero están dentro del dispositivo por si ocurre una desgracia." },
-{ t:"t08", q:"El objetivo de la cobertura corporal es:", o:["Trasladar al protegido a un lugar seguro","Disminuir la superficie de blanco y la silueta del protegido","Neutralizar al agresor"], c:[1], w:"El traslado es la evacuación; la neutralización llega después, y solo con el protegido a salvo." },
-{ t:"t08", q:"Al neutralizar al agresor hay que ir:", o:["Hacia su cuerpo","Hacia su arma, colocándose delante del agresor","Hacia su vehículo de huida"], c:[1], w:"Así se corta la línea directa con el protegido." },
-{ t:"t08", q:"Un cuarto seguro debe reunir:", o:["Acceso rápido y fácil y buenas comunicaciones","Capacidad de defensa y estar limitado","Amplitud y acceso libre al público"], c:[0,1], w:"También facilidad para prestar los primeros auxilios." },
-/* t09 */
-{ t:"t09", q:"¿Por qué debe llevar aire acondicionado el vehículo de seguridad?", o:["Por comodidad del protegido","Para permitir el cierre total ante un ataque con gas","Para refrigerar el blindaje"], c:[1], w:"Es un requisito de seguridad, no de confort." },
-{ t:"t09", q:"Aspectos exigidos al vehículo de seguridad:", o:["Sistema de bloqueo que corta la inyección de combustible","Rejilla metálica en el interior del tubo del depósito","Televisiones en todos los asientos"], c:[0,1], w:"También sistema de protección del depósito y cierre especial de la caja con candado o cerradura de seguridad." },
-{ t:"t09", q:"La conducción que evita colisionar variando la trayectoria con un giro de 180 grados es:", o:["Ofensiva","Defensiva","Agresiva"], c:[1], w:"La ofensiva aprovecha peso, potencia y velocidad y llega a colisionar." },
-{ t:"t09", q:"¿Qué maniobra emplea el freno de mano para derrapar?", o:["Maniobra en Y","Maniobra California","Giro en J"], c:[1], w:"Se gira el volante hacia la izquierda ayudándose del freno de mano." },
-{ t:"t09", q:"Con dos coches de escolta, la disposición es:", o:["Ambos delante del VIP","Uno delante y otro detrás del VIP","Ambos detrás del VIP"], c:[1], w:"Con uno va detrás; con tres, uno delante y dos detrás." },
-{ t:"t09", q:"¿Dónde viaja el jefe de seguridad de la cápsula?", o:["Detrás, junto al protegido","Delante, al lado del conductor","En el coche escolta"], c:[1], w:"Detrás van el protegido y sus acompañantes." },
-{ t:"t09", q:"El itinerario que lleva a puntos seguros elegidos de antemano es el:", o:["De evacuación","De fuga","Alternativo"], c:[1], w:"El de evacuación lleva a un centro de urgencia o asistencial previamente programado." },
-{ t:"t09", q:"¿Cada cuánto se revisan los itinerarios?", o:["Cada 5 semanas","Cada 5 meses","Cada año"], c:[1], w:"El estudio lo realizan los escoltas con anterioridad a la salida." },
 /* t10 */
 { t:"t10", q:"El vigilante de explosivos tiene la condición de:", o:["Agente de la autoridad","Funcionario de carrera","Autoridad pública plena"], c:[0], w:"La STS 4778/2013 le reconoce además la condición de funcionario público a efectos de responsabilidad penal." },
 { t:"t10", q:"En los controles de acceso, el vigilante:", o:["Puede retener la documentación mientras dure la visita","No puede retener la documentación","Debe fotocopiar siempre el documento"], c:[1], w:"Igualmente, puede detener infractores pero sin realizar interrogatorios." },
@@ -1198,7 +1505,6 @@ const PREGUNTAS = [
 { t:"t19", of:"Oficial 24", q:"¿Cuántas salidas deben tener como mínimo los locales con riesgo de incendio?", o:["Dos y ubicadas en puntos opuestos","Tres como mínimo, para el paso de un número mayor de personas","Dos como mínimo, verticales en relación a la vía de evacuación"], c:[0], w:"Dos salidas en puntos opuestos, para que un foco no bloquee las dos." },
 { t:"t19", of:"Oficial 25", q:"¿Quién asumirá la dirección de la evacuación si no existe otra persona encargada?", o:["El vigilante de seguridad","Siempre el Director del Plan de Autoprotección","El Jefe de Emergencia del edificio o local"], c:[2], w:"El Jefe de Emergencia dirige la evacuación." },
 { t:"t19", of:"Oficial 26", q:"En las normas a seguir en la evacuación, indique la INCORRECTA:", o:["Sin perder la calma, advertir con serenidad al resto de personas la necesidad de abandonar el local","Informar de la presencia de otras personas en lugares donde pueda no haber llegado la noticia del incendio","No recoger el coche del aparcamiento salvo indicación en contra del equipo de seguridad","Tener siempre prevista una vía de evacuación por si el incendio es de envergadura y hay que evacuar"], c:[3], w:"Solución oficial D: la vía de evacuación está prevista en el plan de antemano, no se improvisa según la envergadura." },
-
 /* ===== Test oficial — comunicaciones ===== */
 { t:"t17", of:"Oficial 27", q:"A la estación responsable del correcto funcionamiento de la malla, cuyo indicativo es el más bajo, se la denomina:", o:["Estación secundaria","Estación directora","Estación de trabajo o de reserva"], c:[1], w:"Las secundarias llevan números correlativos a partir de la directora." },
 { t:"t17", of:"Oficial 28", q:"¿Qué elementos indispensables debe tener todo sistema de telecomunicación?", o:["Fuente, transmisor, medio de transmisión, receptor, destino y canal de transmisión","Fuente, transmisor, sistema de trabajo, receptor, destino y canal de transmisión","Fuente, transmisor, medio de transmisión, receptor y canal de transmisión"], c:[0], w:"El sistema de trabajo no es un elemento y el destino no puede faltar." },
@@ -1213,7 +1519,6 @@ const PREGUNTAS = [
 { t:"t17", of:"Oficial 38", q:"¿Qué aspectos se distinguen en la voz como componente de la comunicación telefónica?", o:["Entonación, articulación y elocución","Entonación, articulación y concisión","Articulación, brevedad y concisión"], c:[0], w:"Articulación = mensaje comprensible; elocución = velocidad adecuada." },
 { t:"t17", of:"Oficial 39", q:"Sobre el lenguaje para conseguir el éxito de la transmisión, indique la INCORRECTA:", o:["Hablaremos siempre en presente, situando al interlocutor en el centro de la acción y con vocabulario sencillo","Utilizaremos un vocabulario que nuestro interlocutor pueda entender perfectamente","Repetiremos palabras y frases aunque el interlocutor haya quedado enterado, lo que da mayor seguridad"], c:[2], w:"Repetir lo ya entendido alarga la comunicación sin aportar nada." },
 { t:"t17", of:"Oficial 40", q:"Recibe en un control de accesos una llamada de amenaza de bomba. ¿Qué tres preguntas clave debe hacer?", o:["Dónde está colocado el artefacto, cuándo hará explosión y de qué clase de artefacto se trata","Qué tamaño tiene el artefacto, por qué lo puso y qué explosivo lleva","Dónde está colocado, de qué clase de artefacto se trata y qué tamaño tiene"], c:[0], w:"Dónde, cuándo y qué clase: lo que permite acotar la zona y decidir la evacuación." },
-
 /* ===== Test oficial — informática ===== */
 { t:"t18", of:"Oficial 41", q:"¿Cómo se llama el ordenador que, formando parte de una red local o de internet, provee servicios a otras computadoras llamadas clientes?", o:["Ordenador PC de sobremesa","Workstation","Servidor"], c:[2], w:"La workstation es un sobremesa para trabajos técnicos y científicos." },
 { t:"t18", of:"Oficial 42", q:"¿Qué tipo de operaciones pueden realizar los ordenadores?", o:["Entrada de datos, salida de datos, recuperación, almacenamiento, transmisión, recepción y tratamiento","Entrada de datos, salida de datos, almacenamiento, transmisión, recepción y tratamiento","Entrada de datos, salida de datos, recuperación, almacenamiento, recepción y tratamiento"], c:[0], w:"Son siete operaciones; las otras opciones omiten la recuperación o la transmisión." },
@@ -1286,6 +1591,93 @@ const PREGUNTAS = [
 { t:"t22", of:"Armas 58", q:"Los componentes de un cartucho semimetálico son:", o:["Cuerpo, culote, punta u ojiva","Vaina, pistón, pólvora, taco, tapa y proyectiles","Cuerpo, culote, perdigones, vaina y pólvora","Vaina, pistón, pólvora y perdigones"], c:[1], w:"Añade el taco y la tapa respecto al metálico." },
 { t:"t22", of:"Armas 59", q:"¿Cómo se llama el elemento que impide que los perdigones se fundan, deformen o suelden por la temperatura de los gases?", o:["La vaina, que actúa de refrigerante","El taco, que actúa como refrigerante","El pistón, que separa la pólvora de los perdigones","La tapa, que al separarse deja entrar aire que refrigera los perdigones"], c:[1], w:"El taco sella la cámara de gas y actúa de refrigerante." },
 { t:"t22", of:"Armas 60", q:"¿Qué tipo de proyectiles se pueden disparar con cañones de ánima lisa?", o:["Perdigones, postas y proyectiles de cañón estriado","Perdigones y balas solamente","Postas, perdigones y balas","Postas, balas, perdigones y bolas de goma para antidisturbios"], c:[2], w:"Postas, perdigones y balas." },
+/* ===== UF2676 · incluye las autoevaluaciones del manual ===== */
+{ t:"t24", q:"¿Qué requisitos son necesarios para la habilitación de profesionales de la seguridad privada?", o:["Formación previa","Ser ciudadano del mundo","Carecer de antecedentes penales"], c:[0,2], w:"Art. 28 de la Ley 5/2014. La nacionalidad exigida es la de un Estado de la UE, del EEE o de un tercer Estado con convenio: no vale «ciudadano del mundo».", of:"Autoevaluación UD1 · 1" },
+{ t:"t25", q:"¿Qué principio de actuación implica la aplicación de las medidas de seguridad y de investigación de manera proporcionada a los riesgos?", o:["Corrección","Proporcionalidad","Congruencia"], c:[2], w:"<b>Congruencia</b> = medidas adecuadas y proporcionadas <b>a los riesgos</b>. La <b>proporcionalidad</b> se refiere al uso de las técnicas y medios de defensa.", of:"Autoevaluación UD1 · 2" },
+{ t:"t29", q:"¿Qué teoría consiste en abrir un espacio contenido en una esfera cuyo centro sería la persona protegida?", o:["Teoría esférica de la protección","Teoría de los círculos concéntricos","Teoría estática de la protección"], c:[0], w:"La teoría esférica actúa en tres planos: aéreo, superficial y subterráneo.", of:"Autoevaluación UD1 · 3" },
+{ t:"t23", q:"Completa: «La ______ es un sistema integrado por medidas aplicables en función de lo que se quiera proteger».", o:["Seguridad","Protección","Actuación"], c:[1], w:"La protección es más específica que la seguridad: aplica medidas concretas para garantizarla.", of:"Autoevaluación UD1 · 4" },
+{ t:"t32", q:"«La evacuación tiene el objetivo de disminuir la superficie de blanco y silueta del protegido».", o:["Verdadero","Falso"], c:[1], w:"Falso: ese es el objetivo de la <b>cobertura</b> corporal. La evacuación es el traslado y alejamiento rápido a un lugar de seguridad previamente establecido.", of:"Autoevaluación UD1 · 5" },
+{ t:"t34", q:"¿Con qué aspectos debe contar un vehículo de seguridad?", o:["Sistema de bloqueo","Televisiones en todos sus asientos","Rejilla metálica en el interior del tubo del combustible"], c:[0,2], w:"También: sistema de protección del depósito y cierre especial de la caja con candado o cerradura de seguridad.", of:"Autoevaluación UD2 · 1" },
+{ t:"t36", q:"Completa: «La conducción ______ tiene por objetivo evitar colisionar con vehículos o materiales, evitando así los obstáculos».", o:["Ofensiva","Defensiva","Agresiva"], c:[1], w:"La defensiva evita la colisión variando la trayectoria con un giro de 180º. La ofensiva sí llega a colisionar.", of:"Autoevaluación UD2 · 2" },
+{ t:"t37", q:"Indica una de las normas de seguridad a seguir en la conducción de vehículos:", o:["Mantener los cristales bajados","Auxiliar a personas que lo necesiten","Revisar el vehículo antes del trayecto"], c:[2], w:"Los cristales van <b>subidos</b> y las puertas aseguradas, y <b>no</b> se recoge ni auxilia a extraños.", of:"Autoevaluación UD2 · 3" },
+{ t:"t38", q:"¿En qué posición se sitúan los coches de escolta respecto al coche VIP cuando hay dos coches de escolta?", o:["Ambos por delante del coche VIP","Uno delante y otro detrás del coche VIP","Ambos detrás del coche VIP"], c:[1], w:"Con 1 escolta va detrás; con 2, uno delante y otro detrás; con 3, uno delante y dos detrás.", of:"Autoevaluación UD2 · 4" },
+{ t:"t39", q:"«El itinerario de evacuación nos permite dirigirnos a uno de los puntos seguros elegidos de antemano».", o:["Verdadero","Falso"], c:[1], w:"Falso: eso es el itinerario <b>de fuga</b>. El de evacuación lleva a un centro de urgencia o asistencial previamente programado.", of:"Autoevaluación UD2 · 5" },
+{ t:"t24", q:"Según la Ley 5/2014, ¿quién habilita a los guardas rurales?", o:["La Dirección General de la Policía","La Dirección General de la Guardia Civil","El órgano autonómico competente"], c:[1], w:"Todo el personal lo habilita la DG de la Policía <b>excepto</b> guardas rurales y sus especialidades (guardas de caza y guardapescas marítimos)." },
+{ t:"t24", q:"¿Cuánto tiempo debe haber transcurrido sin haber sido sancionado por una infracción MUY GRAVE en materia de seguridad privada?", o:["2 años","4 años","5 años"], c:[1], w:"2 años para infracción grave y 4 años para muy grave. No confundir con los 5 años por condena por intromisión ilegítima." },
+{ t:"t24", q:"¿Qué ocurre si el personal habilitado pierde alguno de los requisitos?", o:["Se suspende la habilitación durante 6 meses","Se extingue la habilitación y se cancela de oficio la inscripción en el Registro Nacional","Debe repetir únicamente las pruebas psicotécnicas"], c:[1], w:"La pérdida de un requisito produce la extinción de la habilitación y la cancelación de oficio de la inscripción." },
+{ t:"t31", q:"¿Cuáles de estos son personal de seguridad privada según la Ley 5/2014?", o:["Escoltas privados","Detectives privados","Porteros y conserjes"], c:[0,1], w:"Porteros, conserjes y personal auxiliar análogo realizan funciones de información y control de accesos, <b>fuera</b> del ámbito de la ley (art. 6, actividades compatibles)." },
+{ t:"t23", q:"La actividad de seguridad privada respecto de la seguridad pública es:", o:["Independiente y autónoma","Complementaria y subordinada","Sustitutiva en zonas rurales"], c:[1], w:"Art. 1 de la Ley 5/2014: todas estas actividades tienen consideración de complementarias y subordinadas respecto de la seguridad pública." },
+{ t:"t31", q:"Los fines de la seguridad privada según el art. 4 de la Ley 5/2014 son:", o:["Satisfacer las necesidades legítimas de los usuarios","Contribuir a garantizar la seguridad pública","Complementar el monopolio de la seguridad del Estado"], c:[0,1,2], w:"Los tres. El tercero integra funcionalmente sus medios como recurso externo de la seguridad pública." },
+{ t:"t31", q:"¿Qué actividad queda EXCLUIDA del ámbito de la Ley 5/2014?", o:["La autoprotección sin contraprestación ni servicio a terceros","La investigación privada","El acompañamiento y defensa de personas físicas determinadas"], c:[0], w:"Art. 7: las actuaciones de autoprotección, dirigidas al entorno personal o patrimonial propio y sin contraprestación." },
+{ t:"t26", q:"¿Qué técnica de protección abarca tanto la esfera profesional como la personal del protegido?", o:["Dinámica","Estática","Integral"], c:[2], w:"La protección integral contempla tanto la dinámica como la estática, y cubre todos los aspectos de la persona." },
+{ t:"t26", q:"Uno de los principales fundamentos de la protección es:", o:["La anticipación a los riesgos","La implicación emocional con el protegido","La improvisación ante el ataque"], c:[0], w:"La previsión es uno de los principales factores de eficacia. Además, hay que proteger sin juzgar y <b>sin implicarse emocionalmente</b>." },
+{ t:"t26", q:"Señala medidas preventivas recomendables según el manual:", o:["Eliminar los riesgos","Anticiparse al agresor previniendo su posible acción","Ensayar y evaluar el plan de seguridad"], c:[0,1,2], w:"Las tres son las medidas preventivas que cita el manual dentro de los fundamentos de la protección." },
+{ t:"t26", q:"¿Cuál de estas NO es una causa que justifique la protección de una persona según el manual?", o:["Causas religiosas","Causas deportivas","Causas monetarias o económicas"], c:[1], w:"Las causas son: políticas, ideológicas, psicológicas, religiosas, raciales, personales y monetarias o económicas." },
+{ t:"t27", q:"«Intrusión de extraños, asalto, robo, amenaza de bomba, vandalismo o huelgas» son riesgos:", o:["Tecnológicos","Por accidente","Por malas acciones o comportamiento de personas"], c:[2], w:"Los tecnológicos son fallos de instalaciones, corte eléctrico o de agua, fuego y explosión de equipos." },
+{ t:"t27", q:"¿Cómo se detecta de forma más común y efectiva que un peligro provoque daños concretos?", o:["Asignando valores numéricos a la posibilidad y a la seriedad del peligro","Consultando el histórico de incidentes del barrio","Preguntando al protegido su percepción de riesgo"], c:[0], w:"Escala numérica: a los peligros más serios, los valores más altos." },
+{ t:"t28", q:"La protección integral se fundamenta en dos aspectos principales:", o:["La prevención y la protección","La cobertura y la evacuación","La vigilancia y el control"], c:[0], w:"Prevención = evitar el suceso. Protección = neutralizar el suceso ya acontecido para salvar la vida." },
+{ t:"t28", q:"Las medidas orientadas a detectar o advertir una amenaza mediante dispositivos son medidas de seguridad:", o:["Física","Electrónica","Organizativa"], c:[1], w:"Física = barreras. Organizativa = planificación de funciones, departamentos y planes de seguridad." },
+{ t:"t28", q:"La creación y funcionamiento de departamentos de seguridad y la elaboración de planes de seguridad son medidas de seguridad:", o:["Personal","Informática","Organizativa"], c:[2], w:"La organizativa se dirige a evitar amenazas mediante disposición, programación o planificación de cometidos y funciones." },
+{ t:"t29", q:"En la teoría esférica, los tres planos de actuación son:", o:["Aéreo, superficial y subterráneo","Interior, intermedio y exterior","Frontal, lateral y posterior"], c:[0], w:"El centro de la esfera es la persona protegida." },
+{ t:"t29", q:"¿Quién ocupa el primer círculo en la teoría de los círculos concéntricos?", o:["Los puestos de seguridad","El escolta personal","Las patrullas móviles"], c:[1], w:"1º escolta personal (cubrir, proteger y evacuar); 2º puestos de seguridad; 3º patrullas móviles y grupos de información." },
+{ t:"t29", q:"En el tercer círculo concéntrico se sitúan dispositivos que:", o:["Vigilan permanentemente al protegido","No controlan ni vigilan al protegido pero están para una posible actuación","Sustituyen al escolta personal en los relevos"], c:[1], w:"Son las patrullas móviles y grupos de información, el círculo más alejado." },
+{ t:"t30", q:"La misión principal del escolta del primer círculo es:", o:["Cubrir y proteger del ataque y realizar una rápida evacuación","Filtrar el acceso al área restringida","Observar el perímetro e informar al superior"], c:[0], w:"El filtro de acceso corresponde a los puestos de revisión y control; la observación del perímetro, a los puestos de vigilancia." },
+{ t:"t30", q:"¿Qué puesto supone realizar un filtro entre las personas que intentan acceder a un área restringida?", o:["Puestos de vigilancia","Puestos de revisión y control","Puestos especiales de seguridad"], c:[1], w:"Identifican a personas, vehículos u objetos y seleccionan quién entra en el área de seguridad." },
+{ t:"t30", q:"El estudio de los riesgos en la evaluación del dispositivo se hace en función de:", o:["Su gravedad (magnitud del daño) y la probabilidad de que sucedan","El coste económico de las medidas","El número de escoltas disponibles"], c:[0], w:"Además se estudia el entorno: ciudad, zona, itinerarios, cuartos seguros y centros de asistencia." },
+{ t:"t30", q:"Un cuarto seguro debe reunir:", o:["Acceso rápido y fácil y buenas comunicaciones","Capacidad de defensa y estar limitado","Ser un espacio amplio y abierto al público"], c:[0,1], w:"También facilidad para prestar los primeros auxilios. Nunca abierto al público." },
+{ t:"t31", q:"Un plan de seguridad temporal se realiza cuando:", o:["La persona realiza actividades no habituales, como un viaje","Se trata de los recorridos habituales del protegido","Se produce un cambio de escolta"], c:[0], w:"En los permanentes (recorridos habituales) la coordinación es más protocolizada." },
+{ t:"t31", q:"El art. 14 de la Ley 5/2014 regula:", o:["La colaboración profesional con las FCS","El acceso a la información por las FCS","La coordinación y participación"], c:[0], w:"Art. 15 = acceso a la información; art. 16 = coordinación y participación (comisiones mixtas)." },
+{ t:"t31", q:"Las comisiones mixtas de seguridad privada previstas en el art. 16 tienen carácter:", o:["Ejecutivo y sancionador","Consultivo y de colaboración","Judicial"], c:[1], w:"Pueden ser nacionales, autonómicas o provinciales; su composición y funciones se determinan reglamentariamente." },
+{ t:"t32", q:"Ante una agresión, la primera acción del escolta incluye avisar del ataque especificando:", o:["El tipo de agresión, el agresor y la dirección por la que viene","El número de heridos y su gravedad","La matrícula del vehículo del agresor"], c:[0], w:"El aviso a los compañeros se da por cualquier medio: walkie talkie o señales." },
+{ t:"t32", q:"Una vez puesto a salvo el protegido, para neutralizar al agresor hay que ir:", o:["Hacia el cuerpo del atacante","Hacia el arma del atacante, colocándose delante del agresor","Hacia el vehículo de huida"], c:[1], w:"Se corta así la línea directa con el protegido." },
+{ t:"t32", q:"Se recomienda que las cápsulas de protección estén formadas por:", o:["De uno a cinco miembros","De cinco a diez miembros","Exactamente cuatro miembros"], c:[0], w:"No hay regla fija, pero de 1 a 5 es lo recomendable." },
+{ t:"t32", q:"En una escalera, ¿por dónde va la persona protegida?", o:["Por el centro de la escalera","Lo más cerca posible de la pared","Detrás de todo el dispositivo"], c:[1], w:"El escolta se sitúa próximo a ella y el resto del dispositivo alrededor formando un círculo." },
+{ t:"t32", q:"En un ascensor, ¿qué hace el resto del equipo de seguridad?", o:["Sube en el mismo ascensor","Sube por las escaleras y controla la salida","Espera en el vestíbulo"], c:[1], w:"El protegido va siempre acompañado de algún escolta dentro del ascensor." },
+{ t:"t32", q:"En un acto de recibimiento, el escolta se sitúa:", o:["Delante de la personalidad","Tras la personalidad, que ocupa una posición fija","En la puerta del local exclusivamente"], c:[1], w:"El resto se reparte por la sala y es conveniente que uno se sitúe en la entrada del local." },
+{ t:"t32", q:"En las líneas de control, los escoltas deben observar especialmente:", o:["Las manos de las personas que saludan","El calzado de los asistentes","Las cámaras de los periodistas"], c:[0], w:"Se colocan dos delante y dos detrás del protegido." },
+{ t:"t32", q:"En una evacuación, el jefe del equipo se sitúa:", o:["Cerrando la formación","Más próximo a la persona a evacuar, guiándola","En el vehículo, esperando"], c:[1], w:"El resto abre camino apartando a quienes dificulten el paso, o conduce al protegido al vehículo." },
+{ t:"t29", q:"La protección estática se planifica dividiendo el espacio en:", o:["Tres círculos concéntricos","Interior y exterior (teoría simplificada)","Aéreo, superficial y subterráneo"], c:[1], w:"Es la teoría simplificada de los círculos concéntricos aplicada al lugar fijo." },
+{ t:"t33", q:"Dentro de la protección estática exterior hay que vigilar especialmente:", o:["Las terrazas y sótanos del inmueble","Papeleras y buzones, por poder ocultar explosivos","La bandeja trasera del vehículo"], c:[1], w:"Terrazas y sótanos pertenecen al interior; la bandeja trasera es de la requisa del vehículo." },
+{ t:"t33", q:"¿Qué es la avanzada?", o:["El primer escolta de la formación a pie","La acción de requisar el lugar antes de la entrada del protegido","El vehículo que abre la caravana"], c:[1], w:"Su misión es obtener información del lugar de destino y establecer un perímetro de seguridad." },
+{ t:"t33", q:"La coordinación entre varios servicios que protegen a una misma persona la realiza:", o:["El escolta más antiguo","La sala de operaciones u órgano conocedor de esos servicios","La Comisión Mixta provincial"], c:[1], w:"Los jefes de cada servicio mantienen con el coordinador información continua y recíproca." },
+{ t:"t34", q:"El sistema de bloqueo del vehículo debe tener un retardo entre activación y acción de:", o:["30 segundos como máximo","2 minutos como máximo","5 minutos como máximo"], c:[1], w:"Corta la inyección de combustible y acciona alarma acústica y luminosa." },
+{ t:"t34", q:"El blindaje completo del vehículo incluye:", o:["Carrocería y cristales","Bajos y neumáticos","Solo las puertas laterales"], c:[0,1], w:"Debe estar completamente blindado: carrocería, cristales, bajos y neumáticos." },
+{ t:"t35", q:"¿Qué conocimientos se exigen al conductor del vehículo de seguridad?", o:["Conocer a la perfección el vehículo y su mecánica","Conocer los itinerarios programados y alternativos","Poseer licencia de armas de guerra"], c:[0,1], w:"Debe haber recibido entrenamiento de conducción de alta seguridad." },
+{ t:"t35", q:"La capacidad de reacción, la concentración y los reflejos del conductor son:", o:["Límites externos","Límites del vehículo","Límites personales"], c:[2], w:"Los externos los impone el entorno (pavimento, tráfico, meteorología)." },
+{ t:"t35", q:"¿Cada cuánto debe revisarse el vehículo para detectar manipulaciones o sabotajes?", o:["Diariamente","Semanalmente","Antes de cada mes"], c:[0], w:"Además, la requisa exterior debe ser completa, sistemática y preestablecida." },
+{ t:"t35", q:"La requisa interior del vehículo incluye:", o:["Asientos, bandeja trasera y guantera","Bajos y neumáticos","Únicamente el maletero"], c:[0], w:"Por último se revisan el motor y el maletero." },
+{ t:"t36", q:"La conducción evasiva busca:", o:["Llegar lo más rápido posible al destino evitando las situaciones de peligro","Circular siempre por debajo del límite legal","Provocar la colisión con cualquier obstáculo"], c:[0], w:"Su finalidad es la destreza y pericia para evitar emboscadas y evadirse con una simple maniobra." },
+{ t:"t36", q:"¿En qué maniobra se utiliza el freno de mano para hacer derrapar el coche?", o:["Maniobra en Y","Maniobra California","Giro en J"], c:[1], w:"En la California se gira el volante hacia la izquierda ayudándose del freno de mano." },
+{ t:"t36", q:"¿Qué maniobra consiste en parar el vehículo y realizar el giro marcha atrás?", o:["Vuelta corta","Giro en J","Maniobra California"], c:[0], w:"Es parecida a la maniobra en Y, pero primero se detiene el vehículo." },
+{ t:"t36", q:"El giro en J consiste en:", o:["Mantener el sentido de dirección cambiando el de la marcha, iniciando marcha atrás","Girar 90 grados aprovechando un cruce","Embestir lateralmente al vehículo atacante"], c:[0], w:"Se frena bloqueando las ruedas delanteras y se engrana la primera para salir hacia adelante." },
+{ t:"t36", q:"¿Por qué carril conviene circular para poder realizar las maniobras evasivas con comodidad?", o:["Por el arcén","Por el carril medio o más próximo a la calzada","Por el carril de la derecha siempre"], c:[1], w:"Ante barricadas, si el vehículo tiene mayor envergadura y potencia, se puede embestir a otro vehículo." },
+{ t:"t37", q:"Señala las normas de seguridad correctas en la conducción:", o:["No recoger ni auxiliar a extraños","Detenerse solo ante fuerza pública identificada con su placa","No bajar del coche al protegido hasta comprobar que no hay peligro"], c:[0,1,2], w:"También: cristales subidos, puertas aseguradas, vías amplias e iluminadas y rutas aleatorias previamente estudiadas." },
+{ t:"t38", q:"Cuando hay varios escoltas en el mismo operativo:", o:["Viajan todos en el coche del protegido","Viajan en vehículos separados y en caravana","Se desplazan a pie por delante del vehículo"], c:[1], w:"En el coche del protegido solo van el conductor, el jefe de seguridad, el protegido y sus acompañantes." },
+{ t:"t38", q:"Se considera que hay caravana cuando, como mínimo, hay:", o:["Tres vehículos","El coche del protegido y el coche de los escoltas","Un coche piloto y un coche adicional"], c:[1], w:"Cuantos más vehículos conformen la caravana, más complicada y problemática será." },
+{ t:"t38", q:"Una caravana informal es aquella en la que:", o:["El itinerario es conocido por todos","El itinerario solo lo conocen el protegido y su equipo de seguridad","No se emplean vehículos blindados"], c:[1], w:"La formal es aquella cuyo itinerario es conocido por todos." },
+{ t:"t38", q:"En el coche piloto viajan:", o:["El protegido y sus acompañantes","El equipo de seguridad y un Policía local","Solo el jefe del equipo"], c:[1], w:"En el coche VIP van el protegido, sus acompañantes y el Jefe del Equipo de seguridad." },
+{ t:"t38", q:"¿Para qué sirve el coche adicional?", o:["Para transportar el equipamiento pesado","Para sustituir al coche VIP si se estropea, con las mismas prestaciones","Para abrir la caravana"], c:[1], w:"El que abre la caravana en su caso es el coche piloto." },
+{ t:"t38", q:"Con tres coches de escolta, la disposición es:", o:["Uno delante y dos detrás del VIP","Los tres detrás del VIP","Dos delante y uno detrás"], c:[0], w:"Con uno: detrás. Con dos: uno delante y otro detrás." },
+{ t:"t38", q:"¿Dónde se sitúa el jefe de seguridad de la cápsula dentro del coche del protegido?", o:["En la parte trasera, junto al protegido","En la parte delantera, al lado del conductor","En el coche escolta"], c:[1], w:"En la parte trasera van el protegido y, si los hubiese, sus acompañantes." },
+{ t:"t39", q:"El itinerario que permite acudir a un centro de urgencia o asistencial previamente programado es el:", o:["De fuga","De evacuación","Alternativo"], c:[1], w:"El de fuga lleva a puntos seguros elegidos de antemano; el alternativo sustituye al principal." },
+{ t:"t39", q:"Sobre el itinerario principal es correcto afirmar que:", o:["Es siempre el mismo para un mismo destino","Se elige tras estudiar el resto de caminos y puede ser alternativo otro día","Solo lo decide el protegido"], c:[1], w:"Lo elige el equipo de protección tras cerciorarse de que es el más seguro para ese trayecto." },
+{ t:"t39", q:"¿Cuáles son puntos de peligro urbanos en un itinerario?", o:["Los semáforos","Los vehículos aparcados o en doble fila sospechosos","Los contenedores"], c:[0,1,2], w:"También la llegada y salida del itinerario, los pasos de peatones, el tráfico y las obras en la vía." },
+{ t:"t39", q:"El estudio de los itinerarios por tramos tiene en cuenta:", o:["Nombre y anchura de la calle, carriles, aceras, bordillos y suelo","La posibilidad de realizar maniobras","El horario de apertura de los comercios"], c:[0,1], w:"Lo realizan los escoltas con anterioridad a la salida." },
+{ t:"t39", q:"¿Con qué frecuencia deben revisarse los itinerarios?", o:["Cada 5 meses","Cada 5 semanas","Cada año"], c:[0], w:"Se revisan teniendo en cuenta el grado de peligrosidad que tengan." },
+{ t:"t40", q:"El guardaespaldas, a diferencia del escolta:", o:["Puede portar armas de fuego","No es profesional ni está habilitado y no puede portar armas","Solo actúa en protección estática"], c:[1], w:"El escolta es profesional de la seguridad pública o privada y puede llevar armas de fuego." },
+{ t:"t40", q:"Según Mora (2008), la detección de explosivos y los primeros auxilios son competencias:", o:["Prácticas","Teóricas","Perceptivas"], c:[1], w:"Las perceptivas son la relación con el entorno, la eficacia en la observación y la rememoración y retentiva." },
+{ t:"t40", q:"La capacidad de rememoración y retentiva es una cualidad:", o:["Práctica","Teórica","Perceptiva"], c:[2], w:"Junto con la capacidad de relación con el entorno y la eficacia en la observación." },
+{ t:"t40", q:"El chaleco antibalas protege también de disparos de fusil cuando:", o:["Se moja previamente","Se le agregan placas metálicas o cerámicas","Se lleva bajo la camisa"], c:[1], w:"Absorbe el impacto de balas al torso y esquirlas de explosiones." },
+{ t:"t40", q:"El kubotán mide aproximadamente:", o:["7 cm","14 cm","25 cm"], c:[1], w:"Cilindro de metal, plástico o madera de unos 14 cm y 1,5 de grosor; no necesita mucho entrenamiento." },
+{ t:"t40", q:"El inhibidor de frecuencia es un dispositivo que:", o:["Amplifica la señal de los intercomunicadores","Impide o dificulta la transmisión radioeléctrica emitiendo mayor potencia que el emisor","Detecta explosivos por resonancia"], c:[1], w:"Actúa sobre un determinado rango de frecuencias." },
+{ t:"t40", q:"¿Qué se usa para taponar de forma aséptica una herida de bala?", o:["Preservativos","Gasas de algodón hidrófilo","Cinta americana"], c:[0], w:"Es uno de los materiales que el manual incluye entre los que utilizan los escoltas." },
+{ t:"t40", q:"Los escoltas de un dispositivo se comunican mediante:", o:["Intercomunicadores y el Código Fonético Internacional","Señales luminosas exclusivamente","Mensajería del teléfono personal"], c:[0], w:"Especialmente importante cuando ocurre algún incidente." },
+{ t:"t40", q:"El entorno del protegido incluye:", o:["Su familia y su círculo de amistades","El personal que trabaja para él y la prensa","Únicamente a él mismo"], c:[0,1], w:"Los ataques suelen ir dirigidos hacia el círculo de familiares y amigos cercanos." },
+{ t:"t40", q:"Ante la prensa, el escolta debe:", o:["Mantener una actitud firme y controlada, permaneciendo en un segundo plano","Responder en nombre del protegido","Impedir cualquier grabación por la fuerza"], c:[0], w:"La finalidad es no dar mala prensa al protegido." },
+{ t:"t41", q:"«Respetar las directrices de los superiores, cumpliendo normas y protocolos» corresponde al valor ético de:", o:["Honor","Disciplina consciente","Excelencia en las labores"], c:[1], w:"Cuando el dispositivo cuente con varios escoltas siempre habrá un Jefe de Seguridad por encima." },
+{ t:"t41", q:"«No cometer ni tolerar actos de corrupción y atender al usuario con respeto y cortesía» es el valor de:", o:["Excelencia en las labores","Espíritu de servicio","Conciencia de grupo"], c:[0], w:"La conciencia de grupo es la cooperación y solidaridad entre compañeros y entidades." },
+{ t:"t41", q:"El valor ético de respeto legal implica:", o:["Comunicar toda irregularidad legal a los organismos competentes","Actuar bajo los principios de racionalidad y proporcionalidad","Obedecer cualquier orden del protegido"], c:[0,1], w:"El escolta actúa siempre conforme a la legislación, no a las instrucciones particulares del protegido." },
+{ t:"t41", q:"El orgullo de ostentar el uniforme que identifica al escolta corresponde al valor de:", o:["Honor","Dignidad","Espíritu de servicio"], c:[0], w:"Quienes llevan el uniforme tienen responsabilidad con el servicio y con el resto de la población." }
 ];
 
 /* ---------------------------------------------------------
@@ -1315,18 +1707,6 @@ const ORAL = [
   "Equipos: <b>EPI</b> primera intervención, <b>ESI</b> segunda intervención, <b>EPA</b> primeros auxilios y <b>EAE</b> alarma y evacuación.",
   "Colaboración: <b>RED AZUL</b> con el Cuerpo Nacional de Policía y <b>COOPERA</b> con la Guardia Civil.",
   "Cierre: el sistema integral combina medios <b>humanos, técnicos</b> (pasivos y activos) e <b>institucionales</b>." ] },
-{ t:"t08", q:"Desarrolle la teoría de los círculos concéntricos y la secuencia de actuación ante una agresión.", p:[
-  "Un círculo rodeado por <b>tres círculos concéntricos</b> en torno al protegido; cada uno actúa dentro de su propio cometido.",
-  "<b>1º interior</b>: escolta personal. Misión: cubrir y proteger del ataque y realizar una rápida evacuación.",
-  "<b>2º</b>: puestos de seguridad, que mantienen al protegido en su campo de observación. <b>3º</b>: patrullas móviles y grupos de información, que no vigilan al protegido.",
-  "Ante agresión: <b>avisar</b> (tipo, agresor, dirección), <b>cobertura</b> (reducir superficie de blanco y silueta), <b>evacuación</b> al lugar seguro preestablecido y <b>neutralizar</b> yendo al arma, no al cuerpo.",
-  "Enlazar con la <b>teoría esférica</b>: planos aéreo, superficial y subterráneo." ] },
-{ t:"t09", q:"Caravanas, itinerarios y normas de conducción en protección de personas.", p:[
-  "<b>Caravana</b>: mínimo coche del protegido y coche de escoltas. <b>Informales</b> (itinerario no público) y <b>formales</b> (conocido por todos).",
-  "Coches: <b>piloto</b>, <b>VIP</b>, <b>adicional</b> y <b>escolta</b>. Posiciones: 1 escolta detrás; 2, uno delante y otro detrás; 3, uno delante y dos detrás.",
-  "Dentro del VIP: conductor y <b>jefe de seguridad delante</b>; protegido y acompañantes detrás.",
-  "Itinerarios: <b>principal, alternativo, de evacuación</b> (centro asistencial) y <b>de fuga</b> (puntos seguros de antemano). Se revisan <b>cada 5 meses</b>.",
-  "Normas: cristales subidos, puertas aseguradas, no recoger extraños, detenerse solo ante fuerza pública identificada, revisar el vehículo antes y rutas aleatorias previamente estudiadas." ] },
 { t:"t10", q:"Marco jurídico del vigilante de explosivos: condición, funciones y normativa.", p:[
   "Condición de <b>agente de la autoridad</b> según la Ley 5/2014, con mayor protección penal. La <b>STS 4778/2013</b> añade la condición de funcionario público a efectos de responsabilidad penal.",
   "Funciones del <b>art. 32</b>: vigilancia y protección de bienes y personas, controles de acceso <b>sin retener documentación</b>, prevención de actos delictivos, detención y entrega <b>sin interrogatorios</b>, protección de transportes de valores y explosivos y verificación de señales de alarma.",
@@ -1407,6 +1787,66 @@ const ORAL = [
   "<b>Pólvora</b>: hoy piroxilada o sin humo. <b>Deflagra</b>, no explosiona: menos presión, más velocidad y sin residuos.",
   "<b>Balas</b>: de plomo, blindadas y semiblindadas. Otras: perforadoras, trazadoras, incendiarias, expansivas, explosivas y dum-dum, estas últimas prohibidas.",
   "Cierre: el <b>calibre real</b> se mide entre dos crestas del estriado y el <b>nominal</b> entre dos surcos; este coincide con el diámetro de la bala." ] },
+/* ===== UF2676 ===== */
+{ t:"t28", q:"Explíqueme qué es la protección integral y en qué se fundamenta.", p:[
+  "Servicio de protección cuyo <b>objetivo</b> es establecer un entorno seguro mediante un dispositivo que <b>neutralice los peligros</b>.",
+  "El dispositivo tiene carácter <b>preventivo y disuasorio</b>: permite controlar y reaccionar mediante <b>neutralización, cobertura y evacuación</b>.",
+  "Se extiende a la esfera <b>profesional y personal</b> del protegido; cada una se aborda desde la protección <b>dinámica y estática</b>.",
+  "Se fundamenta en <b>dos aspectos</b>: la <b>prevención</b> (evitar el suceso) y la <b>protección</b> (neutralizar el suceso ya acontecido, con medios humanos y técnicos, para salvar la vida).",
+  "Cierre: un buen sistema de protección llega a ser <b>disuasorio</b> y hace desistir al agresor de sus intenciones." ] },
+{ t:"t25", q:"Enumere los principios básicos de actuación del personal de seguridad privada.", p:[
+  "<b>Legalidad</b> · <b>Integridad</b> · <b>Protección</b> · <b>Dignidad</b> · <b>Corrección</b> · <b>Congruencia</b> · <b>Proporcionalidad</b> · <b>Reserva profesional</b> · <b>Colaboración</b> con las FCS.",
+  "Truco para no perderse: los cinco primeros son de <b>conducta</b>; congruencia y proporcionalidad son de <b>medida</b>; reserva y colaboración son de <b>relación</b>.",
+  "Añadir: el personal está obligado a <b>auxiliar y colaborar</b> especialmente con las FCS y a guardar <b>rigurosa reserva profesional</b>, facilitando datos solo a quien le haya contratado y a los órganos judiciales y policiales competentes." ] },
+{ t:"t29", q:"Desarrolle la teoría de los círculos concéntricos.", p:[
+  "Un círculo rodeado por <b>tres círculos concéntricos</b> alrededor del protegido; cada uno presta servicio dentro de la esfera de su propio cometido y sirve de base para un <b>dispositivo integral</b>.",
+  "<b>1er círculo o interior</b>: el <b>escolta personal</b>, las personas más próximas. La distancia depende de la situación concreta. Misión: <b>cubrir y proteger</b> de un ataque y realizar una <b>rápida evacuación</b> a lugar seguro.",
+  "<b>2º círculo</b>: <b>puestos de seguridad</b>; guardan cierta distancia pero tienen al protegido <b>dentro de su campo de observación</b>.",
+  "<b>3er círculo</b>: <b>patrullas móviles y grupos de información</b>; <b>no controlan ni vigilan</b> al protegido, pero están dentro del dispositivo por si ocurriera una desgracia.",
+  "Enlazar con la <b>teoría esférica</b> (planos aéreo, superficial y subterráneo) y con la teoría <b>simplificada</b> (interior/exterior) usada en la protección estática." ] },
+{ t:"t24", q:"¿Qué requisitos generales exige la Ley 5/2014 para obtener la habilitación?", p:[
+  "Ser <b>mayor de edad</b>; <b>capacidad física y aptitud psicológica</b>; <b>nacionalidad</b> UE, EEE o tercer Estado con convenio; <b>formación previa</b>.",
+  "<b>Carecer de antecedentes penales</b> por delitos dolosos.",
+  "No sancionado por infracción <b>grave en 2 años</b> ni <b>muy grave en 4 años</b>; no <b>separado del servicio</b> de FCS o FFAA en 2 años; no <b>condenado</b> por intromisión ilegítima en honor, intimidad, imagen o secreto de las comunicaciones en <b>5 años</b>.",
+  "<b>Superar las pruebas</b> de comprobación del Ministerio del Interior.",
+  "Añadir: la habilita la <b>DG de la Policía</b> (guardas rurales, la <b>Guardia Civil</b>) y la <b>pérdida de un requisito extingue</b> la habilitación con cancelación de oficio en el Registro Nacional." ] },
+{ t:"t32", q:"¿Cómo actúa usted desde que se produce la agresión hasta que termina el incidente?", p:[
+  "<b>1. Aviso</b>: comunico el ataque a los compañeros por walkie o señales, especificando <b>tipo de agresión, agresor y dirección</b> de la que procede.",
+  "<b>2. Cobertura</b>: cubro corporalmente al protegido para <b>disminuir su superficie de blanco y su silueta</b>.",
+  "<b>3. Evacuación</b>: traslado y alejo rápidamente al protegido al <b>lugar seguro previamente establecido</b>. Ningún miembro del equipo hace otra maniobra que no sea cubrir o evacuar.",
+  "<b>4. Neutralización</b>: solo con el protegido a salvo. Voy <b>al arma</b> del atacante, no al cuerpo, colocándome <b>delante del agresor</b> para cortar la línea directa con el protegido.",
+  "Recordar que el desplazamiento <b>a pie</b> es el de mayor riesgo por el enlentecimiento de la cobertura y la evacuación." ] },
+{ t:"t32", q:"Explique la protección en interior de edificios, escaleras y ascensores.", p:[
+  "<b>Edificios</b>: inspección completa <b>antes</b> de la llegada del protegido, localizando una habitación que sirva de <b>espacio de seguridad</b>.",
+  "<b>Escaleras</b>: inspección previa. El protegido va <b>pegado a la pared</b>, el escolta próximo y el resto <b>formando un círculo</b>; la distancia depende de las dimensiones de la escalera. Las <b>mecánicas</b> son más peligrosas por los espacios abiertos a los lados.",
+  "<b>Ascensores</b>: entrañan bastante peligro. Revisión minuciosa de <b>espacio, hueco entre ascensor y techo, cables y maquinaria</b>. El protegido va <b>siempre con un escolta</b> y el resto <b>sube por las escaleras</b> para controlar la salida." ] },
+{ t:"t34", q:"¿Qué características debe reunir el vehículo y qué exige el Real Decreto?", p:[
+  "Características: <b>cómodo</b>, con <b>aire acondicionado</b> (permite el cierre total ante un ataque con gas), <b>seguro y rápido</b>, completamente <b>blindado</b> (carrocería, cristales, bajos y neumáticos) y con <b>potencia</b> suficiente en buena relación potencia/peso.",
+  "Requisitos del RD: <b>sistema de bloqueo</b> que corta la inyección de combustible y acciona alarma acústica y luminosa, con retardo máximo de <b>2 minutos</b>; <b>rejilla metálica</b> en el tubo del depósito; <b>protección del depósito</b>; <b>cierre especial de la caja</b> con candado o cerradura de seguridad.",
+  "En grandes dispositivos, <b>vehículo aparte para los escoltas</b>, de características similares, con buen sistema de comunicación entre ambos." ] },
+{ t:"t36", q:"Diferencie conducción ofensiva y defensiva y describa las maniobras.", p:[
+  "Ambas son <b>conducción evasiva</b>: llegar lo más rápido posible al destino evitando las situaciones de peligro, con la destreza necesaria para evitar emboscadas.",
+  "<b>Ofensiva</b>: aprovecha <b>peso, potencia y velocidad</b> para afrontar el ataque de forma <b>activa</b>, llegando a <b>colisionar</b> con el obstáculo.",
+  "<b>Defensiva</b>: su objetivo es <b>evitar la colisión</b>, variando la trayectoria mediante un <b>giro de 180º</b>.",
+  "Maniobras: <b>en Y</b> (reducir, girar de derecha a izquierda, marcha atrás y volver a girar), <b>vuelta corta</b> (parar y girar marcha atrás), <b>California</b> (volante a la izquierda + freno de mano, derrapando) y <b>giro en J</b> (marcha atrás, giro rápido, bloqueo de ruedas delanteras y primera para salir adelante).",
+  "La <b>Y</b> y la <b>California</b> se usan <b>solo cuando no hay tiempo para reaccionar</b>. Conviene circular por el <b>carril medio o más próximo a la calzada</b>." ] },
+{ t:"t38", q:"Clasifique las caravanas y explique la posición de los vehículos.", p:[
+  "<b>Caravana</b>: conjunto de vehículos para desplazar al protegido y a todo su personal de seguridad. Mínimo: <b>coche del protegido + coche de escoltas</b>. Cuantos más vehículos, más problemática.",
+  "Según el itinerario: <b>informales</b> (itinerario no público, solo conocido por protegido y equipo) y <b>formales</b> (conocido por todos).",
+  "Vehículos: <b>piloto</b> (equipo de seguridad y un Policía local), <b>VIP</b> (protegido, acompañantes y Jefe del Equipo), <b>adicional</b> (mismas prestaciones que el VIP, por avería) y <b>escolta</b> (resto del equipo).",
+  "Posiciones: 1 escolta → <b>detrás</b>; 2 escoltas → <b>uno delante y otro detrás</b>; 3 escoltas → <b>uno delante y dos detrás</b>.",
+  "Dentro del coche VIP: <b>conductor y jefe de seguridad delante</b>; <b>protegido y acompañantes detrás</b>." ] },
+{ t:"t39", q:"Tipos de itinerario y estudio previo.", p:[
+  "<b>Principal</b>: el elegido para un desplazamiento concreto tras estudiar el resto y comprobar que es el más seguro; puede ser alternativo otro día.",
+  "<b>Alternativo</b>: sustituye al principal si este no puede usarse.",
+  "<b>De evacuación</b>: variante del principal para acudir a un <b>centro de urgencia o asistencial</b> previamente programado.",
+  "<b>De fuga</b>: variación del principal o del alternativo para dirigirse a <b>puntos seguros elegidos de antemano</b>.",
+  "Estudio: se determinan los <b>puntos de peligro urbanos</b> (llegada y salida, semáforos, pasos de peatones, tráfico, obras, vehículos en doble fila, contenedores), se fijan <b>puntos seguros</b> y <b>centros asistenciales</b>. Por tramos se valora <b>nombre y anchura de la calle, carriles, aceras, bordillos, suelo y posibilidad de maniobras</b>. Lo hacen <b>los escoltas antes de la salida</b> y se revisa <b>cada 5 meses</b>." ] },
+{ t:"t40", q:"Funciones del escolta, diferencia con el guardaespaldas y valores éticos.", p:[
+  "El <b>escolta</b> es un profesional de la seguridad <b>pública o privada</b> especializado en protección de personalidades; pertenece a las FCS del Estado o a una empresa de seguridad privada. Su función principal es <b>proteger a las personas</b>, con dedicación <b>plena</b>, mentalizado para el ataque con arma de fuego; los escoltas privados <b>pueden portar armas</b>.",
+  "El <b>guardaespaldas</b> es una persona <b>no profesional y no habilitada</b> contratada por un particular: <b>no puede portar armas</b> ni ejercer las funciones propias del escolta.",
+  "Habilidades (Mora, 2008): <b>prácticas</b> (físico, defensa personal, tácticas, conducción ofensiva-evasiva, asunción de responsabilidades, equilibrio mental), <b>teóricas</b> (explosivos, primeros auxilios, protocolo) y <b>perceptivas</b> (relación con el entorno, observación, retentiva).",
+  "<b>Valores éticos</b>: espíritu de servicio, conciencia de grupo, honor, disciplina consciente, excelencia en las labores y respeto legal." ] }
 ];
 
 /* ---------------------------------------------------------
@@ -1471,4 +1911,23 @@ const CHULETA = [
   "<b>Vaina</b> — boca, cuerpo y culote","<b>Pistón</b> — Berdan (2 oídos) o Bóxer (1 oído)","<b>Carga de proyección</b> — pólvora sin humo","<b>Bala</b> — cuerpo, culote y ojiva","<b>Taco</b> — solo en el semimetálico; refrigerante"] },
 { t:"Cifras del módulo instrumental", cnt:"Números", ord:false, l:[
   "<b>20 kg / 30 kg</b> — extintor manual y dorsal","<b>6 meses</b> — revisión de extintores","<b>100 m</b> — distancia máxima de los hidrantes a las fachadas","<b>96 %</b> — eficacia de los sprinklers","<b>2 salidas</b> — mínimo en locales con riesgo, en puntos opuestos","<b>20 mm</b> — calibre desde el que un arma es de guerra","<b>30 cm / 60 cm</b> — cañón y longitud total del arma corta","<b>11 cm</b> — hoja máxima de navaja no automática","<b>3 a 8</b> — número de estrías de un cañón rayado","<b>1890</b> — año que separa las armas históricas (6.ª categoría)"] },
+/* ===== UF2676 ===== */
+{ t:"Principios básicos de actuación", cnt:"9 principios", ord:true, l:[
+  "Legalidad","Integridad","Protección","Dignidad","Corrección","<b>Congruencia</b> — medidas proporcionadas a los <b>riesgos</b>","<b>Proporcionalidad</b> — uso de <b>técnicas y medios</b> de defensa","Reserva profesional","Colaboración con las FCS"] },
+{ t:"Técnicas de protección", cnt:"3 tipos", ord:false, l:[
+  "<b>Integral</b> — todos los aspectos: esfera profesional y personal","<b>Dinámica</b> — desplazamientos o traslado de un objeto","<b>Estática</b> — lugar fijo"] },
+{ t:"Escalones o niveles de seguridad", cnt:"3 puestos", ord:true, l:[
+  "<b>Puestos de vigilancia</b> — observar y comunicar novedades al superior","<b>Puestos de revisión y control</b> — filtro de acceso al área restringida","<b>Puestos especiales de seguridad</b> — función específica dentro del dispositivo"] },
+{ t:"Medidas de seguridad (Ley 5/2014)", cnt:"5 medidas", ord:false, l:[
+  "<b>Física</b> — barreras","<b>Electrónica</b> — detección","<b>Informática</b> — integridad, confidencialidad y disponibilidad","<b>Organizativa</b> — departamentos y planes de seguridad","<b>Personal</b> — resto de servicios"] },
+{ t:"Clasificación de riesgos", cnt:"4 clases", ord:false, l:[
+  "<b>Naturales</b> — inundaciones, rayos, incendios, terremotos","<b>Tecnológicos</b> — fallos de instalación, corte eléctrico, explosión de equipos","<b>Por accidente</b> — heridas a personas o daños en edificios","<b>Por malas acciones de personas</b> — intrusión, asalto, robo, amenaza de bomba, vandalismo, disturbios y huelgas"] },
+{ t:"Secuencia ante agresión", cnt:"4 pasos", ord:true, l:[
+  "<b>Avisar</b> del ataque: tipo, agresor y dirección","<b>Cobertura</b>: reducir superficie de blanco y silueta","<b>Evacuación</b> al lugar seguro preestablecido","<b>Neutralizar</b>: al arma, no al cuerpo"] },
+{ t:"Maniobras evasivas", cnt:"4 maniobras", ord:true, l:[
+  "<b>En Y</b> — 180º con marcha atrás intermedia","<b>Vuelta corta</b> — parar y girar marcha atrás","<b>California</b> — freno de mano, derrape","<b>Giro en J</b> — marcha atrás y salir hacia delante","<i>Y</i> y <i>California</i>: solo si no hay tiempo para reaccionar"] },
+{ t:"Vehículos de la caravana", cnt:"4 coches", ord:true, l:[
+  "<b>Piloto</b> — equipo de seguridad + Policía local","<b>VIP</b> — protegido, acompañantes y Jefe del Equipo","<b>Adicional</b> — repuesto del VIP","<b>Escolta</b> — resto del equipo"] },
+{ t:"Cifras de la protección de personas", cnt:"Números", ord:false, l:[
+  "<b>18 años</b> — edad mínima para la habilitación","<b>2 / 4 años</b> — plazo sin sanción grave / muy grave","<b>5 años</b> — condena por intromisión ilegítima","<b>2 minutos</b> — retardo máximo del sistema de bloqueo del vehículo","<b>1 a 5</b> — miembros de una cápsula de protección","<b>5 meses</b> — revisión de los itinerarios","<b>14 cm</b> — longitud del kubotán","<b>3 círculos</b> — concéntricos del dispositivo dinámico","<b>3 planos</b> — aéreo, superficial y subterráneo de la teoría esférica"] }
 ];

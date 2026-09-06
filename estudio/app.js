@@ -161,9 +161,7 @@ function renderTemario() {
   });
   h += "</div>";
 
-  h += '<div class="why" style="margin-bottom:18px">El <b>Módulo Instrumental</b> trae los <b>109 tests oficiales</b> del manual, con su solucionario; en la pestaña Test puedes filtrarlos con «Solo oficiales».<br>' +
-    'La <b>UF2676</b> tiene además una página aparte, con su propio banco de preguntas y su chuleta: ' +
-    '<a href="/UF2676" style="color:inherit"><b>lydiel.online/UF2676</b></a>.</div>';
+  h += '<div class="why" style="margin-bottom:18px">Todo el certificado está aquí: los ocho manuales, la <b>UF2676</b> con su banco de preguntas y sus diagramas, y los <b>tests oficiales</b> del Módulo Instrumental con su solucionario. En la pestaña Test puedes filtrarlos con «Solo oficiales».</div>';
 
   h += '<div id="arbol"></div>';
   p.innerHTML = h;
@@ -573,14 +571,69 @@ function renderOral() {
 }
 
 /* ---------------- chuleta ---------------- */
+const CIRC = [
+  { n: "1er círculo · interior", who: "Escolta personal", d: "Las personas más próximas al protegido; la distancia depende de la situación concreta. Misión: cubrir y proteger de un ataque y realizar una rápida evacuación a lugar seguro." },
+  { n: "2º círculo", who: "Puestos de seguridad", d: "Guardan cierta distancia con el protegido, pero lo mantienen dentro de su campo de observación." },
+  { n: "3er círculo", who: "Patrullas móviles y grupos de información", d: "El más alejado. No controlan ni vigilan al protegido, pero están dentro del dispositivo para una posible actuación si ocurriese alguna desgracia." }
+];
+function conv(cap, cars) {
+  return '<div class="conv"><div class="cap">' + cap + "</div>" +
+    cars.slice().reverse().map(c => '<div class="car ' + (c === "VIP" ? "vip" : "ve") + '">' + c + "</div>")
+      .join('<div class="arrow">&#9650;</div>') + "</div>";
+}
+function selCirc(i) {
+  const c = CIRC[i];
+  $("cN").textContent = c.n;
+  $("cW").textContent = c.who;
+  $("cD").innerHTML = c.d;
+  document.querySelectorAll("#cLeg button").forEach(b => b.setAttribute("aria-pressed", String(+b.dataset.c === i)));
+}
 function renderChuleta() {
-  let h = '<p class="lead">Las listas numeradas y las cifras que caen. Si la pregunta empieza por «cuántos» o «cuáles», la respuesta sale de aquí.</p><div class="grid2">';
+  const p = $("p-chuleta");
+  let h = '<p class="lead">Las listas numeradas y las cifras que caen. Si la pregunta empieza por «cuántos» o «cuáles», la respuesta sale de aquí.</p>';
+
+  h += '<div class="diagram"><svg viewBox="0 0 240 240" role="img" aria-label="Diagrama de los tres círculos concéntricos">' +
+    '<circle class="d-ring" data-c="2" cx="120" cy="120" r="112" fill="var(--azul-soft)" stroke="var(--azul)" stroke-width="1.5"></circle>' +
+    '<circle class="d-ring" data-c="1" cx="120" cy="120" r="80" fill="var(--surface-2)" stroke="var(--azul)" stroke-width="1.5"></circle>' +
+    '<circle class="d-ring" data-c="0" cx="120" cy="120" r="48" fill="var(--ambar-soft)" stroke="var(--ambar)" stroke-width="1.5"></circle>' +
+    '<circle cx="120" cy="120" r="20" fill="var(--azul)"></circle>' +
+    '<text x="120" y="124" text-anchor="middle" fill="var(--surface)" font-family="IBM Plex Mono, monospace" font-size="11">VIP</text>' +
+    '<text x="120" y="90" text-anchor="middle" fill="var(--ambar)" font-family="IBM Plex Mono, monospace" font-size="12">1</text>' +
+    '<text x="120" y="58" text-anchor="middle" fill="var(--azul)" font-family="IBM Plex Mono, monospace" font-size="12">2</text>' +
+    '<text x="120" y="26" text-anchor="middle" fill="var(--azul)" font-family="IBM Plex Mono, monospace" font-size="12">3</text>' +
+    '</svg><div class="d-info"><h4 id="cN"></h4><div class="who" id="cW"></div><p id="cD"></p>' +
+    '<div class="d-legend" id="cLeg"></div></div></div>';
+
+  h += '<div class="ref" style="margin-top:16px"><h3>Posición de los coches</h3><div class="cnt">Sentido de la marcha hacia arriba</div><div class="caravana">' +
+    conv("1 coche de escolta", ["VIP", "VE"]) +
+    conv("2 coches de escolta", ["VE", "VIP", "VE"]) +
+    conv("3 coches de escolta", ["VE", "VIP", "VE", "VE"]) +
+    "</div></div>";
+
+  h += '<div class="grid2" style="margin-top:16px">';
   CHULETA.forEach(r => {
     const tag = r.ord ? "ol" : "ul";
     h += '<div class="ref"><h3>' + r.t + '</h3><div class="cnt">' + r.cnt + "</div><" + tag + ">" +
       r.l.map(x => "<li>" + x + "</li>").join("") + "</" + tag + "></div>";
   });
-  $("p-chuleta").innerHTML = h + "</div>";
+  h += "</div>";
+
+  h += '<div class="aviso" style="margin-top:16px"><b>Fe de erratas del manual de la UF2676.</b> En la página 17 cita «Ley 5/2014, de <s>14</s> de abril». La fecha correcta —y la que repite el propio manual en el resto de páginas— es <b>Ley 5/2014, de 4 de abril, de Seguridad Privada</b>. Si te lo preguntan, di <b>4 de abril</b>.</div>';
+
+  p.innerHTML = h;
+
+  const leg = $("cLeg");
+  CIRC.forEach((c, i) => {
+    const b = document.createElement("button");
+    b.type = "button";
+    b.dataset.c = i;
+    b.innerHTML = '<span class="sw" style="background:' + (i === 0 ? "var(--ambar)" : "var(--azul)") +
+      ";opacity:" + (1 - i * 0.3) + '"></span>' + c.n;
+    b.onclick = () => selCirc(i);
+    leg.appendChild(b);
+  });
+  p.querySelectorAll(".d-ring").forEach(r => r.onclick = () => selCirc(+r.dataset.c));
+  selCirc(0);
 }
 
 /* ---------------- buscador ---------------- */
