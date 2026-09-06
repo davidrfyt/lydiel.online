@@ -616,7 +616,324 @@ const TEMAS = [
       "Usar lenguaje claro, registrar todo lo actuado y cooperar con los demás profesionales."
     ]}
   ]
-}
+},
+/* ============ Módulo instrumental (MF0080) ============ */
+{
+  id: "t17", mod: "mf0080", n: 10, t: "Comunicaciones: radioteléfono y teléfono",
+  c: [
+    { h: "Conceptos básicos", l: [
+      "<b>Telecomunicación</b>: toda transmisión, emisión o recepción de signos, señales escritas, imágenes, sonidos e informaciones por hilo, radio, medios ópticos u otros sistemas electromagnéticos.",
+      "<b>Transmisión</b>: acción de transportar entre dos puntos, directa o indirectamente, información de cualquier naturaleza.",
+      "<b>Mensaje</b>: comunicación transmitida a distancia por cualquier medio. Consta de <b>encabezamiento, texto y final</b>.",
+      "<b>Telegrama</b>: mensaje transmitido por medios eléctricos u ópticos. <b>Mensaje postal</b>: se remite el texto original.",
+      "<b>Señales</b>: mensaje transmitido por medios ópticos o acústicos; debe ser interpretado.",
+      "<b>Malla</b>: conjunto de emisoras o radioteléfonos que usan un mismo canal. <b>Red</b>: conjunto de varias mallas.",
+      "<b>Estación o equipo</b>: conjunto de aparatos y accesorios, fijo o móvil, que permite utilizar un solo medio de transmisión. Se diferencian por indicativo y número (ej. <i>charli 1</i>).",
+      "<b>Frecuencia</b>: número de oscilaciones de un movimiento vibratorio en la unidad de tiempo. Siempre hay una <b>de trabajo</b> y otra <b>de reserva</b> por si falla la primera."
+    ]},
+    { h: "Estaciones y sistemas de trabajo", l: [
+      "<b>Estación directora</b>: responsable del correcto funcionamiento de la malla. Su indicativo suele ser <b>el número más bajo</b> de la malla.",
+      "<b>Estaciones secundarias</b>: el resto; sus números son correlativos a partir de la directora.",
+      "<b>Correspondencia libre</b>: cada estación transmite cuando el canal está libre.",
+      "<b>Correspondencia cronometrada</b>: cada estación transmite a un horario determinado.",
+      "<b>Correspondencia mixta</b>: combina las dos anteriores.",
+      "<b>Correspondencia dirigida</b>: nadie transmite sin autorización de la directora."
+    ]},
+    { h: "Sistema básico de comunicación", l: [
+      "<b>Fuente</b> — genera la información o el mensaje.",
+      "<b>Transmisor</b> — transforma el mensaje en ondas radioeléctricas.",
+      "<b>Medio de transmisión</b> — el soporte por el que viaja.",
+      "<b>Receptor</b> — recibe la señal y la demodula.",
+      "<b>Destino</b> — quien recibe el mensaje.",
+      "<b>Canal de transmisión</b> — equipos y medio que transportan la información de la fuente al destino."
+    ]},
+    { h: "Radioteléfonos", l: [
+      "<b>Fijos</b> — instalados en un lugar fijo.",
+      "<b>Móviles</b> — en vehículo; se alimentan de sus baterías.",
+      "<b>Portátiles</b> — autónomos, con baterías propias y libertad de movimiento.",
+      "Componentes del portátil: <b>batería, antena, potenciómetro, silenciador de ruidos, silenciador de frecuencias, altavoz, micrófono y pulsador de emisión</b>.",
+      "La batería <b>se descarga más al emitir</b> que al recibir. Comprobar antena conectada y apretada; cambiar la batería con el equipo desconectado."
+    ]},
+    { h: "Llamada, texto y final", l: [
+      "Tipos de llamada: <b>simple</b> (a un solo corresponsal), <b>múltiple</b> (a varios), <b>colectiva</b> (a varios con indicativo común, típica de la directora) y <b>abreviada</b> (cuando no hay duda del destinatario).",
+      "El <b>texto</b> debe ser <b>claro, conciso y breve</b> para ocupar el canal el menor tiempo posible.",
+      "Final: <b>CAMBIO</b> (se espera respuesta), <b>CORTO</b> (se espera respuesta) y <b>CIERRO</b> (fin de la transmisión, se desconectan estaciones).",
+      "<b>Autenticación</b>: medida de seguridad para identificar a una estación como conocida o para acreditar que el mensaje procede de fuente autorizada. Es <b>monodireccional</b>: uno interroga y el otro autentifica.",
+      "El sistema oficialmente aceptado por la Dirección General de Telecomunicaciones para deletrear es el <b>alfabeto fonético internacional</b>."
+    ]},
+    { h: "El teléfono", l: [
+      "Reglas de uso: <b>cortesía, ritmo de voz, claridad y dicción, capacidad de escucha, capacidad de respuesta, confianza, organización, concentración, identificación e identidad privada</b> (tratada como reservada).",
+      "Aspectos de la voz: <b>entonación, articulación</b> (mensaje comprensible) y <b>elocución</b> (velocidad adecuada sin volverlo ininteligible).",
+      "Lenguaje: hablar en presente, situar al interlocutor en el centro de la acción, vocabulario sencillo y <b>no repetir</b> innecesariamente lo ya entendido.",
+      "Ante una <b>amenaza de bomba</b>, las tres preguntas clave: <b>dónde está colocado el artefacto, cuándo hará explosión y de qué clase de artefacto se trata</b>."
+    ]},
+    { h: "Telefonía móvil", l: [
+      "<b>Teléfono móvil</b>: dispositivo inalámbrico para acceder a la red de telefonía móvil; su característica principal es la <b>portabilidad</b>.",
+      "<b>Lenguaje SMS</b>: acortar palabras, sustituirlas por simbología y suprimir preposiciones.",
+      "<b>Internet móvil</b>: páginas diseñadas para móviles (tecnología WAP), con velocidades 3G y 4G.",
+      "<b>Smartphone</b>: teléfono construido sobre una plataforma informática móvil, con mayor capacidad de computación y conectividad.",
+      "<b>Contaminación electromagnética</b>: la producida por radiaciones del espectro electromagnético de equipos electrónicos, incluidas las antenas de telefonía."
+    ]}
+  ]
+},
+{
+  id: "t18", mod: "mf0080", n: 11, t: "Informática y ordenadores",
+  c: [
+    { h: "Tipos de ordenadores", l: [
+      "<b>Sistema</b>: conjunto de partes o dispositivos que trabajan coordinadamente para un fin común.",
+      "<b>Mainframes</b>: gran ordenador para organismos oficiales; procesa volúmenes elevados a gran velocidad. Muy caros, requieren temperatura especial y mucho personal.",
+      "<b>Miniordenadores</b>: gran volumen sin exigir velocidad de cálculo. Aplicaciones muy específicas, sin temperatura especial, para medianas empresas.",
+      "<b>Microordenadores</b>: los ordenadores personales o PC.",
+      "Tipos de PC: <b>sobremesa</b> (no transportable), <b>workstation</b> (trabajos técnicos y científicos), <b>servidor</b> (provee servicios a otros ordenadores llamados clientes), <b>portátil</b>, <b>PDA</b> (agenda electrónica, sustituida por el smartphone) y <b>tablet PC</b> (pantalla táctil)."
+    ]},
+    { h: "Las siete operaciones", l: [
+      "<b>Entrada de datos</b> — suministrar información al ordenador; lo habitual es el teclado.",
+      "<b>Salida de datos</b> — obtener información; lo habitual es la pantalla.",
+      "<b>Almacenamiento</b> — copia permanente reutilizable.",
+      "<b>Recuperación</b> — leer de nuevo lo contenido en cinta o disco.",
+      "<b>Transmisión</b> — transferir información a otro ordenador por una red.",
+      "<b>Recepción</b> — recibir información de otro ordenador.",
+      "<b>Tratamiento</b> — ordenación, selección, combinación y reclasificación de la información."
+    ]},
+    { h: "Programa y lenguaje", l: [
+      "<b>Programa</b>: conjunto de instrucciones que controlan el funcionamiento de un ordenador.",
+      "<b>Lenguaje de programación</b>: conjunto de reglas y símbolos que, combinados, permiten dar órdenes que el ordenador puede interpretar.",
+      "Dos niveles: <b>bajo nivel</b> (ceros y unos) y <b>alto nivel</b> (pensado para ingeniería, uso comercial, etc.).",
+      "<b>Hardware</b>: dispositivos físicos (CPU, monitor). <b>Software</b>: el conjunto intangible de datos y programas."
+    ]},
+    { h: "Componentes de un ordenador", l: [
+      "<b>CPU (Unidad Central de Procesamiento)</b>: centro nervioso donde se interpreta y procesa la información. La componen <b>unidad de control, memoria y unidad aritmético-lógica (ALU)</b>.",
+      "<b>Unidad de control</b>: corazón del ordenador; lee las instrucciones, manipula los datos y supervisa el funcionamiento integral.",
+      "<b>ALU</b>: se encarga de las operaciones matemáticas.",
+      "<b>RAM</b>: memoria de lectura y escritura; los datos desaparecen al apagar. <b>ROM</b>: solo lectura, no modificable, permanece al apagar.",
+      "<b>Periféricos de entrada</b>: transfieren datos del exterior al procesador; el típico es el teclado.",
+      "<b>Periféricos de salida</b>: monitor, impresora, plotter, microfilm, altavoces.",
+      "<b>Periféricos de almacenamiento</b>: CD-ROM, pendrive, disco duro.",
+      "Existen <b>tres clases</b>: de entrada, de salida y de entrada/salida."
+    ]},
+    { h: "Redes", l: [
+      "<b>LAN</b> (red de área local): ordenadores en el mismo edificio.",
+      "<b>WAN</b> (red de área amplia): unidades en distintos edificios, ciudades o países.",
+      "Características de la red local: <b>aumento de productividad, reducción de costes de equipos, mayor nivel de comunicación y simplicidad de gestión</b>.",
+      "Componentes esenciales: <b>tarjetas de red</b> y <b>cableado</b>.",
+      "<b>Fileserver</b>: cerebro de la red, imprescindible; asume las funciones de mando.",
+      "<b>Printserver</b>: gestiona las tareas de impresión; <b>no es indispensable</b>.",
+      "<b>Estación de trabajo</b>: cada ordenador conectado a la red.",
+      "Redes públicas conocidas: <b>ARPANET, MINET, MAP, TOP, BITNET</b> e <b>INTERNET</b>."
+    ]}
+  ]
+},
+{
+  id: "t19", mod: "mf0080", n: 12, t: "Mecanismos de extinción de incendios",
+  c: [
+    { h: "El fuego y el tetraedro", l: [
+      "<b>Fuego</b>: reacción química de oxidación con desprendimiento de calor y luz, en la que intervienen un <b>reductor (combustible)</b> y un <b>comburente (oxidante)</b>.",
+      "<b>Tetraedro del fuego</b>: <b>combustible, oxidante (aire), energía de activación (calor) y reacción en cadena</b>. Eliminando cualquiera de los cuatro, el incendio se apaga.",
+      "Procedimientos de extinción: <b>eliminación del combustible</b>, <b>refrigeración</b> (absorber el calor), <b>sofocación</b> (aislar del oxígeno) y <b>rotura de la reacción en cadena</b> (inhibición)."
+    ]},
+    { h: "Clases de fuego", l: [
+      "Se clasifican por la <b>naturaleza del material combustible</b>.",
+      "<b>Clase A</b> — sólidos con brasa (madera, papel, tejidos).",
+      "<b>Clase B</b> — líquidos inflamables y sólidos licuables.",
+      "<b>Clase C</b> — gases.",
+      "<b>Clase D</b> — metales especiales. Generan <b>temperaturas muy altas</b>, son poco frecuentes y difíciles de extinguir.",
+      "<b>Clase E</b> — fuegos en presencia de <b>corriente eléctrica</b>."
+    ]},
+    { h: "Agentes extintores", l: [
+      "<b>Agua</b>: el más abundante y barato; apaga por <b>refrigeración</b>. <b>A chorro</b> (clase A), <b>pulverizada</b> (clase A, aceptable en B salvo líquidos solubles como el alcohol; no actúa en C ni D).",
+      "<b>Espuma</b>: burbujas de aire, agua y líquido espumógeno; apaga por <b>sofocación</b> y también enfría.",
+      "<b>Espuma química</b> — reacción de dos sustancias, casi en desuso; clase B y aceptable en A.",
+      "<b>Espuma física o mecánica</b> — mezcla turbulenta de aire y agua. <b>Baja expansión</b> (B, aceptable A), <b>media expansión</b> (B) — ambas <b>conductoras</b>, no para clase E — y <b>alta expansión</b> (inundación de recintos cerrados, no conductora).",
+      "<b>Polvo</b>: bicarbonato sódico o potásico con aditivos; interrumpe la <b>reacción química</b>. <b>Normal</b> (B, C y E, no conductor, no para A), <b>polivalente</b> (todo tipo de fuegos) y <b>especial</b> (solo clase D).",
+      "<b>Anhídrido carbónico (CO₂)</b>: gas más pesado que el aire, almacenado licuado a presión; al expandirse genera <b>nieve carbónica</b>. Sofocante excelente.",
+      "<b>Sustitutos de halones</b>: los halones están prohibidos por el <b>Protocolo de Montreal de 1987</b> y por la CEE (capa de ozono), salvo usos críticos."
+    ]},
+    { h: "Extintores", l: [
+      "<b>Extintor</b>: aparato que contiene un agente extintor proyectable sobre el fuego por una presión interna.",
+      "Por <b>peso</b>: <b>portátiles manuales</b> (≤20 kg), <b>portátiles dorsales</b> (≤30 kg) y <b>sobre ruedas</b> (transportables por remolque).",
+      "Por <b>sistema de impulsión</b>: presión auxiliar permanente, presión propia permanente, presión por reacción química, presión auxiliar por botellín y automático.",
+      "Por <b>sustancia extintora</b>: de agua, de espuma química, de polvo y de anhídrido carbónico.",
+      "La carga se expresa en <b>litros</b> si es agua y en <b>kilogramos</b> si es polvo, espuma o CO₂.",
+      "Todos los extintores deben <b>revisarse cada seis meses</b>.",
+      "El extintor de <b>espuma química</b> es corrosivo y por su peligrosidad no debe utilizarse."
+    ]},
+    { h: "Normas de uso", l: [
+      "Antes: conocer en qué fuegos puede emplearse y <b>leer la etiqueta de instrucciones</b>; supervisar su estado periódicamente.",
+      "Verificar el tipo de incendio y elegir el extintor adecuado; en incendio eléctrico, <b>cortar la electricidad</b>.",
+      "<b>No abrir puertas ni ventanas.</b> Apurar el alcance del agente extintor.",
+      "Atacar el incendio <b>en la misma dirección de su desplazamiento</b>, de espaldas al viento, y dirigir el chorro <b>a la base de las llamas</b>.",
+      "Con extintores de CO₂, <b>no tocar las partes metálicas de la boquilla</b>: producen quemaduras por frío.",
+      "Si se inflaman las ropas: <b>no correr</b>, rodar por el suelo y envolverse en una manta."
+    ]},
+    { h: "Redes de agua, BIE y sistemas especiales", l: [
+      "<b>Redes de agua</b>: conducen el agente a presión hasta puntos estratégicos; son el <b>segundo escalón</b> de la lucha contra incendios, tras los extintores portátiles.",
+      "<b>Hidrantes</b>: accesos de agua en vía urbana a nivel rasante, situados a <b>menos de 100 m</b> de cualquier punto de las fachadas.",
+      "<b>Columna seca</b>: uso exclusivo del servicio de extinción; parte de la fachada y discurre por la escalera con bocas en cada planta.",
+      "<b>BIE (bocas de incendio equipadas)</b>: medio de <b>primera intervención</b> en el interior de edificios, alimentado por red de agua a presión. Elementos: <b>manguera, válvula de conexión con manómetro, soporte o devanadera y lanza</b>. Mantener alrededor una zona libre de obstáculos.",
+      "<b>Sistemas especiales</b>: rociadores automáticos (sprinklers), agua pulverizada, polvo seco, anhídrido carbónico, gases sustitutivos de los halones y espuma física. Los <b>sprinklers</b> tienen una eficacia del <b>96 %</b>."
+    ]},
+    { h: "Plan de emergencia y evacuación", l: [
+      "El plan de emergencia debe incluir como mínimo: <b>planos actualizados del edificio</b>, <b>normas de actuación de los ocupantes</b> y <b>documentos del equipo de seguridad contra incendios</b>.",
+      "Ante un incendio: notificar cuanto antes al responsable de seguridad (características, lugar), <b>no usar ascensores</b>, palpar las puertas antes de abrirlas y aislar el incendio evitando su propagación.",
+      "<b>Vías de evacuación</b>: <b>horizontales y verticales</b>. Los locales con riesgo deben tener <b>dos salidas como mínimo, en puntos opuestos</b>.",
+      "<b>Fases de la evacuación</b>: detección, notificación, alarma y evacuación.",
+      "Dirige la evacuación el <b>Jefe de Emergencia</b> del edificio o local si no hay otra persona encargada.",
+      "Normas: no perder la calma, advertir con serenidad, informar a quien no se haya enterado, <b>no recoger el coche del aparcamiento</b> y seguir las indicaciones del equipo de seguridad.",
+      "Los <b>simulacros</b> sirven para familiarizar al personal con los extintores e inculcar serenidad y disciplina; <b>no</b> para hacer mantenimiento de los agentes extintores."
+    ]}
+  ]
+},
+{
+  id: "t20", mod: "mf0080", n: 13, t: "Armas de fuego: clasificación y categorías",
+  c: [
+    { h: "Concepto y clases de arma", l: [
+      "<b>Arma</b>: cualquier instrumento, máquina o aparato empleado para el ataque o la defensa.",
+      "<b>Armas blancas</b>: se utilizan con la mano. <b>De punta</b> (estiletes) y <b>de punta y corte</b> (machetes, navajas).",
+      "<b>Armas arrojadizas</b>: se lanzan con la mano (piedras, dardos, flechas).",
+      "<b>Armas de fuego</b>: usan la pólvora como elemento de proyección, lanzando un proyectil a gran velocidad por un tubo llamado cañón.",
+      "Definición legal (RD 976/2001, que modifica el <b>Reglamento de Armas RD 137/1993</b>): toda arma portátil que tenga cañón y que lance, esté concebida para lanzar o pueda transformarse fácilmente para lanzar un perdigón, bala o proyectil por la acción de un combustible proyector."
+    ]},
+    { h: "Por el sistema de disparo", l: [
+      "<b>De repetición</b>: el arma se recarga después de cada disparo, con intervención manual del tirador.",
+      "<b>Semiautomáticas</b>: tras cada disparo se recargan automáticamente, pero <b>solo se efectúa un disparo</b> por cada accionamiento del disparador.",
+      "<b>Automáticas</b>: se recargan automáticamente y realizan <b>varios disparos</b> mientras el disparador siga pulsado. Su tenencia y uso están <b>prohibidos a particulares</b> en todo caso."
+    ]},
+    { h: "Por el ánima del cañón", l: [
+      "<b>Cañón liso</b>: sin rayas ni estrías. Puede ser <b>cilíndrico</b> (ánima cilíndrica en toda su longitud) o <b>de choque</b> (ánima cónica que se estrecha hacia la boca de fuego).",
+      "La escopeta de <b>cañón cilíndrico dispersa el perdigón y agrupa las postas</b>; la de <b>choque agrupa el perdigón y dispersa las postas</b>.",
+      "Las armas de ánima lisa tienen <b>alcance máximo 300 m</b> y <b>alcance eficaz 60 m</b>, con gran seguridad de tiro a corta distancia y elevada potencia.",
+      "<b>Cañón estriado</b>: hendiduras que imprimen al proyectil un movimiento de rotación sobre su eje, dándole dirección y estabilidad.",
+      "Características del estriado: <b>inclinación, forma, número y dimensiones</b> (anchura y profundidad).",
+      "<b>Paso constante o rayado helicoidal</b> — armas portátiles, menor rozamiento. <b>Paso progresivo o parabólico</b> — piezas de artillería.",
+      "La inclinación puede ser a la derecha (<b>dextrorsum</b>) o a la izquierda (<b>sinistrorsum</b>) y se mide por el <b>paso de la hélice</b>.",
+      "El <b>número de estrías</b> varía entre <b>3 y 8</b>, menor cuanto menor sea el calibre. Las estrías tienen más anchura que los campos y la profundidad es la mínima indispensable."
+    ]},
+    { h: "Por la longitud del cañón", l: [
+      "<b>Armas cortas</b>: cañón <b>no superior a 30 cm</b> o longitud total <b>no superior a 60 cm</b>. Se disparan con una sola mano y sin apoyo.",
+      "<b>Pistolas</b>: armas cortas semiautomáticas y en algún caso automáticas.",
+      "<b>Revólveres</b>: armas cortas con sistema giratorio de repetición. Alcance eficaz de unos <b>25 m</b> en calibre 38 con cañón de 4 pulgadas.",
+      "<b>Armas largas</b>: cañón superior a 30 cm o longitud total superior a 60 cm. Se apoyan en el hombro y se manejan con las dos manos: fusiles, rifles y escopetas."
+    ]},
+    { h: "Armas de guerra y prohibidas", l: [
+      "Son <b>armas de guerra</b>, prohibidas a particulares: las de <b>calibre igual o superior a 20 mm</b>; las de calibre inferior consideradas de guerra por el <b>Ministerio de Defensa</b>; las <b>automáticas</b> y sus municiones; y bombas, misiles, cohetes, torpedos, minas y granadas.",
+      "<b>Totalmente prohibidas</b>: armas de fuego en el interior de bastones; disimuladas bajo cualquier objeto; imitaciones transformables en verdaderas; Flobert de más de 6 mm; armas sustancialmente modificadas; bastones estoque, puñales, cuchillos estriados o acanalados y navajas automáticas; armas de fuego combinadas con armas blancas; defensas de alambre o plomo, llaves de pugilato, tiragomas; armas largas con culata para alojar pistolas; y <b>navajas no automáticas de hoja de más de 11 cm</b>.",
+      "<b>Prohibidas a particulares</b>: semiautomáticas de más de 5 cartuchos (incluida recámara), de culatín plegable o empuñadura tipo pistola; <b>sprays</b> y aerosoles tóxicos o corrosivos (algunos permitidos a adultos para defensa personal); defensas eléctricas o de goma; <b>silenciadores</b>; munición <b>dum-dum</b> o de punta hueca; municiones perforantes, explosivas o incendiarias; e imitaciones que induzcan a engaño."
+    ]},
+    { h: "Las siete categorías del Reglamento de Armas", l: [
+      "<b>1.ª</b> — armas de fuego <b>cortas</b>: pistolas y revólveres.",
+      "<b>2.ª 1</b> — armas de fuego largas <b>para vigilancia y guardería</b>, con cartuchería metálica apta para arma corta de calibre 6,35; 7,65; 9 mm corto; 9 mm parabellum o 9 mm largo. <b>2.ª 2</b> — armas largas rayadas para caza mayor.",
+      "<b>3.ª 1</b> — armas largas rayadas para <b>tiro deportivo</b>. <b>3.ª 2</b> — <b>escopetas</b> y demás armas de ánima lisa, o con rayas para facilitar el plomeo. <b>3.ª 3</b> — armas accionadas por aire u otro gas comprimido.",
+      "<b>4.ª 1</b> — carabinas y pistolas de tiro semiautomático y de repetición y revólveres de doble acción accionados por aire o gas comprimido. <b>4.ª 2</b> — carabinas y pistolas de un solo tiro y revólveres de acción simple accionados por aire o gas.",
+      "<b>5.ª</b> — armas blancas no prohibidas, y cuchillos o machetes militares o su imitación.",
+      "<b>6.ª</b> — armas de fuego <b>antiguas o históricas</b> y sus reproducciones, en especial las anteriores al <b>1 de enero de 1890</b>.",
+      "<b>7.ª</b> — 1 anestésicas; 2 <b>ballestas</b>; 3 sistema <b>Flobert</b>; 4 arcos, lanzalíneas y fusiles de pesca submarina; 5 <b>revólveres y pistolas detonadoras</b> y pistolas lanzabengalas."
+    ]},
+    { h: "Armas reglamentarias del personal de seguridad", l: [
+      "<b>Orden INT/318/2011</b>. El <b>vigilante de seguridad</b> usa el <b>revólver del 38 especial de cuatro pulgadas</b>.",
+      "Con arma larga, la <b>escopeta de repetición del calibre 12/70</b> con cartuchos de <b>12 postas en taco contenedor</b>.",
+      "El <b>escolta privado</b> usa la <b>pistola semiautomática de 9 mm Parabellum</b>.",
+      "Los <b>guardas rurales</b> usan armas rayadas de repetición con cartuchería metálica apta para arma corta: 6,35; 7,65; 9 mm corto; 9 mm parabellum; 9 mm largo; 22 LR; 22 Magnum; 38 especial y 357 Magnum.",
+      "Cuando el servicio desaconseje las armas rayadas, la empresa puede pedir a la <b>Dirección General de la Guardia Civil</b> autorización para el revólver del 38 o la escopeta del 12.",
+      "<b>Elementos comunes</b> de toda arma de fuego: <b>cañón, recámara, cargador, elementos de puntería y seguros</b>."
+    ]}
+  ]
+},
+{
+  id: "t21", mod: "mf0080", n: 14, t: "Armas reglamentarias: revólver, pistola, escopeta y carabina",
+  c: [
+    { h: "El revólver 38 especial de 4 pulgadas", l: [
+      "Arma de <b>acción manual de recámaras múltiples giratorias</b>, clasificada como <b>arma de repetición</b>. Dispara en <b>simple y doble acción</b>.",
+      "Alcance eficaz <b>25 m</b> · peso sin munición <b>715 g</b> · <b>6 estrías dextrógiras</b> · calibre <b>38 pulgadas</b> (equivale a 9 mm) · cañón <b>4 pulgadas</b> · capacidad del cilindro <b>6 cartuchos</b>.",
+      "<b>Tres partes fundamentales: cañón, armazón y cilindro.</b>",
+      "<b>Cañón</b>: conduce y estabiliza el proyectil. Seis estrías y seis campos dextrorsum; velocidad inicial <b>250 m/s</b> y giro superior a <b>2.500 revoluciones por minuto</b>.",
+      "<b>Armazón</b>: elemento de sostén. Empuñadura, arco guardamonte, <b>orejetas</b> (evitan que los cartuchos salgan de las recámaras), tope lateral del cilindro, alojamiento del cilindro, alojamiento del soporte basculante y caja plana de mecanismos.",
+      "<b>Cilindro</b>: seis recámaras, un <b>taladro central</b> por el que pasa la barra del extractor, seis ranuras exteriores para aligerar peso y seis hendiduras posteriores para el diente del tope. El <b>soporte basculante en forma de L</b> une el grupo cilindro con el armazón.",
+      "El cilindro <b>bascula hacia la izquierda</b> por gravedad para la extracción."
+    ]},
+    { h: "Mecanismos del revólver", l: [
+      "<b>Puntería</b>: punto de mira en el canal de la punta del cañón y <b>alza micrométrica</b> regulable en derivación y elevación.",
+      "<b>Alimentación</b>: el tambor con sus recámaras y la corona dentada. En cada disparo el cilindro <b>gira 60°</b>.",
+      "<b>Repetición</b>: presenta sucesivamente las recámaras cargadas frente al cañón.",
+      "<b>Disparo</b>: interviene el disparador, con <b>cabeza, cuerpo y cola</b>. En <b>simple acción</b> se lleva el martillo atrás con la mano; en <b>doble acción</b> basta apretar la cola del disparador, y es la pieza <b>levante</b> la que lleva el martillo hacia atrás. La doble acción da la <b>máxima rapidez</b> de tiro.",
+      "<b>Percusión</b>: martillo percutor, aguja percutora y disparador. El <b>anillo regulador</b> gradúa la presión del muelle real. La aguja asoma por el <b>orificio del grano del fogón</b>.",
+      "<b>Extracción</b>: saca las vainas. Tres tipos de revólver según la apertura: de <b>obturador lateral</b>, de <b>cilindro basculante</b> y de <b>apertura superior</b>. En este mecanismo está la <b>cabeza estrellada</b> del cilindro.",
+      "<b>Seguridad</b>: el seguro por <b>interposición de masas</b> impide el disparo accidental.",
+      "<b>Guarniciones</b>: complementan el arma sin ser imprescindibles (las cachas). <b>Respetos</b>: elementos exteriores que la mantienen en condiciones de uso (baqueta, destornillador). <b>Freno de boca</b>: reduce el ángulo de elevación del disparo."
+    ]},
+    { h: "La pistola de 9 mm Parabellum", l: [
+      "Arma corta <b>semiautomática</b> que aprovecha los gases del disparo y la energía acumulada en el <b>muelle recuperador</b> al comprimirse por el retroceso de la corredera.",
+      "Grupo de <b>cañón y cierres móviles</b>; dispara en <b>simple y doble acción</b>; cargador de <b>15 cartuchos</b>; armazón de aleación ligera; se desmonta sin herramientas.",
+      "Partes: <b>armazón, bastidor de mecanismos, corredera o cerrojo y cañón</b>.",
+      "<b>Armazón</b>: aloja y enlaza todos los mecanismos. La <b>corredera</b> va montada <b>sobre el armazón</b>, sujeta por canales-guía, y aloja puntería, extracción, seguridad, automatismo, cierre y percusión.",
+      "<b>Cañón</b>: recámara, ánima y <b>anclajes</b> (de cadeneta o rampa), que lo sujetan al armazón facilitando el basculado y el retroceso de la corredera. Suele llevar <b>seis estrías dextrorsum</b>.",
+      "Mecanismos: <b>automatismo, cierre, alimentación, disparo, percusión, extracción, expulsión y seguridad</b>.",
+      "El <b>macizo trasero de la corredera</b> es el cerrojo: cierra la recámara y empuja los cartuchos del cargador; pertenece al mecanismo de <b>alimentación</b>.",
+      "La <b>uña extractora</b> está en la <b>corredera</b>. La <b>espina de retenida</b> mantiene la corredera atrás al consumirse el último cartucho.",
+      "El <b>seguro</b> atraviesa lateralmente la parte trasera de la corredera, oculta y bloquea la aguja percutora y permite el tiro en seco sin dañarla."
+    ]},
+    { h: "La escopeta de émbolo 12/70", l: [
+      "Arma larga reglamentaria del vigilante de seguridad. Calibre <b>12</b>, <b>ánima lisa</b>, <b>5 cartuchos en depósito</b> (más uno en recámara), cañón de <b>350 mm</b>, de <b>repetición</b>, alcance máximo <b>300 m</b> y eficaz <b>60 m</b>.",
+      "Funciona por <b>corredera o pumping</b> y admite cualquier munición. Doble seguro, <b>manual y automático</b>. Con bocacha adecuada lanza botes de humo o pelotas de goma.",
+      "Seis grupos: <b>cañón, carcasa, cerrojo, disparo, asta y culata</b>.",
+      "<b>Grupo carcasa</b>: aloja el cerrojo y lleva roscado el <b>tubo depósito</b>. <b>Leva de cierre</b> (retiene los cartuchos), <b>leva comando</b> (libera el transportador) y <b>leva auxiliar</b> (retiene el resto mientras uno pasa a la recámara).",
+      "<b>Grupo cerrojo</b>: cerrojo, <b>grapón</b>, carro, percutor y extractor.",
+      "<b>Grupo disparo</b>: <b>transportador</b>, <b>serpentín</b>, disparador y biela, leva del seguro automático y seguro manual.",
+      "<b>Mecanismo de cierre</b>: cerrojo, grapón, carro, culata del cañón y asta de armamento.",
+      "Seguridad: en el <b>campo de tiro</b>, descargada, con la ventana del cajón de mecanismos <b>abierta</b> y el seguro puesto; para <b>almacenaje</b>, descargada, ventana <b>cerrada</b> y gatillo bloqueado. Se transporta con la boca de fuego hacia arriba, por encima de la cabeza del más alto del grupo."
+    ]},
+    { h: "La carabina", l: [
+      "Arma <b>rayada de repetición</b> con <b>cerrojo tipo Máuser</b>, preparada para <b>9 mm Parabellum</b> y admite visor telescópico. Es el arma reglamentaria de los <b>guardas particulares de campo</b>.",
+      "Partes: <b>cañón, cajón de los mecanismos y culata</b>, con mecanismos de alimentación, cierre, percusión, bloqueo, disparo, seguro y elementos de puntería.",
+      "<b>Cañón</b>: seis estrías dextrógiras; punto de mira en cola de milano y alza atornillada.",
+      "<b>Alimentación</b>: cargador con muelle y <b>elevador</b> en forma de teja, más el soporte guía del cargador.",
+      "<b>Cierre</b>: cerrojo (aloja percutor y muelle) y <b>cabeza del cerrojo</b>, que bloquea el arma obturando la recámara y traslada el cartucho a la recámara; lleva la aguja percutora y el extractor.",
+      "<b>Bloqueo</b>: al encajarse el brazo lateral del cerrojo en el cajón de mecanismos; la ventana inferior impide que la retenida suelte el percutor hasta que el cerrojo ha girado del todo, <b>evitando el disparo con la recámara abierta</b>.",
+      "Puntería: miras abiertas de fábrica, punto de mira fijo y <b>alza regulable</b>."
+    ]}
+  ]
+},
+{
+  id: "t22", mod: "mf0080", n: 15, t: "Munición, balística y precisión del tiro",
+  c: [
+    { h: "El cartucho", l: [
+      "<b>Munición</b>: la carga de las armas de fuego. <b>Cartucho</b>: unidad organizada que reúne en un solo cuerpo los factores esenciales de un disparo. Es <b>sólido, sensible, impermeable y económico</b>.",
+      "<b>Cartucho metálico</b> (cuatro elementos): <b>vaina, pistón, carga de proyección (pólvora) y bala</b>.",
+      "<b>Cartucho semimetálico</b> (escopeta): añade el <b>taco</b>; culote metálico y resto de la vaina no metálico. Componentes: vaina, pistón, pólvora, taco, tapa y proyectiles.",
+      "El <b>taco</b> sella la cámara de gas, mantiene los gases fuera del haz de perdigones, evita dispersiones y <b>actúa de refrigerante</b> impidiendo que los perdigones se deformen o se suelden."
+    ]},
+    { h: "La vaina", l: [
+      "Recipiente tubular que contiene la pólvora y lleva en su base el pistón con el fulminante. Resistente, elástica, dura y resistente a corrosión y calor.",
+      "En armas de <b>cañón liso</b> la vaina es de <b>cartón con culote de latón</b>; en las de <b>cañón estriado</b>, de <b>latón</b>. En tiro deportivo de pequeño calibre con sistema Flobert, de cobre.",
+      "Tres partes: <b>boca</b> (anterior), <b>cuerpo</b> (intermedia) y <b>culote</b> (posterior o cabeza), sobre el que actúa la uña extractora."
+    ]},
+    { h: "Sistemas de percusión y pistón", l: [
+      "<b>Lefaucheux</b>: la cápsula va dentro de la vaina y se acciona por una varilla que sobresale. En desuso.",
+      "<b>Flobert</b>: reborde posterior hueco con el fulminante; se inflama al golpear en cualquier punto del reborde. Solo se usó en tiro deportivo, calibres 22 y 6 mm.",
+      "<b>Sistema central</b>: el fulminante va en una cápsula alojada en el <b>centro del culote</b>. Es el usado actualmente en casi todas las armas.",
+      "<b>Pistón o cápsula iniciadora</b>: enciende la pólvora. Lleva un <b>yunque</b> y unos orificios llamados <b>oídos o chimeneas</b>.",
+      "<b>Pistón Berdan</b>: el yunque es <b>solidario al culote</b> de la vaina y tiene <b>dos oídos</b>. <b>Pistón Bóxer</b>: el yunque va <b>metido a presión en la cápsula</b> y tiene <b>un solo oído</b>; permite recargar vainas, por lo que es más económico.",
+      "<b>Fulminante</b> actual: <b>trinitrorresorcinato de plomo</b> con aditivos y <b>tetraceno</b> como estabilizador; más sensible y potente que el antiguo fulminato de plomo."
+    ]},
+    { h: "Carga de proyección", l: [
+      "Se emplea <b>pólvora</b>. La antigua pólvora negra daba muchos inconvenientes.",
+      "Hoy se usan las <b>pólvoras piroxiladas, blancas o sin humo</b>: no dejan residuos en el ánima, <b>deflagran progresivamente</b>, originan menos presión en la recámara, dan más velocidad al proyectil y no producen humo.",
+      "La pólvora <b>deflagra</b>: se quema con gran rapidez sin explosionar."
+    ]},
+    { h: "Las balas", l: [
+      "Componentes de la bala: <b>cuerpo, culote y punta u ojiva</b>.",
+      "<b>Tres tipos normales</b>: <b>de plomo</b> (90 % plomo, 5 % estaño, 5 % antimonio; revólver y calibre 22 deportivo), <b>blindadas</b> (plomo blando con forro metálico de cobre, latón o cuproníquel) y <b>semiblindadas</b> (plomo parcialmente recubierto; de <b>punta blanda</b> o de <b>punta dura</b>).",
+      "Otros tipos: <b>perforadoras</b> (punta de acero macizo), <b>trazadoras</b> (dejan rastro luminoso), <b>incendiarias</b>, <b>expansivas o de punta hueca</b>, <b>explosivas</b> (carga de pólvora y cápsula fulminante en la ojiva) y <b>dum-dum</b> (trituran el canal de penetración).",
+      "<b>Forma</b>: esférica para ánima lisa (no cabecea); alargada para cañón rayado (menos resistencia al aire a igualdad de peso). <b>Longitud</b>: cuatro o cinco veces su calibre.",
+      "<b>Trazado</b>: <b>cuerpo o forzamiento</b> (cilíndrico, de diámetro mayor que el calibre del arma) y <b>ojiva</b> (calibre decreciente para no tocar el rayado).",
+      "<b>Calibre real</b>: se mide entre <b>dos crestas</b> diametralmente opuestas del estriado. <b>Calibre nominal</b>: entre <b>dos surcos</b> opuestos; coincide con el diámetro de la bala.",
+      "Con cañones de <b>ánima lisa</b> se pueden disparar <b>postas, perdigones y balas</b>."
+    ]},
+    { h: "Puntería y precisión", l: [
+      "<b>Puntería</b>: encarar los elementos de puntería del arma —<b>alza, punto de mira y eje del cañón</b>— de modo que la inclinación y dirección correspondan a la distancia y situación del blanco.",
+      "<b>Precisión</b>: al disparar repetidas veces en idénticas condiciones, los impactos no caen en el mismo punto sino que se distribuyen alrededor de uno, con mayor densidad cerca de él. Ese fenómeno se llama <b>dispersión</b>."
+    ]}
+  ]
+},
 ];
 
 /* ---------------------------------------------------------
@@ -683,7 +1000,47 @@ const FICHAS = [
 { t:"t15", q:"¿Cómo se calcula la superficie quemada?", a:"Con la <b>regla de los 9</b>. Zonas críticas: <b>cara, cuello, genitales, manos y pies</b>." },
 { t:"t15", q:"¿Cuándo se usa la posición de Trendelenburg?", a:"Para prevenir el shock, <b>siempre que no haya trauma craneal</b>." },
 { t:"t16", q:"Materiales de inmovilización", a:"<b>Collarín cervical</b>, <b>férulas</b>, <b>camilla cuchara</b>, <b>tablero espinal</b> y <b>colchón de vacío</b>." },
-{ t:"t16", q:"Transporte urgente frente a diferido", a:"<b>Urgente</b>: riesgo vital inmediato, traslado inmediato con soporte.<br><b>Diferido</b>: paciente estabilizado que requiere atención sin urgencia extrema.<br>Criterios: estabilidad hemodinámica, tipo de lesión y distancia al centro." }
+{ t:"t16", q:"Transporte urgente frente a diferido", a:"<b>Urgente</b>: riesgo vital inmediato, traslado inmediato con soporte.<br><b>Diferido</b>: paciente estabilizado que requiere atención sin urgencia extrema.<br>Criterios: estabilidad hemodinámica, tipo de lesión y distancia al centro." },
+/* ===== Módulo instrumental ===== */
+{ t:"t17", q:"Partes de un mensaje y palabras de final", a:"Un mensaje consta de <b>encabezamiento, texto y final</b>.<br>Final: <b>CAMBIO</b> y <b>CORTO</b> esperan respuesta; <b>CIERRO</b> termina la transmisión desconectando estaciones." },
+{ t:"t17", q:"Malla, red, estación directora y secundarias", a:"<b>Malla</b>: emisoras que usan un mismo canal. <b>Red</b>: conjunto de mallas.<br><b>Directora</b>: responsable del funcionamiento de la malla; su indicativo es <b>el número más bajo</b>. <b>Secundarias</b>: el resto, con números correlativos." },
+{ t:"t17", q:"Los cuatro sistemas de trabajo", a:"<b>Libre</b> — se transmite cuando el canal está libre.<br><b>Cronometrada</b> — cada estación a su horario.<br><b>Mixta</b> — combinación de las dos.<br><b>Dirigida</b> — no se transmite sin autorización de la directora." },
+{ t:"t17", q:"Los seis elementos del sistema básico de comunicación", a:"<b>Fuente · Transmisor · Medio de transmisión · Receptor · Destino · Canal de transmisión</b>." },
+{ t:"t17", q:"Los cuatro tipos de llamada", a:"<b>Simple</b> (un corresponsal) · <b>Múltiple</b> (varios) · <b>Colectiva</b> (varios con indicativo común, típica de la directora) · <b>Abreviada</b> (cuando no hay duda del destinatario)." },
+{ t:"t17", q:"Tres preguntas clave ante una amenaza de bomba", a:"<b>Dónde</b> está colocado el artefacto · <b>Cuándo</b> hará explosión · <b>De qué clase</b> de artefacto se trata." },
+{ t:"t17", q:"Los tres aspectos de la voz al teléfono", a:"<b>Entonación</b> · <b>Articulación</b> (que el mensaje sea comprensible) · <b>Elocución</b> (velocidad adecuada sin volverlo ininteligible)." },
+{ t:"t18", q:"Las siete operaciones de un ordenador", a:"<b>Entrada</b> · <b>Salida</b> · <b>Almacenamiento</b> · <b>Recuperación</b> · <b>Transmisión</b> · <b>Recepción</b> · <b>Tratamiento</b>." },
+{ t:"t18", q:"Componentes de la CPU", a:"<b>Unidad de control</b> (corazón del ordenador), <b>memoria</b> y <b>unidad aritmético-lógica o ALU</b>.<br>El disco duro, la placa base y las lectoras no forman parte de la CPU." },
+{ t:"t18", q:"RAM frente a ROM", a:"<b>RAM</b>: lectura y escritura; los datos desaparecen al apagar.<br><b>ROM</b>: solo lectura; no se modifica y permanece al apagar." },
+{ t:"t18", q:"Las tres clases de periféricos", a:"<b>De entrada</b> (teclado, ratón, webcam, escáner, micrófono), <b>de salida</b> (monitor, impresora, altavoces, plotter) y <b>de entrada/salida</b> (disco duro, pendrive, pantalla táctil)." },
+{ t:"t18", q:"Fileserver y printserver", a:"<b>Fileserver</b>: cerebro de la red, asume las funciones de mando. <b>Es imprescindible</b>.<br><b>Printserver</b>: gestiona las tareas de impresión. <b>No es indispensable</b>." },
+{ t:"t19", q:"El tetraedro del fuego", a:"<b>Combustible</b> (reductor) · <b>Oxidante</b> o comburente (aire) · <b>Energía de activación</b> (calor) · <b>Reacción en cadena</b>.<br>Eliminando cualquiera de los cuatro, el incendio se apaga." },
+{ t:"t19", q:"Los cuatro procedimientos de extinción", a:"<b>Eliminación</b> del combustible · <b>Refrigeración</b> (absorber el calor) · <b>Sofocación</b> (aislar del oxígeno) · <b>Rotura de la reacción en cadena</b> (inhibición)." },
+{ t:"t19", q:"Clases de fuego", a:"<b>A</b> sólidos con brasa · <b>B</b> líquidos inflamables · <b>C</b> gases · <b>D</b> metales especiales (temperaturas muy altas, difícil extinción) · <b>E</b> en presencia de corriente eléctrica." },
+{ t:"t19", q:"Los tres tipos de polvo químico seco", a:"<b>Normal</b> — clases B, C y E (no conductor); no para la A.<br><b>Polivalente</b> — todo tipo de fuegos.<br><b>Especial</b> — solo clase D." },
+{ t:"t19", q:"Clasificación de los extintores por peso", a:"<b>Portátiles manuales</b> hasta <b>20 kg</b> · <b>Portátiles dorsales</b> hasta <b>30 kg</b> · <b>Sobre ruedas</b>, transportables por remolque.<br>Todos se revisan <b>cada seis meses</b>." },
+{ t:"t19", q:"Elementos de una BIE", a:"<b>Manguera</b> · <b>Válvula de conexión</b> con manómetro · <b>Soporte o devanadera</b> · <b>Lanza</b>.<br>Son medio de <b>primera intervención</b>; alrededor debe haber zona libre de obstáculos." },
+{ t:"t19", q:"Escalones de la lucha contra incendios", a:"<b>1.º</b> extintores portátiles · <b>2.º</b> redes de agua y BIE · <b>3.º</b> sistemas especiales y bomberos.<br>Los <b>hidrantes</b> están a menos de <b>100 m</b> de cualquier punto de las fachadas y los <b>sprinklers</b> tienen un <b>96 %</b> de eficacia." },
+{ t:"t19", q:"Las cuatro fases de la evacuación", a:"<b>Detección</b> → <b>Notificación</b> → <b>Alarma</b> → <b>Evacuación</b>.<br>La dirige el <b>Jefe de Emergencia</b>. Vías <b>horizontales y verticales</b>; mínimo <b>dos salidas en puntos opuestos</b>." },
+{ t:"t20", q:"Sistema de disparo: repetición, semiautomática y automática", a:"<b>Repetición</b>: se recarga tras cada disparo con intervención manual.<br><b>Semiautomática</b>: se recarga sola, <b>un disparo</b> por accionamiento.<br><b>Automática</b>: dispara mientras se mantenga pulsado el disparador. <b>Prohibida a particulares en todo caso</b>." },
+{ t:"t20", q:"Arma corta y arma larga", a:"<b>Corta</b>: cañón <b>≤ 30 cm</b> o longitud total <b>≤ 60 cm</b>. Pistolas y revólveres.<br><b>Larga</b>: cañón > 30 cm o longitud total > 60 cm. Fusiles, rifles y escopetas." },
+{ t:"t20", q:"Escopeta cilíndrica frente a escopeta de choque", a:"<b>Cañón cilíndrico</b>: <b>dispersa el perdigón y agrupa las postas</b>.<br><b>Cañón de choque</b>: <b>agrupa el perdigón y dispersa las postas</b>.<br>Ánima lisa: alcance máximo <b>300 m</b>, eficaz <b>60 m</b>." },
+{ t:"t20", q:"Las siete categorías de armas", a:"<b>1.ª</b> cortas · <b>2.ª1</b> largas de vigilancia y guardería · <b>3.ª1</b> largas rayadas deportivas, <b>3.ª2</b> escopetas y ánima lisa · <b>4.ª</b> aire comprimido · <b>5.ª</b> armas blancas no prohibidas · <b>6.ª</b> históricas (anteriores a <b>1890</b>) · <b>7.ª</b> anestésicas, ballestas, Flobert, arcos y detonadoras." },
+{ t:"t20", q:"Armas reglamentarias del personal de seguridad", a:"<b>Vigilante de seguridad</b>: revólver <b>38 especial 4\"</b>; con arma larga, escopeta <b>12/70</b> con cartuchos de <b>12 postas en taco contenedor</b>.<br><b>Escolta privado</b>: pistola <b>9 mm Parabellum</b>.<br><b>Guarda rural</b>: armas rayadas de repetición. Norma: <b>Orden INT/318/2011</b>." },
+{ t:"t21", q:"Datos del revólver 38 especial de 4 pulgadas", a:"Alcance eficaz <b>25 m</b> · peso <b>715 g</b> · <b>6 estrías dextrógiras</b> · cilindro de <b>6 cartuchos</b> · velocidad inicial <b>250 m/s</b> · el cilindro gira <b>60°</b> por disparo y bascula a la <b>izquierda</b>." },
+{ t:"t21", q:"Las tres partes del revólver", a:"<b>Cañón</b> (conduce y estabiliza el proyectil), <b>armazón</b> (sostén de todas las piezas, lleva las orejetas) y <b>cilindro</b> (seis recámaras y taladro central para la barra del extractor)." },
+{ t:"t21", q:"Simple acción frente a doble acción", a:"<b>Simple acción</b>: se lleva el martillo atrás con la mano; el disparador solo lo suelta.<br><b>Doble acción</b>: basta apretar la cola del disparador; la pieza <b>levante</b> monta el martillo. Da la <b>máxima rapidez</b> de tiro." },
+{ t:"t21", q:"Partes y mecanismos de la pistola de 9 mm", a:"Partes: <b>armazón, bastidor de mecanismos, corredera y cañón</b>.<br>Mecanismos: <b>automatismo, cierre, alimentación, disparo, percusión, extracción, expulsión y seguridad</b>.<br>Cargador de <b>15 cartuchos</b>; la <b>uña extractora</b> va en la corredera." },
+{ t:"t21", q:"Características de la escopeta 12/70", a:"Calibre <b>12</b> · <b>ánima lisa</b> · <b>5 cartuchos</b> en depósito (+1 en recámara) · cañón <b>350 mm</b> · de <b>repetición</b> por corredera o <i>pumping</i> · alcance máximo <b>300 m</b>, eficaz <b>60 m</b> · doble seguro, manual y automático." },
+{ t:"t21", q:"Seguridad con la escopeta", a:"<b>En el campo de tiro</b>: descargada, ventana del cajón de mecanismos <b>abierta</b> y seguro puesto.<br><b>Para almacenaje</b>: descargada, ventana <b>cerrada</b> y gatillo bloqueado.<br>Se transporta con la boca de fuego <b>hacia arriba</b>, por encima de la cabeza del más alto del grupo." },
+{ t:"t21", q:"La carabina", a:"Arma <b>rayada de repetición</b> con <b>cerrojo tipo Máuser</b>, calibre <b>9 mm Parabellum</b>, para <b>guardas particulares de campo</b>. Partes: cañón, cajón de mecanismos y culata. <b>No tiene corredera</b>." },
+{ t:"t22", q:"Partes del cartucho metálico y del semimetálico", a:"<b>Metálico</b>: vaina, pistón, carga de proyección (pólvora) y bala.<br><b>Semimetálico</b> (escopeta): añade el <b>taco</b>, que sella la cámara de gas y actúa de <b>refrigerante</b> evitando que los perdigones se deformen o suelden." },
+{ t:"t22", q:"Las tres partes de la vaina", a:"<b>Boca</b> (anterior) · <b>Cuerpo</b> (intermedia) · <b>Culote</b> (posterior; sobre él actúa la uña extractora).<br>Cañón liso: cartón con culote de latón. Cañón estriado: latón." },
+{ t:"t22", q:"Pistón Berdan frente a pistón Bóxer", a:"<b>Berdan</b>: el yunque es <b>solidario al culote</b> de la vaina; <b>dos oídos</b>.<br><b>Bóxer</b>: el yunque va <b>a presión en la cápsula</b>; <b>un solo oído</b>. Permite recargar vainas, por lo que es más económico." },
+{ t:"t22", q:"Los tres sistemas de percusión", a:"<b>Lefaucheux</b> — cápsula interior accionada por una varilla; en desuso.<br><b>Flobert</b> — fulminante en el reborde hueco; solo calibres 22 y 6 mm deportivos.<br><b>Central</b> — cápsula en el centro del culote; el usado hoy en casi todas las armas." },
+{ t:"t22", q:"Los tres tipos normales de bala", a:"<b>De plomo</b> (90 % plomo, 5 % estaño, 5 % antimonio) · <b>Blindadas</b> (plomo con forro metálico) · <b>Semiblindadas</b> (recubrimiento parcial, de punta blanda o punta dura).<br>Componentes de la bala: <b>cuerpo, culote y punta u ojiva</b>." },
+{ t:"t22", q:"Calibre real y calibre nominal", a:"<b>Real</b>: se mide entre <b>dos crestas</b> diametralmente opuestas del estriado.<br><b>Nominal</b>: entre <b>dos surcos</b> opuestos; coincide con el diámetro de la bala." },
+{ t:"t22", q:"Puntería, precisión y dispersión", a:"<b>Puntería</b>: encarar alza, punto de mira y eje del cañón según la distancia y situación del blanco.<br><b>Dispersión</b>: los impactos se distribuyen alrededor de un punto, con mayor densidad cerca de él, aun en idénticas condiciones de tiro." },
 ];
 
 /* ---------------------------------------------------------
@@ -813,7 +1170,122 @@ const PREGUNTAS = [
 { t:"t16", q:"¿Cuál de estos es material de inmovilización?", o:["Colchón de vacío","Torniquete","Mascarilla de oxígeno"], c:[0], w:"También collarín cervical, férulas, camilla cuchara y tablero espinal." },
 { t:"t16", q:"El traslado de un paciente estabilizado que aún requiere atención es:", o:["Urgente","Diferido","Programado electivo"], c:[1], w:"El urgente es el de riesgo vital inmediato, con soporte durante el traslado." },
 { t:"t16", q:"Criterios que determinan el tipo de transporte:", o:["Estabilidad hemodinámica","Tipo de lesión","Distancia al centro médico"], c:[0,1,2], w:"Durante el traslado: monitorización, oxigenoterapia y control del dolor." },
-{ t:"t16", q:"Regla básica de movilización:", o:["Movilizar primero y luego inmovilizar","No mover al paciente sin inmovilizar antes","Inmovilizar solo si hay fractura visible"], c:[1], w:"Se prioriza la vida antes que la lesión, y se protege siempre la columna vertebral." }
+{ t:"t16", q:"Regla básica de movilización:", o:["Movilizar primero y luego inmovilizar","No mover al paciente sin inmovilizar antes","Inmovilizar solo si hay fractura visible"], c:[1], w:"Se prioriza la vida antes que la lesión, y se protege siempre la columna vertebral." },
+/* ===== Test oficial del módulo instrumental — extinción de incendios ===== */
+{ t:"t19", of:"Oficial 1", q:"¿Qué elementos son necesarios que coexistan para que se desarrolle un incendio?", o:["Combustible, oxidante, comburente y reductor","Combustible, oxidante, energía de activación y reacción en cadena","Combustible, oxidante, carburante y comburente"], c:[1], w:"Es el tetraedro del fuego. Eliminando cualquiera de los cuatro, el incendio se apaga." },
+{ t:"t19", of:"Oficial 2", q:"Los fuegos capaces de generar temperaturas muy altas, no muy frecuentes y con dificultad para su extinción son los considerados:", o:["Clase D","Clase A","Clase E"], c:[0], w:"Clase D: metales especiales. La clase A son sólidos y la E, fuegos con corriente eléctrica." },
+{ t:"t19", of:"Oficial 3", q:"¿Cuáles son los agentes extintores frecuentes utilizados?", o:["Espuma, aire, agua, sustituto de halones y anhídrido carbónico","Agua, espuma, sustituto de los halones, polvo y anhídrido carbónico","Agua, espuma, sustituto de halones, polvo y anhídrido carbónico"], c:[2], w:"Solución oficial C. Las opciones b y c difieren solo en la redacción; el aire de la opción a no es agente extintor." },
+{ t:"t19", of:"Oficial 4", q:"Dentro de las espumas convencionales, ¿de qué clases pueden ser?", o:["Química y de baja expansión","Mecánica y de media expansión","Física y química"], c:[2], w:"Las convencionales son química y física o mecánica. Baja, media y alta expansión son subtipos de la física." },
+{ t:"t19", of:"Oficial 5", q:"Indique la opción INCORRECTA sobre el polvo seco:", o:["No lo usaremos sobre máquinas y equipos delicados","Utilizado junto con espuma proporciona mayor sofocación sobre el incendio","Un polvo no debe ser tóxico, abrasivo ni conductor de la electricidad"], c:[1], w:"El polvo y la espuma son incompatibles: el polvo rompe la manta de espuma." },
+{ t:"t19", of:"Oficial 6", q:"Indique la opción CORRECTA. El dióxido de carbono es un gas más pesado que el aire y también:", o:["No se puede aplicar sobre incendios de clase E por su humedad y baja temperatura, que lo hacen conductor","También le llaman sofocante o nieve carbónica","Es un agente extintor desarrollado para apagar específicamente los fuegos de clase D"], c:[1], w:"Al expandirse produce nieve carbónica. El agente específico de la clase D es el polvo especial." },
+{ t:"t19", of:"Oficial 7", q:"¿En qué tipo de incendios se emplean con mayor eficacia los halones?", o:["Los halones están prohibidos por la CEE por el deterioro de la capa de ozono, salvo para usos críticos","Para los de clase A, al extinguir el fuego por inhibición","Para los de clase C, evitando que se produzca una reacción en cadena"], c:[0], w:"Protocolo de Montreal de 1987. Hoy se emplean sustitutos de los halones." },
+{ t:"t19", of:"Oficial 8", q:"¿En qué medida se expresa la carga del agente extintor?", o:["Si es agua se expresará en litros","Si es espuma se expresará en kg","Si es dióxido de carbono se expresará en kg/m³"], c:[2], w:"Solución oficial C. Regla práctica: agua en litros y el resto de agentes en kilogramos." },
+{ t:"t19", of:"Oficial 9", q:"¿Qué clasificación tendrán los extintores en función de su peso?", o:["Portátiles, manuales y sobre ruedas","Manuales, dorsales y sobre ruedas","Portátiles manuales, sobre ruedas y portátiles dorsales"], c:[2], w:"Manuales hasta 20 kg, dorsales hasta 30 kg y sobre ruedas por remolque." },
+{ t:"t19", of:"Oficial 10", q:"¿Qué clasificación tendrán los extintores en función de su sistema de impulsión?", o:["Presión propia permanente, presión por reacción química, presión auxiliar por botellín y automático","Presión auxiliar por botellín, presión permanente, presión continua, presión auxiliar por botellín y automático","Presión auxiliar por botellín, presión auxiliar permanente, presión propia permanente, presión por reacción química y automático"], c:[2], w:"Son cinco sistemas de impulsión, no cuatro." },
+{ t:"t19", of:"Oficial 11", q:"¿Qué clasificación tendrán los extintores en función de la sustancia extintora?", o:["Extintor de agua, de espuma química, de polvo y de anhídrido carbónico","Extintor de polvo, de agua, de dióxido de carbono y de anhídrido carbónico","Extintor de agua, de espuma química, de aire y de anhídrido carbónico"], c:[0], w:"Dióxido de carbono y anhídrido carbónico son lo mismo; el aire no es agente extintor." },
+{ t:"t19", of:"Oficial 12", q:"Un extintor cuya sustancia es corrosiva y por su peligrosidad no debe utilizarse es el:", o:["Extintor de agua","Extintor de anhídrido carbónico","Extintor de espuma química"], c:[2], w:"La espuma química es corrosiva y está prácticamente en desuso." },
+{ t:"t19", of:"Oficial 13", q:"Señale la opción INCORRECTA. Los simulacros de incendio tendrán por objeto:", o:["Familiarizar al personal en el uso de extintores","Efectuar al mismo tiempo operaciones de mantenimiento de los agentes extintores","Inculcar al personal serenidad y disciplina para obrar acertada y eficazmente"], c:[1], w:"El mantenimiento es una operación independiente; no se hace durante el simulacro." },
+{ t:"t19", of:"Oficial 14", q:"Con anterioridad al uso de un extintor:", o:["Conocer en qué tipo de fuegos puede emplearse y leer su etiqueta de instrucciones","Abrir puertas y ventanas para ventilar el local","Dirigir el chorro a la parte alta de las llamas"], c:[0], w:"No deben abrirse puertas ni ventanas y el chorro se dirige a la base de las llamas." },
+{ t:"t19", of:"Oficial 15", q:"En el momento de la extinción del incendio, indique la opción INCORRECTA:", o:["Dirigir el chorro en zigzag apagando por franjas de arriba hacia abajo para evitar salpicado de brasas","Si se inflaman las ropas, no correr; rodar por el suelo y envolverse en una manta o abrigo","El incendio se atacará en la misma dirección de su desplazamiento, desde su comienzo y de espaldas al viento"], c:[0], w:"El chorro se dirige a la base de las llamas, no de arriba hacia abajo." },
+{ t:"t19", of:"Oficial 16", q:"¿Cuál de estas afirmaciones es la más correcta?", o:["Al detectar un incendio y si su clase lo permite, utilizaré la red de agua, que es el 2.º escalón de la lucha extintora","La respuesta anterior es correcta, pero previamente intentaré dominar el incendio con los extintores portátiles","Las BIE se encontrarán a menos de 100 m de cualquier punto de las fachadas"], c:[1], w:"Los extintores portátiles son el primer escalón; la red de agua, el segundo. Los 100 m corresponden a los hidrantes, no a las BIE." },
+{ t:"t19", of:"Oficial 17", q:"En cuanto al uso de las BIE, indique la opción correcta:", o:["Se mantendrá alrededor de cada BIE una zona libre de obstáculos que permita su acceso y maniobrabilidad","Desenrollar la manguera con un fuerte tirón, alejándose rápidamente de la BIE","En las BIE de espuma, en incendios de líquidos se aplicará la espuma directamente"], c:[0], w:"Solución oficial A. La manguera se despliega por completo antes de abrir la válvula." },
+{ t:"t19", of:"Oficial 18", q:"En los sistemas especiales de extinción, ¿cuál es su clasificación?", o:["Rociadores automáticos (sprinklers), agua pulverizada, polvo seco, anhídrido carbónico, gases sustitutivos de los halones y espuma física","Rociadores automáticos, agua a chorro, agua pulverizada, polvo seco, anhídrido carbónico y espuma física","Rociadores automáticos, agua pulverizada, polvo seco, anhídrido carbónico, dióxido de carbono y espuma química"], c:[0], w:"Seis sistemas. La opción c duplica el CO₂ y la b incluye agua a chorro, que no es sistema especial." },
+{ t:"t19", of:"Oficial 19", q:"¿Cuál de los sistemas especiales tiene una eficacia del 96 %?", o:["Sistema de espuma física","Sistema de rociadores automáticos o sprinklers","Sistema de gases sustitutivos de los halones por inundación total"], c:[1], w:"Los sprinklers son el sistema especial más eficaz." },
+{ t:"t19", of:"Oficial 20", q:"¿Qué aspectos, como mínimo, debe incluir el Plan de Emergencia contra incendios?", o:["Planos actualizados del edificio, normas de actuación de los ocupantes y documentos del equipo de seguridad contra incendios","Evacuación de zona de peligro, planos actualizados del edificio y normas generales a seguir","Planos actualizados del edificio, normas generales a seguir e instrucciones del equipo de seguridad contra incendios"], c:[0], w:"Los tres mínimos: planos, normas de actuación de los ocupantes y documentos del equipo de seguridad." },
+{ t:"t19", of:"Oficial 21", q:"Indique la INCORRECTA respecto a la actuación ante un incendio:", o:["Notificar cuanto antes el incendio a un responsable de seguridad, con características del fuego y lugar","Actuar rápidamente para evacuar a las personas porque prima su seguridad sobre el pánico que se pueda generar","No usar ascensores y palpar las puertas antes de abrirlas; si está caliente buscar otra. Aislar el incendio"], c:[1], w:"La evacuación se ordena y dirige según el plan; la precipitación genera el pánico que se quiere evitar." },
+{ t:"t19", of:"Oficial 22", q:"Respecto a la evacuación de un local o edificio:", o:["Seguir las indicaciones del equipo de seguridad y la señalización contra incendios, y ayudar en las labores auxiliares que requieran los bomberos","Si se inflaman las ropas, correr hasta la BIE más próxima para apagarlas con agua","Si hay humo, buscar la puerta de salida más cercana y evacuar al personal"], c:[0], w:"Con las ropas en llamas no se corre: se rueda por el suelo." },
+{ t:"t19", of:"Oficial 23", q:"Las vías de evacuación de un local o edificio son:", o:["Vías de pasillos, puertas y escaleras","Vías horizontales y vías verticales","Vías de evacuación protegida y no protegida"], c:[1], w:"Horizontales (pasillos) y verticales (escaleras)." },
+{ t:"t19", of:"Oficial 24", q:"¿Cuántas salidas deben tener como mínimo los locales con riesgo de incendio?", o:["Dos y ubicadas en puntos opuestos","Tres como mínimo, para el paso de un número mayor de personas","Dos como mínimo, verticales en relación a la vía de evacuación"], c:[0], w:"Dos salidas en puntos opuestos, para que un foco no bloquee las dos." },
+{ t:"t19", of:"Oficial 25", q:"¿Quién asumirá la dirección de la evacuación si no existe otra persona encargada?", o:["El vigilante de seguridad","Siempre el Director del Plan de Autoprotección","El Jefe de Emergencia del edificio o local"], c:[2], w:"El Jefe de Emergencia dirige la evacuación." },
+{ t:"t19", of:"Oficial 26", q:"En las normas a seguir en la evacuación, indique la INCORRECTA:", o:["Sin perder la calma, advertir con serenidad al resto de personas la necesidad de abandonar el local","Informar de la presencia de otras personas en lugares donde pueda no haber llegado la noticia del incendio","No recoger el coche del aparcamiento salvo indicación en contra del equipo de seguridad","Tener siempre prevista una vía de evacuación por si el incendio es de envergadura y hay que evacuar"], c:[3], w:"Solución oficial D: la vía de evacuación está prevista en el plan de antemano, no se improvisa según la envergadura." },
+
+/* ===== Test oficial — comunicaciones ===== */
+{ t:"t17", of:"Oficial 27", q:"A la estación responsable del correcto funcionamiento de la malla, cuyo indicativo es el más bajo, se la denomina:", o:["Estación secundaria","Estación directora","Estación de trabajo o de reserva"], c:[1], w:"Las secundarias llevan números correlativos a partir de la directora." },
+{ t:"t17", of:"Oficial 28", q:"¿Qué elementos indispensables debe tener todo sistema de telecomunicación?", o:["Fuente, transmisor, medio de transmisión, receptor, destino y canal de transmisión","Fuente, transmisor, sistema de trabajo, receptor, destino y canal de transmisión","Fuente, transmisor, medio de transmisión, receptor y canal de transmisión"], c:[0], w:"El sistema de trabajo no es un elemento y el destino no puede faltar." },
+{ t:"t17", of:"Oficial 29", q:"¿Cuáles son los componentes básicos de un teléfono portátil?", o:["Batería, antena, silenciador de ruidos, silenciador de frecuencias, potenciómetro, altavoz y micrófono","Batería, antena, potenciómetro, silenciador de ruidos, silenciador de frecuencias, altavoz, micrófono y pulsador de emisión","Fuente de alimentación, transmisor, medio de transmisión, antena, silenciador de frecuencias, micrófono y pulsador de emisión"], c:[1], w:"La lista completa incluye el pulsador de emisión." },
+{ t:"t17", of:"Oficial 30", q:"Al poner en funcionamiento el radiotransmisor, indique la opción INCORRECTA:", o:["Cerciorarse de que la antena está conectada y apretada","Al reemplazar la batería, hacerlo siempre con el radiotransmisor desconectado","Al encenderlo, comprobar de inmediato el funcionamiento conectando con la emisora base u otro corresponsal"], c:[2], w:"No se ocupa el canal solo para probar: la comprobación se hace según el sistema de trabajo de la malla." },
+{ t:"t17", of:"Oficial 31", q:"¿Cuándo es mayor la descarga de la batería del radiotransmisor?", o:["Al recibir, por eso hay que tener el volumen lo más bajo posible","Al emitir","Cuando se enciende con el volumen y el nivel de ruidos demasiado alto"], c:[1], w:"Emitir consume mucho más que recibir." },
+{ t:"t17", of:"Oficial 32", q:"¿Cuáles son los tipos de llamadas que existen?", o:["Simple, colectiva, abreviada y múltiple","Simple, compuesta, múltiple y abreviada","Simple, colectiva, resumida y múltiple"], c:[0], w:"No existen ni la compuesta ni la resumida." },
+{ t:"t17", of:"Oficial 33", q:"¿Cuáles serán las principales características del texto de un mensaje?", o:["Que sea conciso, breve y corto","Que sea conciso y breve","Que sea claro, conciso y breve"], c:[2], w:"Las tres: claro, conciso y breve, para ocupar el canal el menor tiempo posible." },
+{ t:"t17", of:"Oficial 34", q:"¿Cómo se llama el sistema oficialmente aceptado por la Dirección General de Telecomunicaciones?", o:["Sistema Oficial Internacional","Alfabeto fonético internacional","Sistema Alfabético Internacional"], c:[1], w:"Alfa, Bravo, Charlie… Se usa para deletrear sin ambigüedad." },
+{ t:"t17", of:"Oficial 36", q:"Sobre la autenticidad en las comunicaciones, indique la opción INCORRECTA:", o:["Es una medida de seguridad y será siempre monodireccional: solo uno interroga y el otro autentifica","La autentificación será siempre mutua","Es una medida de seguridad para identificar a una estación como conocida o acreditar que el mensaje tiene procedencia autorizada"], c:[1], w:"La autenticación es monodireccional, no mutua." },
+{ t:"t17", of:"Oficial 37", q:"¿Cuál de estas reglas NO pertenece al correcto uso del teléfono?", o:["Cortesía, ritmo de voz, claridad y dicción, capacidad de escucha, confianza, organización, concentración e identificación","Cortesía, ritmo de voz, claridad y dicción, capacidad de escucha, capacidad de respuesta, confianza, organización, concentración, identificación e identidad privada","Cortesía, ritmo de voz, capacidad de escucha, capacidad de respuesta, confianza, organización, concentración, identificación e identidad privada"], c:[1], w:"Solución oficial B. La lista completa del manual es la que aparece en esa opción; la pregunta busca la que no encaja como respuesta." },
+{ t:"t17", of:"Oficial 38", q:"¿Qué aspectos se distinguen en la voz como componente de la comunicación telefónica?", o:["Entonación, articulación y elocución","Entonación, articulación y concisión","Articulación, brevedad y concisión"], c:[0], w:"Articulación = mensaje comprensible; elocución = velocidad adecuada." },
+{ t:"t17", of:"Oficial 39", q:"Sobre el lenguaje para conseguir el éxito de la transmisión, indique la INCORRECTA:", o:["Hablaremos siempre en presente, situando al interlocutor en el centro de la acción y con vocabulario sencillo","Utilizaremos un vocabulario que nuestro interlocutor pueda entender perfectamente","Repetiremos palabras y frases aunque el interlocutor haya quedado enterado, lo que da mayor seguridad"], c:[2], w:"Repetir lo ya entendido alarga la comunicación sin aportar nada." },
+{ t:"t17", of:"Oficial 40", q:"Recibe en un control de accesos una llamada de amenaza de bomba. ¿Qué tres preguntas clave debe hacer?", o:["Dónde está colocado el artefacto, cuándo hará explosión y de qué clase de artefacto se trata","Qué tamaño tiene el artefacto, por qué lo puso y qué explosivo lleva","Dónde está colocado, de qué clase de artefacto se trata y qué tamaño tiene"], c:[0], w:"Dónde, cuándo y qué clase: lo que permite acotar la zona y decidir la evacuación." },
+
+/* ===== Test oficial — informática ===== */
+{ t:"t18", of:"Oficial 41", q:"¿Cómo se llama el ordenador que, formando parte de una red local o de internet, provee servicios a otras computadoras llamadas clientes?", o:["Ordenador PC de sobremesa","Workstation","Servidor"], c:[2], w:"La workstation es un sobremesa para trabajos técnicos y científicos." },
+{ t:"t18", of:"Oficial 42", q:"¿Qué tipo de operaciones pueden realizar los ordenadores?", o:["Entrada de datos, salida de datos, recuperación, almacenamiento, transmisión, recepción y tratamiento","Entrada de datos, salida de datos, almacenamiento, transmisión, recepción y tratamiento","Entrada de datos, salida de datos, recuperación, almacenamiento, recepción y tratamiento"], c:[0], w:"Son siete operaciones; las otras opciones omiten la recuperación o la transmisión." },
+{ t:"t18", of:"Oficial 43", q:"¿Qué diferencia hay entre un programa y un lenguaje?", o:["El programa es el conjunto de instrucciones que controlan el ordenador; el lenguaje de programación es el conjunto de reglas y símbolos que permiten darle órdenes","Es lo mismo: dos formas de llamar al conjunto de instrucciones","El programa es el lenguaje de bajo nivel y el lenguaje es el lenguaje máquina"], c:[0], w:"Programa = instrucciones. Lenguaje = reglas y símbolos para escribirlas." },
+{ t:"t18", of:"Oficial 44", q:"¿Cuáles son los componentes principales de la CPU?", o:["Unidad de control, memoria, disco duro, microprocesador y placa base","Unidad de control, memoria, disco duro, placa base y lectora de CD/DVD","Unidad de control, memoria y unidad aritmético-lógica o ALU"], c:[2], w:"Disco duro, placa base y lectoras son periféricos o componentes externos a la CPU." },
+{ t:"t18", of:"Oficial 45", q:"¿Cuáles son los tipos de memoria que existen?", o:["Memoria de lectura y escritura o RAM, memoria de solo lectura o ROM y memoria caché","RAM, ROM, memoria caché y memoria de disco duro","RAM, ROM, memoria caché, memoria de disco duro y la almacenable en un pendrive"], c:[0], w:"El disco duro y el pendrive son almacenamiento, no memoria del sistema." },
+{ t:"t18", of:"Oficial 46", q:"¿Cuántos tipos de periféricos existen?", o:["De entrada, de salida y de escritura","De entrada, de salida y de entrada/salida","De entrada y de salida"], c:[1], w:"Tres clases: entrada, salida y entrada/salida (disco duro, pendrive, pantalla táctil)." },
+{ t:"t18", of:"Oficial 47", q:"¿Cuál es la diferencia entre hardware y software?", o:["Hardware es el lenguaje de programación y software son los programas","Hardware son los dispositivos físicos, como la CPU o el monitor, y software es todo el conjunto intangible de datos y programas","Hardware es un programa que adapta el lenguaje máquina y software son programas como Word, Excel o PowerPoint"], c:[1], w:"Físico frente a intangible." },
+{ t:"t18", of:"Oficial 48", q:"Dentro de los periféricos de SALIDA, diga cuál de estas opciones es la INCORRECTA:", o:["Monitor, impresora, escáner, altavoces, lectora de CD","Monitor, impresora, altavoces, lectora de CD, lectora de DVD","Impresora, monitor, altavoces, lectora de CD"], c:[0], w:"El escáner es un periférico de entrada." },
+{ t:"t18", of:"Oficial 49", q:"Dentro de los periféricos de ENTRADA, diga cuál de estas opciones es la INCORRECTA:", o:["Teclado, ratón, pendrive, disco duro","Monitor, webcam, teclado, ratón","Pendrive, ratón, webcam, micrófono"], c:[1], w:"El monitor es un periférico de salida." },
+{ t:"t18", of:"Oficial 50", q:"Dentro de los periféricos de ENTRADA Y SALIDA, diga cuál es la CORRECTA:", o:["Teclado, ratón, altavoces, impresora","Monitor, webcam, teclado, ratón","Disco duro, pendrive, pantalla táctil"], c:[2], w:"Los de entrada/salida escriben y leen: disco duro, pendrive y pantalla táctil." },
+/* ===== Cuestionario oficial de armamento y tiro ===== */
+{ t:"t22", of:"Armas 1", q:"¿Qué diferencia hay entre una bala y un cartucho?", o:["Es lo mismo, son formas distintas de hablar del mismo elemento","El cartucho es la munición de escopeta y la bala la del arma corta","El cartucho contiene la pólvora y la bala es el proyectil que sale disparado"], c:[2], w:"El cartucho es el conjunto: vaina, pistón, pólvora y bala." },
+{ t:"t20", of:"Armas 2", q:"¿Cuáles son las principales partes de un arma para su estudio?", o:["Cañón, seguros, cargador, disparador, martillo y elementos de puntería","Seguros, cañón, recámara, cargador, ánima y elementos de puntería","Elementos de puntería, cañón, cargador, cerrojo, corredera, seguros, recámara y ánima"], c:[1], w:"Elementos comunes: cañón, recámara, cargador, elementos de puntería y seguros." },
+{ t:"t20", of:"Armas 3", q:"¿Cómo se llama la parte del arma donde, alojado el cartucho y una vez acerrojada y alimentada, se produce el disparo?", o:["Cañón e interiormente su ánima","Recámara","Cargador"], c:[1], w:"La recámara es donde se aloja el cartucho en el momento del disparo." },
+{ t:"t20", of:"Armas 4", q:"Por su velocidad de tiro, ¿cómo se llama el arma que, tras la primera carga y accionamiento del disparador, realiza todas las operaciones siguientes mientras el disparador esté pulsado?", o:["Repetición","Automáticas","Semiautomáticas"], c:[1], w:"La semiautomática solo dispara una vez por cada accionamiento." },
+{ t:"t20", of:"Armas 5", q:"¿Se pueden tener armas automáticas de las categorías 2.ª2 y 3.ª2 cuya capacidad de carga sea inferior a cinco cartuchos incluido el de la recámara?", o:["Sí, porque no supera los cinco cartuchos de capacidad","No, porque no soy funcionario especialmente habilitado","No, en ningún caso"], c:[2], w:"Las armas automáticas son de guerra: prohibidas a particulares en todo caso." },
+{ t:"t20", of:"Armas 6", q:"Según la clasificación por su ánima, ¿cómo se clasifican las armas de fuego?", o:["Lisas y estriadas","Estriadas y a dextrorsum","Lisas y a sinistrorsum"], c:[0], w:"Dextrorsum y sinistrorsum son sentidos del rayado, no clases de ánima." },
+{ t:"t20", of:"Armas 7", q:"Las armas de calibre igual o superior a 20 mm están prohibidas, pero ¿puede un arma de calibre inferior ser de guerra y por tanto estar prohibida?", o:["No, nunca; solo las de calibre igual o superior a 20 mm","No, porque entonces toda arma inferior a 20 mm estaría prohibida","Sí, si así lo considera el Ministerio de Defensa o si el arma se modifica sustancialmente sin autorización"], c:[2], w:"El Ministerio de Defensa puede declarar de guerra armas de calibre inferior." },
+{ t:"t20", of:"Armas 8", q:"¿Qué medidas debe tener un arma para ser considerada corta?", o:["Longitud total máxima de 30 cm y cañón menor de 60 cm","Cañón de 30 cm como máximo o longitud total del arma de 60 cm","Cañón de 30 cm como máximo o longitud total del arma de 70 cm"], c:[1], w:"Cañón ≤ 30 cm o longitud total ≤ 60 cm." },
+{ t:"t20", of:"Armas 9", q:"Registra el bolso de un joven que ha hurtado un reproductor y encuentra un spray de defensa personal. Su actuación podría ser:", o:["Retirárselo automáticamente y entregarlo a las FCS porque el Reglamento de Armas los prohíbe","Actuar así y además preguntar dónde lo compró para decírselo a las FCS","Comprobar el spray, mirar las normas sanitarias y, si el joven es mayor de edad, podrá portarlo"], c:[2], w:"Algunos sprays de defensa están permitidos a mayores de edad si cumplen la normativa sanitaria." },
+{ t:"t20", of:"Armas 10", q:"¿A qué categoría pertenece el revólver del 38 especial de 4 pulgadas?", o:["3.ª2","2.ª1","1.ª"], c:[2], w:"Primera categoría: armas de fuego cortas (pistolas y revólveres)." },
+{ t:"t20", of:"Armas 11", q:"¿A qué categoría pertenece la carabina del calibre 5,6 (22 americano)?", o:["3.ª2","4.ª1","3.ª1"], c:[2], w:"3.ª1: armas largas rayadas para tiro deportivo." },
+{ t:"t20", of:"Armas 12", q:"¿En qué categoría se encuadra una escopeta de ánima lisa o con rayas para facilitar el plomeo?", o:["3.ª2","3.ª1","4.ª1"], c:[0], w:"3.ª2: escopetas y demás armas de ánima lisa." },
+{ t:"t20", of:"Armas 13", q:"¿En qué categoría se encuadra la escopeta 12/70 de émbolo utilizada por el vigilante de seguridad?", o:["3.ª2","2.ª1","2.ª2"], c:[1], w:"2.ª1: armas largas para vigilancia y guardería." },
+{ t:"t20", of:"Armas 14", q:"¿A qué categoría pertenece un revólver detonador?", o:["7.ª6","4.ª2","1.ª"], c:[0], w:"Séptima categoría. El manual lo sitúa en el apartado de revólveres y pistolas detonadoras y lanzabengalas; la solución oficial marca la única opción de 7.ª." },
+{ t:"t20", of:"Armas 15", q:"¿A qué categoría pertenece una ballesta?", o:["3.ª2","2.ª1","2.ª2"], c:[0], w:"Atención: la ballesta es 7.ª2, pero el enunciado oficial no ofrece esa opción y la solución dada es la A. Recuerde el dato correcto: ballesta = categoría 7.ª2." },
+{ t:"t20", of:"Armas 16", q:"¿Cuál de estas afirmaciones es del todo correcta?", o:["El vigilante de seguridad de servicio utilizará el revólver del 38 especial de 4\" y la escopeta del 12/70 cuando esté autorizado para armas largas","La anterior es correcta, pero en la escopeta 12/70 los cartuchos serán de 12 postas en un taco contenedor","La b no es correcta porque las postas están prohibidas"], c:[1], w:"La Orden INT/318/2011 concreta los cartuchos de 12 postas en taco contenedor." },
+{ t:"t20", of:"Armas 17", q:"¿Cuál será el arma reglamentaria que utilizará el escolta privado?", o:["Carabina del calibre 9 mm parabellum","Revólver del 38","Pistola semiautomática de 9 mm parabellum"], c:[2], w:"El revólver del 38 es del vigilante; la pistola de 9 mm, del escolta." },
+{ t:"t20", of:"Armas 18", q:"Escopetas y carabinas serán siempre:", o:["Armas largas","De cañón estriado","Armas de defensa"], c:[0], w:"La escopeta es de ánima lisa, así que no siempre son estriadas." },
+{ t:"t21", of:"Armas 19", q:"Si en el revólver del 38 accionamos el disparador sin haber desplazado el martillo percutor, lo estamos utilizando:", o:["Simple acción","Doble acción","En repetición"], c:[1], w:"En doble acción el propio disparador monta y suelta el martillo." },
+{ t:"t21", of:"Armas 20", q:"¿Cuántas estrías tiene el ánima del revólver del 38 especial de 4 pulgadas?", o:["Seis","Cuatro a dextrorsum","Ninguna de las anteriores"], c:[0], w:"Seis estrías y seis campos, en sentido dextrorsum." },
+{ t:"t21", of:"Armas 21", q:"¿Cuál de estas afirmaciones es la más correcta sobre el revólver del 38 especial de 4\"?", o:["Su cilindro tiene cinco depósitos para la munición","Su cilindro tiene cinco depósitos de munición y una recámara cuando se alinea con el cañón","Su cilindro tiene 6 depósitos de munición para las balas"], c:[1], w:"El cilindro aloja seis cartuchos; la solución oficial recoge el matiz de que el alojamiento alineado con el cañón pasa a llamarse recámara." },
+{ t:"t21", of:"Armas 22", q:"¿Cuáles son las partes fundamentales del revólver del 38 especial de 4\"?", o:["Armazón, cañón y cilindro","Tambor, cañón y cilindro","Cañón, cilindro y disparador"], c:[0], w:"Tres partes: cañón, armazón y cilindro." },
+{ t:"t21", of:"Armas 23", q:"¿Dónde se encuentra la barra del extractor en el revólver del 38?", o:["En la parte superior del cilindro","En un taladro central en el cilindro","En su parte inferior"], c:[1], w:"El taladro central del cilindro aloja la barra del extractor y el eje de giro." },
+{ t:"t21", of:"Armas 24", q:"Las piezas que impiden que los cartuchos salgan de sus depósitos y obstaculicen el giro del cilindro son:", o:["Las orejetas","El bulón","Los topes del cilindro"], c:[0], w:"Las orejetas forman parte del armazón." },
+{ t:"t20", of:"Armas 25", q:"El arma reglamentaria del vigilante de seguridad para los diferentes servicios puede ser:", o:["Revólver del 38 de cuatro pulgadas y la escopeta 12/70","Revólver del 38 de cuatro pulgadas y pistola de 9 mm","Revólver del 38 y carabina de distintos calibres"], c:[0], w:"La pistola es del escolta y la carabina, del guarda rural." },
+{ t:"t21", of:"Armas 26", q:"En el revólver del 38, ¿qué misión tiene la pieza denominada levante?", o:["Empujar el martillo a su posición más retrasada cuando se dispara en doble acción","Levantar la biela del disparador para producir el disparo","Abatir el martillo cuando se dispara en doble acción"], c:[0], w:"El levante monta el martillo al accionar el disparador en doble acción." },
+{ t:"t21", of:"Armas 27", q:"En el revólver del 38, la interposición de masas ¿a qué mecanismo corresponde?", o:["Al de percusión","Al de seguridad","Al de disparo"], c:[1], w:"El seguro por interposición de masas impide el disparo accidental." },
+{ t:"t21", of:"Armas 28", q:"En el revólver del 38, para conseguir la máxima rapidez en la ejecución del disparo emplearemos:", o:["Doble acción","Municionar todos los cartuchos y además llevar uno en recámara","Simple acción"], c:[0], w:"La doble acción dispara sin montar previamente el martillo." },
+{ t:"t21", of:"Armas 29", q:"Al extraer las vainas del revólver tras el tiro, ¿hacia qué lado cae el cilindro?", o:["Hacia el derecho, tras presionar el pestillo y por gravedad","Simplemente hacia el izquierdo, por gravedad","Depende de si durante el disparo hubo algún atasco"], c:[1], w:"El cilindro bascula a la izquierda." },
+{ t:"t21", of:"Armas 30", q:"¿Puede la pistola semiautomática de 9 mm parabellum funcionar, igual que el revólver, en simple o doble acción?", o:["Solo en simple acción, pues tiene corredera, de la que carece el revólver","En simple acción, pues su sistema de seguridad le impide la doble acción","En ambas acciones"], c:[2], w:"Dispara en simple y en doble acción." },
+{ t:"t21", of:"Armas 31", q:"¿Qué une el soporte basculante en forma de L del revólver del 38?", o:["Une el cilindro y lo fija a la barra del extractor para que no caiga","Une el grupo cilindro y el armazón","Une el cilindro al cañón para que pueda cerrarse y alinearse a la boca de fuego"], c:[1], w:"El soporte basculante enlaza el grupo cilindro con el armazón." },
+{ t:"t21", of:"Armas 32", q:"¿De qué tres partes se compone el disparador?", o:["Cabeza, cuerpo y cola","Cuerpo, cola y biela basculante del disparador","Cabeza, cuerpo y base"], c:[0], w:"Cabeza, cuerpo y cola." },
+{ t:"t21", of:"Armas 33", q:"¿Cómo se llama el orificio por donde asoma la aguja percutora cuando el martillo la golpea?", o:["Orificio de la ventana del cuerpo del armazón","Orificio del bulón de cierre","Orificio del grano del fogón"], c:[2], w:"El grano del fogón." },
+{ t:"t21", of:"Armas 34", q:"¿A qué pieza está unida la pieza denominada levante?", o:["Al disparador, ya que al presionarlo amartilla el arma y acciona la doble acción","Al martillo","Al armazón, y dentro de este al disparador en un extremo y al martillo en el otro"], c:[1], w:"Solución oficial B: el levante actúa sobre el martillo." },
+{ t:"t21", of:"Armas 35", q:"¿De qué partes se compone el martillo percutor?", o:["Cabeza, cuerpo y cola","Cuerpo, cabeza y base","Cabeza, cuerpo y diente de disparo"], c:[1], w:"Solución oficial B. Ojo: cabeza, cuerpo y cola es el disparador." },
+{ t:"t21", of:"Armas 36", q:"¿En qué mecanismo del revólver del 38 se encuentra la cabeza estrellada del cilindro?", o:["En el mecanismo de extracción","En el mecanismo de fijación del cilindro","En el mecanismo de municionamiento"], c:[0], w:"La cabeza estrellada empuja las vainas hacia fuera." },
+{ t:"t20", of:"Armas 37", q:"¿A qué categoría pertenece la pistola de 9 mm parabellum de los escoltas privados?", o:["A la 2.ª1, ya que se encuadra en vigilancia y guardería","A la 1.ª, porque es un arma corta","A la 4.ª1, ya que es semiautomática y de doble acción"], c:[1], w:"Primera categoría: todas las armas cortas." },
+{ t:"t21", of:"Armas 38", q:"¿En qué partes se divide la pistola semiautomática de 9 mm parabellum?", o:["Armazón, corredera, cañón y mecanismos","Corredera, armazón, cañón y cargador","Corredera, cañón, armazón y automatismos"], c:[0], w:"Armazón, bastidor de mecanismos, corredera y cañón, más sus mecanismos." },
+{ t:"t21", of:"Armas 39", q:"En la pistola de 9 mm, ¿dónde va montada la corredera?", o:["Sobre el cañón, para facilitar la extracción de las vainas en el retroceso","Sobre los mecanismos, activando con su movimiento todos los automatismos","Sobre el armazón o armadura, sujeta por unos canales que facilitan el movimiento"], c:[2], w:"Va guiada por los canales del armazón." },
+{ t:"t21", of:"Armas 40", q:"¿De qué partes se compone el cañón de la pistola de 9 mm?", o:["Recámara, ánima y anclajes","Recámara, ánima, anclajes y elementos de puntería","Recámara, anclajes, ánima y muelle recuperador"], c:[0], w:"Los elementos de puntería van en la corredera y el muelle recuperador es del mecanismo de automatismo." },
+{ t:"t21", of:"Armas 41", q:"¿Qué función tienen los anclajes de cadeneta o rampa del cañón de la pistola de 9 mm?", o:["Que se sujeten a la corredera para que no salga despedida por la fuerza de los gases","Que se sujeten a la parte superior del cargador facilitando el acceso de los cartuchos","Que se sujeten al armazón, facilitando el basculado y el movimiento de retroceso de la corredera"], c:[2], w:"Sujetan el cañón al armazón y permiten su basculado." },
+{ t:"t21", of:"Armas 42", q:"El macizo posterior rayado de la corredera de la pistola de 9 mm, con el que se monta el arma llevándola a su recorrido máximo, ¿a qué mecanismo pertenece?", o:["Al mecanismo de alimentación","Al mecanismo de disparo","Al mecanismo de automatismo"], c:[0], w:"El macizo trasero de la corredera es el cerrojo: cierra la recámara y empuja los cartuchos." },
+{ t:"t21", of:"Armas 43", q:"¿Cuántas estrías dextrorsum tiene el ánima de la pistola de 9 mm, aunque varíe según modelos?", o:["Seis","Cinco, para facilitar el giro en el sentido de las agujas del reloj","Cinco, para facilitar el giro en sentido contrario a las agujas del reloj"], c:[0], w:"Seis estrías dextrorsum." },
+{ t:"t21", of:"Armas 44", q:"¿Cómo se llama la pieza cuya misión es mantener la recámara cerrada en el disparo y evitar la fuga de gases?", o:["La zona de aguja percutora o grano de fogón","El cartucho siguiente al que ya está en recámara","La corredera"], c:[2], w:"El macizo trasero de la corredera actúa de cerrojo." },
+{ t:"t21", of:"Armas 45", q:"¿Dónde se encuentra la uña extractora de la pistola de 9 mm?", o:["En la corredera","En el armazón, junto a la recámara","En el armazón, encima y en la parte posterior de las guías de la corredera"], c:[0], w:"El extractor va en la corredera; el expulsor, en el bastidor de mecanismos." },
+{ t:"t20", of:"Armas 46", q:"¿A qué categoría pertenece la escopeta de émbolo del calibre 12/70, de repetición, para vigilantes de seguridad?", o:["A la 3.ª, ya que es una escopeta y puede usarse para vigilancia y guardería","A la 2.ª1, ya que es para vigilancia y guardería","A la 2.ª2, ya que es arma de fuego larga y rayada no clasificada como de guerra"], c:[1], w:"Las armas largas de vigilancia y guardería son 2.ª1." },
+{ t:"t21", of:"Armas 47", q:"¿Qué capacidad de cartuchos tiene la escopeta de émbolo del calibre 12/70?", o:["Tres cartuchos en el cargador y uno más en la recámara","Cinco cartuchos en el depósito de munición y uno más en la recámara","Cuatro en el depósito de munición y uno más en la recámara"], c:[1], w:"Cinco en el tubo depósito más uno en recámara." },
+{ t:"t21", of:"Armas 48", q:"¿Cuáles son las principales partes de la escopeta de émbolo del calibre 12/70?", o:["Culata, cañón, caja de mecanismos y depósito de munición","Cañón, culata, caja de mecanismos y cargador","Caja de mecanismos, culata, cañón, depósito de munición y corredera"], c:[1], w:"Solución oficial B. El manual desglosa seis grupos: cañón, carcasa, cerrojo, disparo, asta y culata." },
+{ t:"t20", of:"Armas 49", q:"¿A qué categoría pertenece la carabina de repetición por cerrojo, calibre 5,6 mm y 9 mm parabellum, para guardas de campo?", o:["A la 3.ª2, ya que son escopetas","A la 2.ª1, ya que son para vigilancia y guardería","A la 4.ª1, donde se encuadran las carabinas"], c:[1], w:"Como arma larga de guardería, 2.ª1." },
+{ t:"t21", of:"Armas 50", q:"En la carabina de repetición del calibre 5,6 mm para guardería de campo, ¿dónde va montada la corredera?", o:["Sobre el cañón, para facilitar la extracción de las vainas y el alojamiento manual del cartucho","Sobre los mecanismos, activando con su movimiento todos los automatismos","Ninguna de las anteriores es correcta"], c:[2], w:"La carabina funciona por cerrojo tipo Máuser: no tiene corredera." },
+{ t:"t22", of:"Armas 51", q:"El cartucho con culote metálico y el resto de la vaina no metálico, apto para armas de ánima lisa, se denomina:", o:["Cartucho de escopeta para caza","Cartucho semimetálico","Cartucho metálico","Cartucho ordinario"], c:[1], w:"Semimetálico: es el de escopeta y añade el taco." },
+{ t:"t22", of:"Armas 52", q:"Los componentes de un cartucho metálico son:", o:["Vaina, pistón, carga de proyección y perdigones o postas","Vaina, pistón, carga de proyección y bala","Vaina, pistón, pólvora, taco y bala","Vaina, pistón, pólvora, taco y bala o perdigones"], c:[1], w:"Cuatro elementos. El taco solo aparece en el semimetálico." },
+{ t:"t22", of:"Armas 53", q:"¿Cómo se llama la parte posterior de la vaina, sobre la que actúa la uña extractora?", o:["Cuerpo de la vaina","Vaina abotellada","Boca de la vaina","Culote de la vaina"], c:[3], w:"Boca (anterior), cuerpo (intermedia) y culote (posterior)." },
+{ t:"t22", of:"Armas 54", q:"Señale cuál de las siguientes vainas posee el yunque incorporado:", o:["Bóxer","Tetrinox","Berdan","Culote reforzado"], c:[2], w:"En el Berdan el yunque es solidario al culote de la vaina; en el Bóxer va en la cápsula." },
+{ t:"t22", of:"Armas 55", q:"El pistón Bóxer tiene:", o:["3 oídos","2 oídos","1 oído","No tiene oídos, sino un yunque metálico"], c:[2], w:"Bóxer: un oído. Berdan: dos." },
+{ t:"t22", of:"Armas 56", q:"Los componentes de una bala son:", o:["Cuerpo, culote y punta u ojiva","Cuerpo, vaina, culote y punta u ojiva","Reforzamiento, cuerpo, culote, punta y ojiva","Cuerpo, vaina, culote, taco, carga de proyección y punta u ojiva"], c:[0], w:"La vaina y la pólvora son del cartucho, no de la bala." },
+{ t:"t22", of:"Armas 57", q:"¿De qué tres tipos pueden ser las balas?", o:["Blindadas, semiblindadas, de plomo o de latón","Blindadas, semiblindadas y de plomo","Semiblindadas, blindadas, metálicas y semimetálicas","Para arma larga rayada y para arma de ánima lisa"], c:[1], w:"Tres tipos normales: de plomo, blindadas y semiblindadas." },
+{ t:"t22", of:"Armas 58", q:"Los componentes de un cartucho semimetálico son:", o:["Cuerpo, culote, punta u ojiva","Vaina, pistón, pólvora, taco, tapa y proyectiles","Cuerpo, culote, perdigones, vaina y pólvora","Vaina, pistón, pólvora y perdigones"], c:[1], w:"Añade el taco y la tapa respecto al metálico." },
+{ t:"t22", of:"Armas 59", q:"¿Cómo se llama el elemento que impide que los perdigones se fundan, deformen o suelden por la temperatura de los gases?", o:["La vaina, que actúa de refrigerante","El taco, que actúa como refrigerante","El pistón, que separa la pólvora de los perdigones","La tapa, que al separarse deja entrar aire que refrigera los perdigones"], c:[1], w:"El taco sella la cámara de gas y actúa de refrigerante." },
+{ t:"t22", of:"Armas 60", q:"¿Qué tipo de proyectiles se pueden disparar con cañones de ánima lisa?", o:["Perdigones, postas y proyectiles de cañón estriado","Perdigones y balas solamente","Postas, perdigones y balas","Postas, balas, perdigones y bolas de goma para antidisturbios"], c:[2], w:"Postas, perdigones y balas." },
 ];
 
 /* ---------------------------------------------------------
@@ -879,7 +1351,62 @@ const ORAL = [
   "<b>C</b>, circulación: <b>control de hemorragias</b> con presión directa, y valoración de pulso, presión arterial y relleno capilar.",
   "<b>D</b>, estado neurológico con la <b>Escala de Glasgow</b>: TCE leve 14-15, moderado 9-13, grave 8 o menos.",
   "<b>E</b>, exposición completa para detectar otras lesiones, previniendo la <b>hipotermia</b>.",
-  "Claves: evaluar antes de actuar, proteger siempre la columna, controlar sangrados antes de movilizar y registrar todo lo actuado." ] }
+  "Claves: evaluar antes de actuar, proteger siempre la columna, controlar sangrados antes de movilizar y registrar todo lo actuado." ] },
+{ t:"t17", q:"Explíqueme cómo se organiza una malla de radioteléfonos y cómo se transmite un mensaje.", p:[
+  "<b>Malla</b>: conjunto de emisoras que comparten un mismo canal. Varias mallas forman una <b>red</b>.",
+  "<b>Estación directora</b>: responsable del funcionamiento de la malla; su indicativo es <b>el número más bajo</b>. El resto son <b>secundarias</b>, con números correlativos.",
+  "<b>Sistemas de trabajo</b>: correspondencia <b>libre, cronometrada, mixta y dirigida</b>; en la dirigida nadie transmite sin autorización de la directora.",
+  "El mensaje consta de <b>encabezamiento, texto y final</b>. El encabezamiento lleva la <b>llamada</b>: simple, múltiple, colectiva o abreviada.",
+  "El <b>texto</b> debe ser claro, conciso y breve. El <b>final</b>: CAMBIO y CORTO esperan respuesta; CIERRO termina la transmisión.",
+  "Para deletrear se usa el <b>alfabeto fonético internacional</b>, aceptado por la Dirección General de Telecomunicaciones.",
+  "Cierre: la <b>autenticación</b> es monodireccional y sirve para acreditar que la estación o el mensaje son de procedencia autorizada." ] },
+{ t:"t17", q:"Recibe una llamada de amenaza de bomba en un control de accesos. ¿Cómo actúa?", p:[
+  "Mantener la calma y <b>prolongar la conversación</b> todo lo posible: cada segundo aporta datos.",
+  "Las <b>tres preguntas clave</b>: <b>dónde</b> está colocado el artefacto, <b>cuándo</b> hará explosión y <b>de qué clase</b> de artefacto se trata.",
+  "Anotar todo lo demás: sexo y edad aproximada del llamante, acento, ruidos de fondo, si lee un texto, hora exacta de la llamada.",
+  "<b>Notificar de inmediato</b> al responsable de seguridad y a las Fuerzas y Cuerpos de Seguridad. No colgar el teléfono ni bloquear la línea.",
+  "Aplicar el <b>plan de emergencia</b>: no usar radios ni móviles cerca de la zona sospechosa y esperar a los especialistas.",
+  "Cierre: el vigilante <b>no manipula</b> ningún objeto sospechoso; su función es informar, acordonar y colaborar." ] },
+{ t:"t19", q:"Dígame qué es el tetraedro del fuego y cómo se extingue un incendio.", p:[
+  "El fuego es una <b>reacción química de oxidación</b> con desprendimiento de calor y luz, entre un reductor (combustible) y un comburente (oxidante).",
+  "<b>Tetraedro</b>: combustible, oxidante, energía de activación y reacción en cadena. Quitando uno de los cuatro, se apaga.",
+  "De ahí los <b>cuatro procedimientos</b>: eliminación del combustible, refrigeración, sofocación y rotura de la reacción en cadena.",
+  "<b>Clases de fuego</b>: A sólidos, B líquidos, C gases, D metales especiales y E con corriente eléctrica.",
+  "<b>Agentes</b>: agua (refrigeración), espuma (sofocación), polvo (inhibición) y CO₂ (sofocación). Los halones están prohibidos desde el Protocolo de Montreal de 1987.",
+  "Cierre: elegir el agente por la clase de fuego. En eléctrico, <b>cortar la corriente</b>; nunca agua a chorro ni espuma de baja o media expansión." ] },
+{ t:"t19", q:"Se declara un incendio en su edificio. Explíqueme su actuación y la evacuación.", p:[
+  "<b>Detectar y notificar</b> cuanto antes al responsable de seguridad: lugar, características y magnitud del fuego.",
+  "Atacarlo si su clase lo permite con el <b>extintor adecuado</b> (primer escalón); si no basta, red de agua y <b>BIE</b> (segundo escalón).",
+  "<b>Aislar</b> el incendio: cerrar puertas y ventanas para evitar la propagación, palpar las puertas antes de abrirlas.",
+  "<b>No usar ascensores</b>. Si se inflaman las ropas, no correr: rodar por el suelo y envolverse en una manta.",
+  "<b>Fases de la evacuación</b>: detección, notificación, alarma y evacuación. La dirige el <b>Jefe de Emergencia</b>.",
+  "Vías <b>horizontales y verticales</b>, con un mínimo de <b>dos salidas en puntos opuestos</b>. No recoger el coche del aparcamiento.",
+  "Cierre: ya fuera, <b>informar de quién falta</b> y ayudar en las labores auxiliares que pidan los bomberos." ] },
+{ t:"t20", q:"Clasifique las armas de fuego y dígame cuáles son las reglamentarias del personal de seguridad privada.", p:[
+  "Por el <b>sistema de disparo</b>: repetición, semiautomáticas y automáticas. Las automáticas son de guerra y están <b>prohibidas a particulares</b>.",
+  "Por el <b>ánima</b>: lisas (cilíndricas o de choque) y estriadas. El ánima lisa alcanza <b>300 m</b> como máximo y <b>60 m</b> de alcance eficaz.",
+  "Por la <b>longitud</b>: cortas, con cañón ≤ 30 cm o total ≤ 60 cm; largas, por encima de esas medidas.",
+  "El Reglamento de Armas (RD 137/1993) establece <b>siete categorías</b>: 1.ª cortas, 2.ª1 largas de vigilancia y guardería, 3.ª2 escopetas, 7.ª detonadoras y ballestas, etc.",
+  "Según la <b>Orden INT/318/2011</b>: el vigilante de seguridad usa el <b>revólver del 38 especial de 4 pulgadas</b> y, como arma larga, la <b>escopeta 12/70</b> con cartuchos de <b>12 postas en taco contenedor</b>.",
+  "El <b>escolta privado</b>, la <b>pistola semiautomática de 9 mm Parabellum</b>. El <b>guarda rural</b>, armas rayadas de repetición.",
+  "Cierre: elementos comunes de toda arma de fuego: <b>cañón, recámara, cargador, elementos de puntería y seguros</b>." ] },
+{ t:"t21", q:"Descríbame el revólver reglamentario del vigilante de seguridad.", p:[
+  "<b>Revólver del 38 especial de cuatro pulgadas</b>: arma corta, de acción manual con recámaras múltiples giratorias, clasificada como de <b>repetición</b> y de <b>1.ª categoría</b>.",
+  "Datos: alcance eficaz <b>25 m</b>, peso <b>715 g</b>, <b>6 estrías dextrógiras</b>, cilindro de <b>6 cartuchos</b>, velocidad inicial <b>250 m/s</b>.",
+  "<b>Tres partes</b>: cañón, armazón y cilindro. En el armazón están la empuñadura, el arco guardamonte, las <b>orejetas</b> y la caja plana de mecanismos.",
+  "El cilindro gira <b>60°</b> por disparo y <b>bascula a la izquierda</b> por gravedad para extraer las vainas mediante la <b>cabeza estrellada</b>.",
+  "Dispara en <b>simple acción</b> (martillo montado con la mano) y en <b>doble acción</b>, en la que la pieza <b>levante</b> monta el martillo: es la más rápida.",
+  "Seguridad: seguro por <b>interposición de masas</b>, que impide el disparo accidental.",
+  "Cierre: <b>guarniciones</b> (cachas) y <b>respetos</b> (baqueta, destornillador) completan el arma sin ser imprescindibles para su funcionamiento." ] },
+{ t:"t22", q:"Explíqueme las partes de un cartucho y los tipos de bala.", p:[
+  "<b>Cartucho</b>: unidad organizada que reúne los factores esenciales del disparo; sólido, sensible, impermeable y económico.",
+  "<b>Metálico</b>: vaina, pistón, carga de proyección y bala. <b>Semimetálico</b> (escopeta): añade el <b>taco</b>, que sella la cámara de gas y actúa de refrigerante.",
+  "<b>Vaina</b>: boca, cuerpo y culote. De cartón con culote de latón en ánima lisa; de latón en cañón estriado.",
+  "<b>Percusión</b>: Lefaucheux (en desuso), Flobert (reborde) y <b>central</b>, el actual.",
+  "<b>Pistón</b>: Berdan, con yunque solidario al culote y dos oídos; <b>Bóxer</b>, con yunque en la cápsula y un solo oído, recargable y más económico.",
+  "<b>Pólvora</b>: hoy piroxilada o sin humo. <b>Deflagra</b>, no explosiona: menos presión, más velocidad y sin residuos.",
+  "<b>Balas</b>: de plomo, blindadas y semiblindadas. Otras: perforadoras, trazadoras, incendiarias, expansivas, explosivas y dum-dum, estas últimas prohibidas.",
+  "Cierre: el <b>calibre real</b> se mide entre dos crestas del estriado y el <b>nominal</b> entre dos surcos; este coincide con el diámetro de la bala." ] },
 ];
 
 /* ---------------------------------------------------------
@@ -915,5 +1442,33 @@ const CHULETA = [
 { t:"Cifras que preguntan", cnt:"Números", ord:false, l:[
   "<b>112</b> — teléfono de emergencias","<b>30:2</b> a <b>100-120/min</b>, profundidad <b>5-6 cm</b> — RCP adulto","<b>10-15 min</b> — enfriar una quemadura","<b>14-15 / 9-13 / ≤8</b> — Glasgow leve, moderado, grave","<b>300 m</b> — distancia de alejamiento tras explosión","<b>9 mm parabellum</b> — calibre autorizado","<b>1 semestre</b> — periodicidad de prácticas de tiro","<b>3 años</b> — revisión del plan de la ITC nº 12","<b>2 min</b> — retardo máximo del sistema de bloqueo del vehículo","<b>5 meses</b> — revisión de itinerarios","<b>1 a 5</b> — miembros de una cápsula de protección","<b>7-8 h</b> — sueño diario recomendado","<b>3-5 días</b> — frecuencia semanal de entrenamiento","<b>0,3 g</b> — pólvora máxima en cartuchería de juguete excluida"] },
 { t:"Normas de cabecera", cnt:"Legislación", ord:false, l:[
-  "<b>Ley 5/2014</b> — Seguridad Privada","<b>RD 2364/1994</b> — Reglamento de Seguridad Privada","<b>RD 137/1993</b> — Reglamento de Armas","<b>RD 130/2017</b> — Reglamento de Explosivos","<b>RD 989/2015</b> — pirotecnia y cartuchería","<b>Ley 31/1995</b> — Prevención de Riesgos Laborales","<b>LO 2/1986</b> — Fuerzas y Cuerpos de Seguridad","<b>Orden INT/314/2011</b> — empresas de seguridad","<b>Orden INT/316/2011</b> — centrales de alarmas","<b>Directiva 2012/18/UE</b> — Seveso III"] }
+  "<b>Ley 5/2014</b> — Seguridad Privada","<b>RD 2364/1994</b> — Reglamento de Seguridad Privada","<b>RD 137/1993</b> — Reglamento de Armas","<b>RD 130/2017</b> — Reglamento de Explosivos","<b>RD 989/2015</b> — pirotecnia y cartuchería","<b>Ley 31/1995</b> — Prevención de Riesgos Laborales","<b>LO 2/1986</b> — Fuerzas y Cuerpos de Seguridad","<b>Orden INT/314/2011</b> — empresas de seguridad","<b>Orden INT/316/2011</b> — centrales de alarmas","<b>Directiva 2012/18/UE</b> — Seveso III"] },
+{ t:"Alfabeto fonético internacional", cnt:"26 letras", ord:true, l:[
+  "<b>A</b> Alfa","<b>B</b> Bravo","<b>C</b> Charlie","<b>D</b> Delta","<b>E</b> Echo","<b>F</b> Foxtrot","<b>G</b> Golf","<b>H</b> Hotel","<b>I</b> India","<b>J</b> Juliett","<b>K</b> Kilo","<b>L</b> Lima","<b>M</b> Mike","<b>N</b> November","<b>O</b> Oscar","<b>P</b> Papa","<b>Q</b> Quebec","<b>R</b> Romeo","<b>S</b> Sierra","<b>T</b> Tango","<b>U</b> Uniform","<b>V</b> Victor","<b>W</b> Whiskey","<b>X</b> X-ray","<b>Y</b> Yankee","<b>Z</b> Zulu"] },
+{ t:"Tetraedro del fuego", cnt:"4 factores", ord:false, l:[
+  "<b>Combustible</b> — el reductor","<b>Oxidante</b> o comburente — el aire","<b>Energía de activación</b> — el calor","<b>Reacción en cadena</b>"] },
+{ t:"Procedimientos de extinción", cnt:"4 procedimientos", ord:false, l:[
+  "<b>Eliminación</b> del combustible","<b>Refrigeración</b> — agua","<b>Sofocación</b> — espuma y CO₂","<b>Rotura de la reacción en cadena</b> — polvo y halones"] },
+{ t:"Clases de fuego", cnt:"A a E", ord:true, l:[
+  "<b>A</b> — sólidos con brasa","<b>B</b> — líquidos inflamables","<b>C</b> — gases","<b>D</b> — metales especiales","<b>E</b> — con corriente eléctrica"] },
+{ t:"Fases de la evacuación", cnt:"4 fases", ord:true, l:[
+  "<b>Detección</b> del incendio","<b>Notificación</b>","<b>Alarma</b>","<b>Evacuación</b>"] },
+{ t:"Sistema básico de comunicación", cnt:"6 elementos", ord:true, l:[
+  "<b>Fuente</b>","<b>Transmisor</b>","<b>Medio de transmisión</b>","<b>Receptor</b>","<b>Destino</b>","<b>Canal de transmisión</b>"] },
+{ t:"Tipos de llamada por radio", cnt:"4 tipos", ord:false, l:[
+  "<b>Simple</b> — un solo corresponsal","<b>Múltiple</b> — varios corresponsales","<b>Colectiva</b> — varios con indicativo común","<b>Abreviada</b> — sin duda del destinatario"] },
+{ t:"Las siete operaciones del ordenador", cnt:"7 operaciones", ord:false, l:[
+  "<b>Entrada</b> de datos","<b>Salida</b> de datos","<b>Almacenamiento</b>","<b>Recuperación</b>","<b>Transmisión</b>","<b>Recepción</b>","<b>Tratamiento</b>"] },
+{ t:"Categorías de armas", cnt:"7 categorías", ord:true, l:[
+  "<b>1.ª</b> — armas cortas: pistolas y revólveres","<b>2.ª1</b> — largas de vigilancia y guardería · <b>2.ª2</b> caza mayor","<b>3.ª1</b> — largas rayadas deportivas · <b>3.ª2</b> escopetas y ánima lisa · <b>3.ª3</b> aire comprimido","<b>4.ª</b> — carabinas, pistolas y revólveres de aire comprimido","<b>5.ª</b> — armas blancas no prohibidas","<b>6.ª</b> — históricas, anteriores a 1890","<b>7.ª</b> — anestésicas, ballestas, Flobert, arcos y detonadoras"] },
+{ t:"Armas del personal de seguridad", cnt:"Orden INT/318/2011", ord:false, l:[
+  "<b>Vigilante de seguridad</b> — revólver 38 especial 4\"","<b>Vigilante con arma larga</b> — escopeta 12/70, 12 postas en taco contenedor","<b>Escolta privado</b> — pistola 9 mm Parabellum","<b>Guarda rural</b> — armas rayadas de repetición"] },
+{ t:"Revólver 38 especial 4\"", cnt:"Cifras", ord:false, l:[
+  "<b>25 m</b> — alcance eficaz","<b>715 g</b> — peso sin munición","<b>6</b> — estrías dextrógiras y recámaras del cilindro","<b>250 m/s</b> — velocidad inicial","<b>60°</b> — giro del cilindro por disparo","<b>Izquierda</b> — lado hacia el que bascula el cilindro"] },
+{ t:"Escopeta 12/70", cnt:"Cifras", ord:false, l:[
+  "<b>Calibre 12</b>, ánima lisa","<b>5 + 1</b> — cartuchos en depósito más recámara","<b>350 mm</b> — longitud del cañón","<b>300 m</b> — alcance máximo","<b>60 m</b> — alcance eficaz","<b>6 grupos</b> — cañón, carcasa, cerrojo, disparo, asta y culata"] },
+{ t:"Partes del cartucho", cnt:"4 + 1", ord:false, l:[
+  "<b>Vaina</b> — boca, cuerpo y culote","<b>Pistón</b> — Berdan (2 oídos) o Bóxer (1 oído)","<b>Carga de proyección</b> — pólvora sin humo","<b>Bala</b> — cuerpo, culote y ojiva","<b>Taco</b> — solo en el semimetálico; refrigerante"] },
+{ t:"Cifras del módulo instrumental", cnt:"Números", ord:false, l:[
+  "<b>20 kg / 30 kg</b> — extintor manual y dorsal","<b>6 meses</b> — revisión de extintores","<b>100 m</b> — distancia máxima de los hidrantes a las fachadas","<b>96 %</b> — eficacia de los sprinklers","<b>2 salidas</b> — mínimo en locales con riesgo, en puntos opuestos","<b>20 mm</b> — calibre desde el que un arma es de guerra","<b>30 cm / 60 cm</b> — cañón y longitud total del arma corta","<b>11 cm</b> — hoja máxima de navaja no automática","<b>3 a 8</b> — número de estrías de un cañón rayado","<b>1890</b> — año que separa las armas históricas (6.ª categoría)"] },
 ];

@@ -18,7 +18,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,300;0,6..72,400;1,6..72,300&family=Hanken+Grotesk:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap">
-<link rel="stylesheet" href="style.css?v=5">
+<link rel="stylesheet" href="style.css?v=6">
 </head>
 <body>
 
@@ -44,7 +44,10 @@
           <p class="stand">Diseño la interfaz, escribo el código que la sostiene y lo dejo funcionando en producción.</p>
         </div>
         <figure class="portrait-wrap rise" style="margin:0">
-          <img class="portrait" src="lydiel.jpg" alt="Ilustración del avatar de Lydiel" width="520" height="520">
+          <picture>
+            <source srcset="lydiel.webp" type="image/webp">
+            <img class="portrait" src="lydiel.jpg" alt="Ilustración del avatar de Lydiel" width="520" height="520" decoding="async">
+          </picture>
           <figcaption class="portrait-cap">Lydiel</figcaption>
         </figure>
       </div>
@@ -159,6 +162,8 @@
     <span><a href="#">Volver arriba</a></span>
   </div>
 </footer>
+
+<script src="chat.js?v=1"></script>
 
 </body>
 </html>

@@ -161,7 +161,8 @@ function renderTemario() {
   });
   h += "</div>";
 
-  h += '<div class="why" style="margin-bottom:18px">La <b>UF2676</b> también tiene una página aparte, con su propio banco de preguntas y su chuleta: ' +
+  h += '<div class="why" style="margin-bottom:18px">El <b>Módulo Instrumental</b> trae los <b>109 tests oficiales</b> del manual, con su solucionario; en la pestaña Test puedes filtrarlos con «Solo oficiales».<br>' +
+    'La <b>UF2676</b> tiene además una página aparte, con su propio banco de preguntas y su chuleta: ' +
     '<a href="/UF2676" style="color:inherit"><b>lydiel.online/UF2676</b></a>.</div>';
 
   h += '<div id="arbol"></div>';
@@ -392,13 +393,17 @@ document.addEventListener("keydown", e => {
 
 /* ---------------- test ---------------- */
 let tSet = [], tIdx = 0, tSel = [], tAnswered = false, tScore = 0, tFails = [];
-let tCfg = { mod: "", len: 10 };
+let tCfg = { mod: "", len: 10, of: "" };
 function renderTestHome() {
   const p = $("p-test");
   const best = S.best ? "Mejor marca: <b>" + S.best.pct + "%</b> (" + S.best.hits + "/" + S.best.total + ")" : "Aún sin marca registrada";
   let h = '<p class="lead">Test con corrección inmediata y la explicación del temario. Las de <b>respuesta múltiple</b> vienen marcadas.</p>';
   h += '<div class="bar"><span class="hint">Módulo</span><button class="chip" data-tm="" aria-pressed="true">Todo</button>';
   MODULOS.forEach(m => h += '<button class="chip" data-tm="' + m.id + '" aria-pressed="false">' + m.cod + "</button>");
+  h += '</div><div class="bar"><span class="hint">Origen</span>' +
+    '<button class="chip" data-tf="" aria-pressed="true">Todas</button>' +
+    '<button class="chip" data-tf="si" aria-pressed="false">Solo oficiales</button>' +
+    '<button class="chip" data-tf="no" aria-pressed="false">Sin oficiales</button>';
   h += '</div><div class="bar"><span class="hint">Preguntas</span>' +
     '<button class="chip" data-tl="10" aria-pressed="true">10</button>' +
     '<button class="chip" data-tl="20" aria-pressed="false">20</button>' +
@@ -408,6 +413,7 @@ function renderTestHome() {
     '<span class="spacer"></span><span class="hint">' + best + "</span></div>";
   p.innerHTML = h;
   p.querySelectorAll("[data-tm]").forEach(c => c.onclick = () => { tCfg.mod = c.dataset.tm; p.querySelectorAll("[data-tm]").forEach(x => x.setAttribute("aria-pressed", String(x === c))); });
+  p.querySelectorAll("[data-tf]").forEach(c => c.onclick = () => { tCfg.of = c.dataset.tf; p.querySelectorAll("[data-tf]").forEach(x => x.setAttribute("aria-pressed", String(x === c))); });
   p.querySelectorAll("[data-tl]").forEach(c => c.onclick = () => { tCfg.len = +c.dataset.tl; p.querySelectorAll("[data-tl]").forEach(x => x.setAttribute("aria-pressed", String(x === c))); });
   $("start").onclick = () => startTest(null);
   const sf = $("startFails"); if (sf) sf.onclick = () => startTest(S.wrong.slice());
@@ -417,6 +423,8 @@ function startTest(only) {
   if (only) pool = pool.filter(q => only.includes(q.i));
   else {
     if (tCfg.mod) pool = pool.filter(q => temaById(q.t).mod === tCfg.mod);
+    if (tCfg.of === "si") pool = pool.filter(q => q.of);
+    if (tCfg.of === "no") pool = pool.filter(q => !q.of);
     shuffle(pool);
     if (tCfg.len < pool.length) pool = pool.slice(0, tCfg.len);
   }
@@ -431,6 +439,7 @@ function paintQ(panel, examen) {
     '<span class="pill">' + modById(tm.mod).cod + "</span>" +
     '<span class="pill">' + esc(tm.t) + "</span>" +
     '<span class="pill">' + (tIdx + 1) + " de " + tSet.length + "</span>" +
+    (q.of ? '<span class="pill of">' + esc(q.of) + "</span>" : "") +
     (multi ? '<span class="pill multi">Respuesta múltiple</span>' : "") +
     (examen ? '<span class="pill time" id="clock">--:--</span>' : "") +
     '<span class="spacer"></span><span>Aciertos: ' + tScore + "</span></div>";

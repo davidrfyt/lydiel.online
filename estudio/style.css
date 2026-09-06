@@ -168,6 +168,7 @@ mark{background:var(--ambar-soft);color:var(--ink);border-radius:2px;padding:0 2
 .qmeta{display:flex;gap:10px;align-items:center;font-family:var(--mono);font-size:var(--f-xs);color:var(--muted);margin-bottom:10px;flex-wrap:wrap}
 .qmeta .pill{background:var(--surface-2);border:1px solid var(--line-soft);border-radius:999px;padding:2px 9px}
 .qmeta .pill.multi{background:var(--ambar-soft);color:var(--ambar);border-color:transparent}
+.qmeta .pill.of{background:var(--ok-soft);color:var(--ok);border-color:transparent;font-weight:600;letter-spacing:.02em}
 .qmeta .pill.time{background:var(--azul-soft);color:var(--azul);border-color:transparent;font-variant-numeric:tabular-nums}
 .qtext{font-family:var(--display);font-size:var(--f-lg);line-height:1.3;margin-bottom:14px}
 .opts{display:flex;flex-direction:column;gap:8px}
