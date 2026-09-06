@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Dispositivo SEA029</title>
+<meta name="description" content="Plataforma de estudio del certificado SEA029 Vigilancia y Seguridad Privada: temario, fichas, tests, examen cronometrado y examen oral.">
+<meta name="color-scheme" content="light dark">
+<link rel="icon" href="../lydiel.jpg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600&family=Archivo:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="style.css?v=2">
+</head>
+<body>
+
+<div id="gate" hidden>
+  <div class="gate-card">
+    <div class="eyebrow"><span>SEA029</span><b>Vigilancia y Seguridad Privada</b></div>
+    <h2>Identifica tu progreso</h2>
+    <p>Escribe tu token de estudio. Los temas dominados, las fichas, la mejor nota y las preguntas falladas quedan asociados a él, no a este navegador: usa el mismo token en el móvil y sigues donde lo dejaste.</p>
+    <div class="gate-field">
+      <label for="gateInput">Token</label>
+      <input id="gateInput" type="text" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="p. ej. david-vigilante-2026">
+    </div>
+    <div class="gate-row">
+      <button class="btn" id="gateGo" type="button">Entrar</button>
+      <button class="link" id="gateGen" type="button">Generar uno al azar</button>
+    </div>
+    <p class="gate-err" id="gateErr"></p>
+    <div class="gate-note">
+      <b>Esto no es una contraseña.</b> Es la etiqueta de tu progreso. Cualquiera que escriba tu mismo token verá tus marcas, así que elige algo que no sea obvio. La página es pública: el token identifica, no protege.
+    </div>
+  </div>
+</div>
+
+<header class="top">
+  <div class="top-in">
+    <div class="brand">
+      <div class="eyebrow"><span>SEA029</span><b>430 h · Vigilante, escolta y vigilante de explosivos</b></div>
+      <h1>Dispositivo<br>SEA029</h1>
+      <p class="sub">Certificado de Vigilancia y Seguridad Privada. Temario completo de los manuales, resúmenes, fichas con repaso espaciado, banco de preguntas, examen cronometrado y simulacro oral.</p>
+    </div>
+    <div class="hud">
+      <svg class="ring" viewBox="0 0 64 64" aria-hidden="true">
+        <circle cx="32" cy="32" r="27" fill="none" stroke="var(--line)" stroke-width="6"></circle>
+        <circle id="ringArc" cx="32" cy="32" r="27" fill="none" stroke="var(--ambar)" stroke-width="6"
+                stroke-linecap="round" stroke-dasharray="170" stroke-dashoffset="170" transform="rotate(-90 32 32)"></circle>
+        <text id="ringTxt" x="32" y="36" text-anchor="middle">0%</text>
+      </svg>
+      <div class="hud-txt">
+        <b id="hudDone">0 / 0</b>
+        epígrafes dominados
+        <div style="margin-top:8px;display:flex;gap:6px;flex-wrap:wrap;align-items:center">
+          <button class="theme-btn" id="themeBtn" type="button">Tema</button>
+          <button class="theme-btn" id="outBtn" type="button">Salir</button>
+        </div>
+        <div style="margin-top:8px;display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+          <span class="who-chip" id="whoChip">-</span>
+          <span class="sync" id="syncBadge" data-s="local"><span class="dot"></span><span id="syncTxt">local</span></span>
+        </div>
+      </div>
+    </div>
+  </div>
+  <nav class="tabs" role="tablist" id="tabs"></nav>
+</header>
+
+<div class="wrap">
+  <section class="panel" id="p-temario" role="tabpanel"></section>
+  <section class="panel" id="p-resumen" role="tabpanel" hidden></section>
+  <section class="panel" id="p-fichas" role="tabpanel" hidden></section>
+  <section class="panel" id="p-test" role="tabpanel" hidden></section>
+  <section class="panel" id="p-examen" role="tabpanel" hidden></section>
+  <section class="panel" id="p-oral" role="tabpanel" hidden></section>
+  <section class="panel" id="p-chuleta" role="tabpanel" hidden></section>
+  <section class="panel" id="p-buscar" role="tabpanel" hidden></section>
+  <footer>
+    <span>Temario OCR de los manuales oficiales SEA029 · I+D capacitación profesional</span>
+    <span id="savedNote">Tu progreso se guarda en tu token</span>
+  </footer>
+</div>
+
+<script src="data.js?v=2"></script>
+<script src="app.js?v=2"></script>
+</body>
+</html>
