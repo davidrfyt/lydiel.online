@@ -161,7 +161,7 @@ function renderTemario() {
   });
   h += "</div>";
 
-  h += '<div class="why" style="margin-bottom:18px">La <b>UF2676, Protección de personas</b> (MF0081_2) tiene su propia página con el manual desarrollado: ' +
+  h += '<div class="why" style="margin-bottom:18px">La <b>UF2676</b> también tiene una página aparte, con su propio banco de preguntas y su chuleta: ' +
     '<a href="/UF2676" style="color:inherit"><b>lydiel.online/UF2676</b></a>.</div>';
 
   h += '<div id="arbol"></div>';
@@ -208,6 +208,11 @@ async function abreManual(clave, silencioso) {
   if (!silencioso) cont.scrollIntoView({ behavior: "smooth", block: "start" });
 }
 
+function tam(e) {
+  const n = e.chars != null ? e.chars : (e.texto ? e.texto.length : 0);
+  if (!n) return "";
+  return " · " + (n >= 1000 ? Math.round(n / 1000) + "k" : n) + " caracteres";
+}
 function listaEpi(clave, u) {
   return '<ul class="epis">' + u.epigrafes.map(e => {
     const k = epiKey(clave, u.n, e.n);
@@ -216,7 +221,7 @@ function listaEpi(clave, u) {
       '<span class="mark" data-act="mark" role="button" tabindex="0" aria-label="Marcar como dominado">&#10003;</span>' +
       '<span class="epi-n">' + esc(e.n) + '</span>' +
       '<span class="epi-t">' + esc(e.titulo) + "</span>" +
-      '<span class="epi-m">pág. ' + e.pag + " · " + Math.round(e.chars / 1000) + "k</span></button>" +
+      '<span class="epi-m">pág. ' + e.pag + tam(e) + "</span></button>" +
       '<div class="epi-b" hidden></div></li>';
   }).join("") + "</ul>";
 }
