@@ -1,8 +1,8 @@
 "use strict";
 /* =========================================================
-   SEA029 — plataforma de estudio
-   Navegacion en dos niveles: indice de unidades -> unidad.
-   Dentro de cada unidad esta todo su material.
+   SEA029 — panel de estudio
+   Barra lateral fija; el lienzo cambia entre el indice de
+   unidades, una unidad concreta y las herramientas.
    ========================================================= */
 
 const CONFIG = { SYNC_URL: "https://uf2676.entrenadorespokemon.workers.dev", SUFIJO: "-sea029" };
@@ -15,14 +15,15 @@ const TOKEN_RE = /^[A-Za-z0-9_-]{6,56}$/;
 const USUARIO_RE = /^[a-z0-9][a-z0-9._-]{2,31}$/;
 let SESION = null;
 let USUARIO = null;
+let ADMIN = false;
 let TOKEN = null;                       // solo si el servicio no tiene cuentas
-let CUENTAS = null;                     // lo dice el servicio al arrancar
+let CUENTAS = null;
 let modoGate = "entrar";
 let S = { done: {}, epi: {}, best: null, wrong: [], box: {}, examBest: null, uBest: {} };
 let pushTimer = null;
 
-let IDX = [];                 // indice de manuales
-const CACHE = {};             // manuales ya descargados
+let IDX = [];
+const CACHE = {};
 
 const $ = id => document.getElementById(id);
 const lsGet = k => { try { return localStorage.getItem(k); } catch (e) { return null; } };
@@ -47,7 +48,6 @@ const cuerpoProgreso = () => JSON.stringify({
   done: S.done, epi: S.epi, best: S.best, wrong: S.wrong,
   box: S.box, examBest: S.examBest, uBest: S.uBest
 });
-
 async function push() {
   if (!CONFIG.SYNC_URL) return;
   try {
@@ -64,7 +64,7 @@ async function push() {
     } else return;
     if (!r.ok) throw new Error("HTTP " + r.status);
     setSync("ok", "sincronizado");
-  } catch (e) { setSync("err", "sin conexion"); }
+  } catch (e) { setSync("err", "sin conexión"); }
 }
 async function pull() {
   if (!CONFIG.SYNC_URL) return null;
@@ -82,7 +82,7 @@ async function pull() {
 }
 function caduca() {
   lsDel(KSES); lsDel(KUSR);
-  SESION = null; USUARIO = null;
+  SESION = null; USUARIO = null; ADMIN = false;
   abrePuerta("Tu sesión ha caducado. Entra otra vez.");
 }
 const hasData = o => !!o && ((o.done && Object.keys(o.done).length) || (o.epi && Object.keys(o.epi).length) ||
@@ -95,6 +95,7 @@ const norma = o => ({
 async function unlock(quien) {
   $("whoChip").textContent = quien;
   $("whoChip").title = (SESION ? "Cuenta: " : "Token de estudio: ") + quien;
+  $("avatar").textContent = quien.slice(0, 1);
 
   let local = null;
   try { const raw = lsGet(slotKey()); if (raw) local = JSON.parse(raw); } catch (e) {}
@@ -102,10 +103,10 @@ async function unlock(quien) {
   if (CONFIG.SYNC_URL) {
     setSync("wait", "conectando");
     const remoto = await pull();
-    if (!SESION && !TOKEN) return;          // la sesion caduco mientras cargaba
+    if (!SESION && !TOKEN) return;
     if (hasData(remoto)) { S = norma(remoto); setSync("ok", "sincronizado"); }
     else if (hasData(local)) { S = norma(local); await push(); }
-    else { S = norma({}); setSync(remoto === null ? "err" : "ok", remoto === null ? "sin conexion" : "sincronizado"); }
+    else { S = norma({}); setSync(remoto === null ? "err" : "ok", remoto === null ? "sin conexión" : "sincronizado"); }
   } else {
     S = hasData(local) ? norma(local) : norma({});
     setSync("local", "solo este equipo");
@@ -116,11 +117,12 @@ async function unlock(quien) {
 }
 async function lock() {
   clearTimeout(pushTimer);
+  paraVoz();
   if (SESION) {
     try { await fetch(CONFIG.SYNC_URL + "/salir", { method: "POST", headers: conSesion() }); } catch (e) {}
   }
   lsDel(KSES); lsDel(KUSR); lsDel(TKEY);
-  SESION = null; USUARIO = null; TOKEN = null;
+  SESION = null; USUARIO = null; TOKEN = null; ADMIN = false;
   S = norma({});
   abrePuerta("");
 }
@@ -128,7 +130,6 @@ async function lock() {
 /* ---------------- utilidades ---------------- */
 const temaById = id => TEMAS.find(t => t.id === id);
 const modById = id => MODULOS.find(m => m.id === id);
-const manById = clave => IDX.find(m => m.clave === clave);
 function shuffle(a) { for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1));[a[i], a[j]] = [a[j], a[i]]; } return a; }
 const esc = s => String(s).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
 const plano = h => String(h).replace(/<[^>]*>/g, "");
@@ -137,9 +138,11 @@ const epiKey = (clave, un, en) => clave + "|" + un + "|" + en;
 const uKey = (man, ud) => man + "|" + ud;
 const fKey = f => f.t + ":" + FICHAS.indexOf(f);
 
-/* material que cuelga de cada unidad */
+const TONOS = { mf0080: "--m80", mf0081: "--m81", mf0082: "--m82", mf0272: "--m272" };
+const tono = mod => { const k = TONOS[mod] || "--m80"; return "--tono:var(" + k + ");--tono-2:var(" + k + "-2)"; };
+
 const temasDe = (man, ud) => TEMAS.filter(t => t.man === man && t.ud === ud);
-function idsDe(man, ud) { return temasDe(man, ud).map(t => t.id); }
+const idsDe = (man, ud) => temasDe(man, ud).map(t => t.id);
 const fichasDe = (man, ud) => { const ids = idsDe(man, ud); return FICHAS.filter(f => ids.includes(f.t)); };
 const oralDe = (man, ud) => { const ids = idsDe(man, ud); return ORAL.filter(o => ids.includes(o.t)); };
 function preguntasDe(man, ud) {
@@ -156,17 +159,14 @@ function unidades() {
   })));
   return out;
 }
-function unidad(man, ud) { return unidades().find(u => u.man === man && u.ud === +ud); }
+const unidad = (man, ud) => unidades().find(u => u.man === man && u.ud === +ud);
 
 function epiHechos(man, ud) {
   const u = unidad(man, ud); if (!u) return 0;
   return u.epis.filter(e => S.epi[epiKey(man, ud, e.n)]).length;
 }
-function fichasDominadas(man, ud) {
-  return fichasDe(man, ud).filter(f => (S.box[fKey(f)] || 0) >= 2).length;
-}
+const fichasDominadas = (man, ud) => fichasDe(man, ud).filter(f => (S.box[fKey(f)] || 0) >= 2).length;
 
-/* progreso de una unidad: media de los tramos con material */
 function progresoUD(man, ud) {
   const u = unidad(man, ud); if (!u) return 0;
   const tramos = [];
@@ -179,13 +179,12 @@ function progresoUD(man, ud) {
   if (preguntasDe(man, ud).length) tramos.push(b ? Math.min(1, b.pct / 100) : 0);
   return tramos.length ? Math.round(tramos.reduce((a, x) => a + x, 0) / tramos.length * 100) : 0;
 }
-
-function totalEpi() { return IDX.reduce((a, m) => a + m.uds.reduce((b, u) => b + u.epigrafes.length, 0), 0); }
-function hechosEpi() { return Object.values(S.epi).filter(Boolean).length; }
+const totalEpi = () => IDX.reduce((a, m) => a + m.uds.reduce((b, u) => b + u.epigrafes.length, 0), 0);
+const hechosEpi = () => Object.values(S.epi).filter(Boolean).length;
 
 function updHud() {
   const tot = totalEpi() || 1, n = hechosEpi();
-  const pct = Math.round(n / tot * 100), C = 2 * Math.PI * 27;
+  const pct = Math.round(n / tot * 100), C = 2 * Math.PI * 26;
   const arc = $("ringArc");
   arc.setAttribute("stroke-dasharray", C.toFixed(1));
   arc.setAttribute("stroke-dashoffset", (C * (1 - pct / 100)).toFixed(1));
@@ -202,12 +201,70 @@ async function cargaManual(clave) {
 }
 
 /* =========================================================
-   RUTAS
-   #/                     indice de unidades
-   #/u/<manual>/<ud>[/<seccion>]
-   #/buscar  #/examen  #/chuleta  #/falladas
+   LECTURA EN VOZ ALTA
    ========================================================= */
-function ir(hash) { location.hash = hash; }
+const VOZ = { trozos: [], i: 0, estado: "parado", vel: 1, voz: null, li: null, pinta: null };
+
+const hayVoz = () => typeof speechSynthesis !== "undefined" && typeof SpeechSynthesisUtterance !== "undefined";
+
+function vocesEs() {
+  if (!hayVoz()) return [];
+  return speechSynthesis.getVoices().filter(v => /^es/i.test(v.lang));
+}
+function eligeVoz() {
+  const vs = vocesEs();
+  if (!vs.length) return null;
+  const guardada = lsGet("sea029:voz");
+  return vs.find(v => v.voiceURI === guardada) || vs.find(v => /es[-_]ES/i.test(v.lang)) || vs[0];
+}
+function trocea(texto) {
+  const frases = texto.replace(/\s+/g, " ").split(/(?<=[.:;!?])\s+/);
+  const out = [];
+  let acc = "";
+  frases.forEach(f => {
+    if ((acc + " " + f).trim().length > 230) { if (acc) out.push(acc.trim()); acc = f; }
+    else acc += " " + f;
+  });
+  if (acc.trim()) out.push(acc.trim());
+  return out.filter(Boolean);
+}
+function paraVoz() {
+  if (!hayVoz()) return;
+  speechSynthesis.cancel();
+  VOZ.trozos = []; VOZ.i = 0; VOZ.estado = "parado";
+  if (VOZ.li) VOZ.li.classList.remove("leyendo");
+  VOZ.li = null;
+  if (VOZ.pinta) VOZ.pinta();
+}
+function siguienteTrozo() {
+  if (VOZ.i >= VOZ.trozos.length) { paraVoz(); return; }
+  const u = new SpeechSynthesisUtterance(VOZ.trozos[VOZ.i]);
+  u.lang = "es-ES";
+  u.rate = VOZ.vel;
+  if (VOZ.voz) u.voice = VOZ.voz;
+  u.onend = () => { if (VOZ.estado === "leyendo") { VOZ.i++; siguienteTrozo(); } };
+  u.onerror = () => paraVoz();
+  speechSynthesis.speak(u);
+  if (VOZ.pinta) VOZ.pinta();
+}
+function lee(texto, li, repinta) {
+  paraVoz();
+  VOZ.voz = eligeVoz();
+  VOZ.trozos = trocea(texto);
+  VOZ.i = 0; VOZ.estado = "leyendo"; VOZ.li = li; VOZ.pinta = repinta;
+  if (li) li.classList.add("leyendo");
+  siguienteTrozo();
+}
+function pausaVoz() {
+  if (VOZ.estado === "leyendo") { speechSynthesis.pause(); VOZ.estado = "pausa"; }
+  else if (VOZ.estado === "pausa") { speechSynthesis.resume(); VOZ.estado = "leyendo"; }
+  if (VOZ.pinta) VOZ.pinta();
+}
+
+/* =========================================================
+   RUTAS Y ARMAZON
+   ========================================================= */
+const ir = hash => { location.hash = hash; };
 
 function ruta() {
   const h = (location.hash || "#/").replace(/^#/, "");
@@ -217,51 +274,96 @@ function ruta() {
   return { vista: p[0] };
 }
 
-function pinta() {
+const MENU = [
+  ["indice", "Unidades", "indice", "#/"],
+  ["buscar", "Buscar", "buscar", "#/buscar"],
+  ["examen", "Examen general", "examen", "#/examen"],
+  ["chuleta", "Chuleta", "chuleta", "#/chuleta"],
+  ["falladas", "Mis falladas", "falladas", "#/falladas"],
+];
+
+function pintaNav() {
   const r = ruta();
+  const actual = r.vista === "unidad" ? "indice" : r.vista;
+  let h = '<div class="titulo">Estudio</div>';
+  MENU.forEach(([id, txt, ic, hash]) => {
+    let n = "";
+    if (id === "falladas") n = S.wrong.length || "";
+    if (id === "chuleta") n = CHULETA.length;
+    h += '<button type="button" data-ir="' + hash + '" aria-current="' + (actual === id) + '">' +
+      icono(ic) + "<span>" + txt + "</span>" + (n ? '<span class="cifra">' + n + "</span>" : "") + "</button>";
+  });
+  if (ADMIN) {
+    h += '<div class="titulo" style="margin-top:16px">Administración</div>' +
+      '<button type="button" data-ir="#/panel" aria-current="' + (actual === "panel") + '">' +
+      icono("panel") + "<span>Usuarios</span></button>";
+  }
+  const nav = $("nav");
+  nav.innerHTML = h;
+  nav.querySelectorAll("[data-ir]").forEach(b => b.onclick = () => { cierraMenu(); ir(b.dataset.ir); });
+}
+
+function cabecera(ruta, titulo) {
+  $("ruta").textContent = ruta;
+  $("titulo").textContent = titulo;
+  document.title = titulo + " · SEA029";
+}
+const cierraMenu = () => { $("app").dataset.menu = "0"; const v = document.querySelector(".velo"); if (v) v.remove(); };
+
+function pinta() {
+  paraVoz();
+  const r = ruta();
+  pintaNav();
   window.scrollTo({ top: 0, behavior: "instant" });
   if (r.vista === "unidad") return vistaUnidad(r);
   if (r.vista === "buscar") return vistaBuscar();
   if (r.vista === "examen") return vistaExamenGeneral();
   if (r.vista === "chuleta") return vistaChuletaGeneral();
   if (r.vista === "falladas") return vistaFalladas();
+  if (r.vista === "panel") return vistaAdmin();
   return vistaIndice();
 }
 window.addEventListener("hashchange", () => { if (SESION || TOKEN) pinta(); });
 
 /* =========================================================
-   NIVEL 0 — indice de unidades
+   INDICE DE UNIDADES
    ========================================================= */
 let filtroMod = "";
 
 function vistaIndice() {
+  cabecera("Panel", "Tus unidades");
   const p = $("vista");
   const us = unidades();
   const conMaterial = us.filter(u => temasDe(u.man, u.ud).length).length;
+  const completas = us.filter(u => progresoUD(u.man, u.ud) === 100).length;
+  const medias = us.length ? Math.round(us.reduce((a, u) => a + progresoUD(u.man, u.ud), 0) / us.length) : 0;
+  const fichasOk = FICHAS.filter(f => (S.box[fKey(f)] || 0) >= 2).length;
 
-  let h = '<section class="intro"><div class="intro-rail">Índice general</div><div>' +
-    "<h2>Elige la unidad que vas a estudiar</h2>" +
-    "<p>Cada unidad reúne su temario, su resumen, sus fichas, su test, su examen, su examen oral y su chuleta. " +
-    "El plan de estudio de la unidad te dice en qué orden usarlos.</p></div></section>";
+  let h = '<div class="resumen">' +
+    kpi(medias + "%", "Avance medio", true) +
+    kpi(hechosEpi() + " / " + totalEpi(), "Epígrafes leídos") +
+    kpi(fichasOk + " / " + FICHAS.length, "Fichas dominadas") +
+    kpi(completas + " / " + us.length, "Unidades al 100 %") +
+    "</div>";
 
-  h += '<div class="tools">' +
-    herramienta("buscar", "Buscar", "En todo el material a la vez", "&#9906;") +
-    herramienta("examen", "Examen general", EX_N + " preguntas · " + EX_MIN + " min", "&#9202;") +
-    herramienta("chuleta", "Chuleta completa", CHULETA.length + " bloques de memoria", "&#9776;") +
-    herramienta("falladas", "Mis falladas", S.wrong.length + " preguntas pendientes", "&#8635;") +
+  h += '<div class="acciones">' +
+    accion("buscar", "Buscar", "En todo el material", "buscar") +
+    accion("examen", "Examen general", EX_N + " preguntas · " + EX_MIN + " min", "examen") +
+    accion("chuleta", "Chuleta completa", CHULETA.length + " bloques", "chuleta") +
+    accion("falladas", "Mis falladas", S.wrong.length + " pendientes", "falladas") +
     "</div>";
 
   const viejo = lsGet(TKEY);
   if (SESION && viejo && !hasData(S)) {
-    h += '<div class="why" id="traer" style="margin-bottom:26px">Tienes progreso guardado con el token antiguo ' +
-      "<b>" + esc(viejo) + '</b>. <button class="link" id="traerBtn" type="button">Traerlo a esta cuenta</button>' +
-      ' <span class="hint" id="traerMsg"></span></div>';
+    h += '<div class="aviso" style="margin-bottom:22px">Tienes progreso guardado con el token antiguo <b>' +
+      esc(viejo) + '</b>. <button class="link" id="traerBtn" type="button">Traerlo a esta cuenta</button> ' +
+      '<span class="hint" id="traerMsg"></span></div>';
   }
 
   h += '<div class="bar"><span class="hint">Módulo</span>' +
-    '<button class="chip" data-f="" aria-pressed="' + (filtroMod === "" ? "true" : "false") + '">Todos</button>';
+    '<button class="chip" data-f="" aria-pressed="' + (filtroMod === "") + '">Todos</button>';
   MODULOS.forEach(m => h += '<button class="chip" data-f="' + m.id + '" aria-pressed="' +
-    (filtroMod === m.id ? "true" : "false") + '">' + m.cod + "</button>");
+    (filtroMod === m.id) + '">' + m.cod + "</button>");
   h += '<span class="spacer"></span><span class="hint">' + conMaterial + " de " + us.length +
     " unidades con material de repaso</span></div>";
 
@@ -269,11 +371,11 @@ function vistaIndice() {
     if (filtroMod && filtroMod !== m.mod) return;
     const eps = m.uds.reduce((a, u) => a + u.epigrafes.length, 0);
     const d = m.uds.reduce((a, u) => a + u.epigrafes.filter(e => S.epi[epiKey(m.clave, u.n, e.n)]).length, 0);
-    h += '<div class="man-head"><span class="k">' + esc(m.cod) + '</span><h3>' + esc(m.nombre) + "</h3>" +
-      '<span class="hint">' + d + " / " + eps + " epígrafes leídos</span></div>";
-    h += '<div class="uds">';
-    m.uds.forEach(u => h += tarjetaUD(m, u));
-    h += "</div>";
+    h += '<div class="mod-head" style="' + tono(m.mod) + '">' +
+      '<span class="pastilla" style="background:var(--tono-2);color:var(--tono)">' + esc(m.cod) + "</span>" +
+      "<h3>" + esc(m.nombre) + "</h3>" +
+      '<span class="hint">' + d + " / " + eps + " epígrafes</span></div>";
+    h += '<div class="uds">' + m.uds.map(u => tarjetaUD(m, u)).join("") + "</div>";
   });
 
   p.innerHTML = h;
@@ -281,24 +383,17 @@ function vistaIndice() {
   p.querySelectorAll("[data-ir]").forEach(b => b.onclick = () => ir(b.dataset.ir));
   const tb = $("traerBtn");
   if (tb) tb.onclick = async () => {
-    tb.disabled = true;
-    $("traerMsg").textContent = "importando…";
-    try {
-      await importaToken(lsGet(TKEY));
-      lsDel(TKEY);
-      updHud(); vistaIndice();
-    } catch (e) {
-      $("traerMsg").textContent = e.message;
-      tb.disabled = false;
-    }
+    tb.disabled = true; $("traerMsg").textContent = "importando…";
+    try { await importaToken(lsGet(TKEY)); lsDel(TKEY); updHud(); vistaIndice(); }
+    catch (e) { $("traerMsg").textContent = e.message; tb.disabled = false; }
   };
 }
 
-function herramienta(id, t, sub, ico) {
-  return '<button class="tool" type="button" data-ir="#/' + id + '">' +
-    '<span class="ico" aria-hidden="true">' + ico + "</span>" +
-    '<span class="tt">' + t + '</span><span class="ts">' + sub + "</span></button>";
-}
+const kpi = (v, l, acento) => '<div class="kpi' + (acento ? " acento" : "") + '"><div class="v">' + v + '</div><div class="l">' + l + "</div></div>";
+const accion = (id, t, sub, ic) =>
+  '<button class="accion" type="button" data-ir="#/' + id + '">' +
+  '<span class="ic">' + icono(ic, 20) + "</span>" +
+  '<span><span class="tt">' + t + '</span><span class="ts">' + sub + "</span></span></button>";
 
 function tarjetaUD(m, u) {
   const man = m.clave, ud = u.n;
@@ -313,19 +408,20 @@ function tarjetaUD(m, u) {
   if (nO) partes.push(plural(nO, "oral", "orales"));
   if (nC) partes.push(plural(nC, "chuleta", "chuletas"));
 
-  const num = String(ud).padStart(2, "0");
-  return '<button class="ud-card' + (pct === 100 ? " completa" : "") + '" type="button" data-ir="#/u/' + man + "/" + ud + '">' +
-    (pct === 100 ? '<span class="sello">Superada</span>' : "") +
-    '<div class="ud-top"><span class="num">UD ' + num + "</span>" +
-    (nT ? "" : '<span class="tag">solo temario</span>') +
-    '<span class="pct">' + pct + "%</span></div>" +
+  return '<button class="ud-card" type="button" data-ir="#/u/' + man + "/" + ud + '" style="' + tono(m.mod) + '">' +
+    '<span class="ilustra">' +
+    '<span class="num">UD ' + String(ud).padStart(2, "0") + "</span>" +
+    (pct === 100 ? '<span class="insignia">Superada</span>' : "") +
+    dibujo(man, ud) + "</span>" +
+    '<span class="ud-cuerpo">' +
     "<h4>" + esc(u.titulo) + "</h4>" +
-    '<div class="barp"><i style="width:' + pct + '%"></i></div>' +
-    '<div class="ud-meta">' + partes.join(" · ") + "</div></button>";
+    '<span class="meta">' + partes.map(x => "<span>" + x + "</span>").join("") + "</span>" +
+    '<span class="pie"><span class="barp' + (pct === 100 ? " ok" : "") + '"><i style="width:' + pct + '%"></i></span>' +
+    '<span class="pct">' + pct + "%</span></span></span></button>";
 }
 
 /* =========================================================
-   NIVEL 1 — una unidad
+   UNA UNIDAD
    ========================================================= */
 const SECCIONES = [
   ["plan", "Plan"], ["temario", "Temario"], ["resumen", "Resumen"], ["fichas", "Fichas"],
@@ -348,17 +444,14 @@ async function vistaUnidad(r) {
   if (!u) { ir("#/"); return; }
   const secs = seccionesDe(r.man, r.ud);
   const sec = secs.some(s => s[0] === r.sec) ? r.sec : "plan";
-  const p = $("vista");
+  cabecera(u.cod + " · UD " + String(u.ud).padStart(2, "0"), u.titulo);
 
-  let h = '<div class="crumb"><button class="volver" type="button" data-ir="#/">&larr; Todas las unidades</button>' +
-    '<span class="c-sep">/</span><span class="c-k">' + esc(u.cod) + "</span>" +
-    '<span class="c-sep">/</span><span class="c-k">UD' + u.ud + "</span></div>";
-
-  h += '<div class="ud-hero"><div class="k">' + esc(modById(u.mod).cod) + "<br>" + esc(u.cod) +
-    " · UD " + String(u.ud).padStart(2, "0") + "</div>" +
-    '<div class="cuerpo"><h2>' + esc(u.titulo) + "</h2>" +
+  let h = '<div class="ud-hero" style="' + tono(u.mod) + '">' +
+    '<span class="escudo">' + dibujo(r.man, r.ud) + "</span>" +
+    '<div class="txt"><div class="k">' + esc(modById(u.mod).cod) + " · " + esc(u.cod) + "</div>" +
+    "<h2>" + esc(u.titulo) + "</h2>" +
     '<p class="sub">' + esc(u.manNombre) + "</p></div>" +
-    '<div class="ud-pct"><b>' + progresoUD(r.man, r.ud) + "%</b><span>de la unidad</span></div></div>";
+    '<div class="aro"><b>' + progresoUD(r.man, r.ud) + "%</b><span>de la unidad</span></div></div>";
 
   h += '<nav class="tabs" role="tablist">' + secs.map(([id, t, n]) =>
     '<button class="tab" type="button" role="tab" data-ir="#/u/' + r.man + "/" + r.ud + "/" + id + '"' +
@@ -366,6 +459,7 @@ async function vistaUnidad(r) {
   ).join("") + "</nav>";
 
   h += '<div id="panel" class="panel-uni"></div>';
+  const p = $("vista");
   p.innerHTML = h;
   p.querySelectorAll("[data-ir]").forEach(b => b.onclick = () => ir(b.dataset.ir));
 
@@ -380,7 +474,7 @@ async function vistaUnidad(r) {
   else if (sec === "chuleta") panelChuleta(ctx, chuletaDe(r.man, r.ud));
 }
 
-/* ---------------- plan de estudio ---------------- */
+/* ---------------- plan ---------------- */
 function panelPlan(c) {
   const { man, ud, u } = c;
   const ts = temasDe(man, ud), fs = fichasDe(man, ud), qs = preguntasDe(man, ud), os = oralDe(man, ud);
@@ -390,7 +484,7 @@ function panelPlan(c) {
 
   pasos.push({
     id: "temario", t: "Leer el temario de la unidad",
-    d: "Los " + u.epis.length + " epígrafes del manual, con el texto íntegro. Marca el círculo de cada uno cuando lo entiendas.",
+    d: "Los " + u.epis.length + " epígrafes del manual, con el texto íntegro. Puedes escucharlos en voz alta mientras sigues la lectura.",
     hecho: epiHechos(man, ud), total: u.epis.length
   });
   if (ts.length) pasos.push({
@@ -400,22 +494,23 @@ function panelPlan(c) {
   });
   if (fs.length) pasos.push({
     id: "fichas", t: "Fijar con las fichas",
-    d: "Repaso espaciado: la ficha sale de la rotación cuando la aciertas dos veces seguidas. Hazlas en sesiones cortas y repetidas, no de una sentada.",
+    d: "Repaso espaciado: la ficha sale de la rotación cuando la aciertas dos veces seguidas. Hazlas en sesiones cortas y repetidas.",
     hecho: fichasDominadas(man, ud), total: fs.length
   });
   if (qs.length) pasos.push({
     id: "test", t: "Comprobar con el test",
     d: "Corrección inmediata y explicación de cada respuesta. Lo que falles se guarda para repasarlo después.",
-    hecho: best ? best.pct : 0, total: 100, sufijo: "%", nota: best ? "Mejor marca: " + best.pct + "%" : "Sin marca todavía"
+    hecho: best ? best.pct : 0, total: 100, nota: best ? "Mejor marca: " + best.pct + " %" : "Sin marca todavía"
   });
   if (qs.length >= 10) pasos.push({
     id: "examen", t: "Simular el examen de la unidad",
     d: "Sin corrección hasta el final y con cronómetro. Repítelo hasta pasar del 75 % con holgura.",
-    hecho: best && best.examen ? best.examen : 0, total: 100, sufijo: "%"
+    hecho: best && best.examen ? best.examen : 0, total: 100,
+    nota: best && best.examen ? "Mejor examen: " + best.examen + " %" : "Aún no lo has hecho"
   });
   if (os.length) pasos.push({
     id: "oral", t: "Responder en voz alta",
-    d: "Es lo que vas a hacer delante del tribunal. Responde primero y solo después despliega el guion, ordenado como conviene contestar.",
+    d: "Es lo que vas a hacer delante del tribunal. Responde primero y solo después despliega el guion.",
     hecho: 0, total: 0
   });
   if (cs.length) pasos.push({
@@ -425,42 +520,39 @@ function panelPlan(c) {
   });
 
   let h = '<p class="lead">Este es el orden que funciona: entender, condensar, memorizar, comprobar y decir en voz alta. ' +
-    'Puedes saltar entre pasos, pero no te saltes el primero.</p>';
-
+    "Puedes saltar entre pasos, pero no te saltes el primero.</p>";
   h += '<ol class="plan">';
   pasos.forEach((s, i) => {
     const pct = s.total ? Math.round(s.hecho / s.total * 100) : null;
     h += '<li class="paso' + (pct === 100 ? " done" : "") + '">' +
-      '<span class="pn">' + (i + 1) + "</span>" +
-      '<div class="pc"><h4>' + s.t + "</h4><p>" + s.d + "</p>" +
-      (pct !== null ? '<div class="barp"><i style="width:' + pct + '%"></i></div>' +
-        '<div class="pmeta">' + (s.sufijo ? (s.nota || s.hecho + s.sufijo) : s.hecho + " de " + s.total) + "</div>" : "") +
+      '<span class="pn">' + (pct === 100 ? "&#10003;" : i + 1) + "</span>" +
+      "<div><h4>" + s.t + "</h4><p>" + s.d + "</p>" +
+      (pct !== null ? '<div class="barp' + (pct === 100 ? " ok" : "") + '"><i style="width:' + pct + '%"></i></div>' +
+        '<div class="pmeta">' + (s.nota || s.hecho + " de " + s.total) + "</div>" : "") +
       "</div>" +
       '<button class="btn ghost" type="button" data-ir="#/u/' + man + "/" + ud + "/" + s.id + '">Ir</button></li>';
   });
   h += "</ol>";
-
   h += '<div class="metodo"><h3>Cómo estudiar esta unidad</h3><ul>' +
     "<li><b>Sesiones de 25 minutos</b> con 5 de descanso. Más seguido, no más largo.</li>" +
     "<li><b>Espacia los repasos</b>: el mismo día, a los 2 días, a la semana y al mes. Las fichas ya lo hacen por ti.</li>" +
     "<li><b>Responde antes de mirar</b>. El esfuerzo de recordar es lo que fija; releer no fija nada.</li>" +
     "<li><b>Di la respuesta en voz alta</b>. En el examen oral no vale reconocerla, hay que producirla.</li>" +
-    "<li><b>Vuelve a lo que fallaste</b>, no a lo que ya te sale. Tienes el botón de falladas en la portada.</li>" +
+    "<li><b>Vuelve a lo que fallaste</b>, no a lo que ya te sale.</li>" +
     "</ul></div>";
 
   $("panel").innerHTML = h;
   $("panel").querySelectorAll("[data-ir]").forEach(b => b.onclick = () => ir(b.dataset.ir));
 }
 
-/* ---------------- temario de la unidad ---------------- */
+/* ---------------- temario con lectura en voz alta ---------------- */
 function tam(e) {
   const n = e.chars != null ? e.chars : (e.texto ? e.texto.length : 0);
   if (!n) return "";
-  return " · " + (n >= 1000 ? Math.round(n / 1000) + "k" : n) + " caracteres";
+  return n >= 1000 ? Math.round(n / 1000) + "k caracteres" : n + " caracteres";
 }
-function parrafos(txt) {
-  return txt.split("\n").map(l => l.startsWith("### ") ? "<h5>" + esc(l.slice(4)) + "</h5>" : "<p>" + esc(l) + "</p>").join("");
-}
+const parrafos = txt => txt.split("\n")
+  .map(l => l.startsWith("### ") ? "<h5>" + esc(l.slice(4)) + "</h5>" : "<p>" + esc(l) + "</p>").join("");
 
 async function panelTemario(c) {
   const { man, ud } = c;
@@ -472,10 +564,23 @@ async function panelTemario(c) {
   const real = datos.uds.find(x => x.n === +ud);
   if (!real) { panel.innerHTML = '<p class="empty">Esta unidad no tiene texto cargado.</p>'; return; }
 
-  let h = '<p class="lead">El texto íntegro del manual. Pulsa un epígrafe para leerlo y el círculo para marcarlo como entendido.</p>';
-  h += '<div class="bar"><button class="btn ghost" id="abrirTodo" type="button">Abrir todos</button>' +
-    '<button class="btn ghost" id="cerrarTodo" type="button">Cerrar todos</button>' +
+  let h = '<p class="lead">El texto íntegro del manual. Pulsa un epígrafe para leerlo, el cuadro para marcarlo como entendido, y <b>Escuchar</b> si prefieres oírlo.</p>';
+
+  if (hayVoz()) {
+    h += '<div class="voz"><span class="hint">Voz</span>' +
+      '<select id="vozSel" aria-label="Voz"></select>' +
+      '<span class="hint">Velocidad</span><select id="vozVel" aria-label="Velocidad">' +
+      [0.8, 0.9, 1, 1.1, 1.25, 1.5].map(v => '<option value="' + v + '"' + (v === VOZ.vel ? " selected" : "") + ">" + v + "×</option>").join("") +
+      '</select><span class="spacer"></span>' +
+      '<button class="btn ghost chico" id="vozStop" type="button">Detener</button></div>';
+  } else {
+    h += '<div class="aviso" style="margin-bottom:16px">Este navegador no tiene lectura en voz alta. En Chrome, Edge o Safari sí funciona.</div>';
+  }
+
+  h += '<div class="bar"><button class="btn ghost chico" id="abrirTodo" type="button">Abrir todos</button>' +
+    '<button class="btn ghost chico" id="cerrarTodo" type="button">Cerrar todos</button>' +
     '<span class="spacer"></span><span class="hint" id="epiCont"></span></div>';
+
   h += '<ul class="epis">' + real.epigrafes.map(e => {
     const k = epiKey(man, ud, e.n);
     return '<li class="epi' + (S.epi[k] ? " done" : "") + '" data-k="' + esc(k) + '" data-n="' + esc(e.n) + '">' +
@@ -483,24 +588,60 @@ async function panelTemario(c) {
       '<span class="mark" data-act="mark" role="button" tabindex="0" aria-label="Marcar como entendido">&#10003;</span>' +
       '<span class="epi-n">' + esc(e.n) + "</span>" +
       '<span class="epi-t">' + esc(e.titulo) + "</span>" +
-      '<span class="epi-m">pág. ' + e.pag + tam(e) + "</span></button>" +
+      '<span class="epi-m">pág. ' + e.pag + " · " + tam(e) + "</span></button>" +
       '<div class="epi-b" hidden></div></li>';
   }).join("") + "</ul>";
   panel.innerHTML = h;
 
-  const cuenta = () => {
-    $("epiCont").textContent = epiHechos(man, ud) + " de " + real.epigrafes.length + " marcados";
-  };
+  const cuenta = () => { $("epiCont").textContent = epiHechos(man, ud) + " de " + real.epigrafes.length + " marcados"; };
   cuenta();
+
+  if (hayVoz()) {
+    const rellena = () => {
+      const sel = $("vozSel"); if (!sel) return;
+      const vs = vocesEs();
+      if (!vs.length) { sel.innerHTML = '<option>del sistema</option>'; sel.disabled = true; return; }
+      const actual = eligeVoz();
+      sel.innerHTML = vs.map(v => '<option value="' + esc(v.voiceURI) + '"' +
+        (actual && v.voiceURI === actual.voiceURI ? " selected" : "") + ">" + esc(v.name) + "</option>").join("");
+      sel.onchange = () => { lsSet("sea029:voz", sel.value); VOZ.voz = eligeVoz(); };
+    };
+    rellena();
+    speechSynthesis.onvoiceschanged = rellena;
+    $("vozVel").onchange = e => {
+      VOZ.vel = +e.target.value;
+      if (VOZ.estado !== "parado") { const t = VOZ.trozos.slice(VOZ.i).join(" "); const li = VOZ.li; const rp = VOZ.pinta; lee(t, li, rp); }
+    };
+    $("vozStop").onclick = paraVoz;
+  }
 
   panel.querySelectorAll(".epi").forEach(li => {
     const cuerpo = li.querySelector(".epi-b");
+    const ep = real.epigrafes.find(x => x.n === li.dataset.n);
+
+    const pintaBotones = () => {
+      const zona = cuerpo.querySelector(".epi-acc"); if (!zona) return;
+      const leyendo = VOZ.li === li && VOZ.estado !== "parado";
+      zona.innerHTML =
+        '<button class="btn ghost chico" data-v="play" type="button">' + (leyendo ? "Reiniciar" : "Escuchar") + "</button>" +
+        (leyendo ? '<button class="btn ghost chico" data-v="pausa" type="button">' + (VOZ.estado === "pausa" ? "Reanudar" : "Pausar") + "</button>" +
+          '<button class="btn ghost chico" data-v="stop" type="button">Detener</button>' : "");
+      zona.querySelectorAll("[data-v]").forEach(b => b.onclick = ev => {
+        ev.stopPropagation();
+        if (b.dataset.v === "play") lee(ep.texto, li, pintaBotones);
+        else if (b.dataset.v === "pausa") pausaVoz();
+        else paraVoz();
+      });
+    };
+
     const carga = () => {
       if (cuerpo.dataset.cargado) return;
-      const ep = real.epigrafes.find(x => x.n === li.dataset.n);
-      cuerpo.innerHTML = '<div class="lectura">' + parrafos(ep.texto) + "</div>";
+      cuerpo.innerHTML = (hayVoz() ? '<div class="epi-acc"></div>' : "") +
+        '<div class="lectura">' + parrafos(ep.texto) + "</div>";
       cuerpo.dataset.cargado = "1";
+      pintaBotones();
     };
+
     li.querySelector(".epi-h").addEventListener("click", e => {
       if (e.target.closest('[data-act="mark"]')) {
         const k = li.dataset.k;
@@ -509,17 +650,17 @@ async function panelTemario(c) {
         save(); updHud(); cuenta();
         return;
       }
-      if (!cuerpo.hidden) { cuerpo.hidden = true; return; }
+      if (!cuerpo.hidden) { cuerpo.hidden = true; if (VOZ.li === li) paraVoz(); return; }
       carga(); cuerpo.hidden = false;
     });
     li._abrir = () => { carga(); cuerpo.hidden = false; };
     li._cerrar = () => { cuerpo.hidden = true; };
   });
   $("abrirTodo").onclick = () => panel.querySelectorAll(".epi").forEach(li => li._abrir());
-  $("cerrarTodo").onclick = () => panel.querySelectorAll(".epi").forEach(li => li._cerrar());
+  $("cerrarTodo").onclick = () => { paraVoz(); panel.querySelectorAll(".epi").forEach(li => li._cerrar()); };
 }
 
-/* ---------------- resumen de la unidad ---------------- */
+/* ---------------- resumen ---------------- */
 function panelResumen(c) {
   const ts = temasDe(c.man, c.ud);
   let h = '<p class="lead">Lo esencial de la unidad, condensado. Marca el bloque cuando lo tengas.</p><div class="blocks">';
@@ -531,9 +672,8 @@ function panelResumen(c) {
     t.c.forEach(s => { h += "<h4>" + s.h + "</h4><ul>" + s.l.map(x => "<li>" + x + "</li>").join("") + "</ul>"; });
     h += "</div></article>";
   });
-  h += "</div>";
   const panel = $("panel");
-  panel.innerHTML = h;
+  panel.innerHTML = h + "</div>";
   panel.querySelectorAll(".block").forEach(bl => {
     bl.querySelector(".bh").addEventListener("click", e => {
       if (e.target.closest('[data-act="mark"]')) {
@@ -547,7 +687,7 @@ function panelResumen(c) {
   });
 }
 
-/* ---------------- fichas de la unidad ---------------- */
+/* ---------------- fichas ---------------- */
 let fDeck = [], fIdx = 0, fModo = "esp", fCtx = null;
 function buildDeck() {
   let base = fichasDe(fCtx.man, fCtx.ud);
@@ -603,24 +743,22 @@ function paintFicha() {
   $("fLbl").textContent = temaById(f.t).t;
   $("fQ").innerHTML = f.q; $("fA").innerHTML = f.a;
   $("fCount").textContent = (fIdx + 1) + " / " + fDeck.length;
-  const tot = fichasDe(fCtx.man, fCtx.ud).length;
-  $("fStats").textContent = fichasDominadas(fCtx.man, fCtx.ud) + " de " + tot + " dominadas";
+  $("fStats").textContent = fichasDominadas(fCtx.man, fCtx.ud) + " de " + fichasDe(fCtx.man, fCtx.ud).length + " dominadas";
 }
 document.addEventListener("keydown", e => {
   if (!$("card") || !fDeck.length || !$("gate").hidden) return;
-  if (e.target.matches("input, textarea")) return;
+  if (e.target.matches("input, textarea, select")) return;
   if (e.key === "ArrowRight") { fIdx = (fIdx + 1) % fDeck.length; paintFicha(); }
   if (e.key === "ArrowLeft") { fIdx = (fIdx - 1 + fDeck.length) % fDeck.length; paintFicha(); }
 });
 
 /* =========================================================
-   MOTOR DE PREGUNTAS — lo usan el test, el examen de unidad
-   y el examen general
+   MOTOR DE PREGUNTAS
    ========================================================= */
 let tSet = [], tIdx = 0, tSel = [], tAnswered = false, tScore = 0, tFails = [];
 let tCfg = { len: 10, of: "" };
-let tCtx = null;          // { man, ud } o null si es general
-let exTimer = null, exFin = 0, exMin = 0;
+let tCtx = null;
+let exTimer = null, exFin = 0;
 const EX_N = 40, EX_MIN = 30;
 const EXU_N = 20, EXU_MIN = 15;
 
@@ -631,8 +769,7 @@ function panelTest(c) {
   const best = S.uBest[uKey(c.man, c.ud)];
   const mias = pool.filter(q => S.wrong.includes(q.i)).length;
 
-  let h = '<p class="lead">' + pool.length + " preguntas de esta unidad, con corrección inmediata y la explicación del temario. " +
-    "Las de <b>respuesta múltiple</b> vienen marcadas.</p>";
+  let h = '<p class="lead">' + pool.length + " preguntas de esta unidad, con corrección inmediata y la explicación del temario.</p>";
   if (ofic) h += '<div class="bar"><span class="hint">Origen</span>' +
     '<button class="chip" data-tf="" aria-pressed="' + (tCfg.of === "") + '">Todas</button>' +
     '<button class="chip" data-tf="si" aria-pressed="' + (tCfg.of === "si") + '">Solo oficiales (' + ofic + ")</button>" +
@@ -643,7 +780,7 @@ function panelTest(c) {
   h += '<div class="bar"><button class="btn" id="start" type="button">Empezar test</button>' +
     (mias ? '<button class="btn ghost" id="startFails" type="button">Repasar mis ' + mias + " falladas</button>" : "") +
     '<span class="spacer"></span><span class="hint">' +
-    (best ? "Mejor marca en la unidad: <b>" + best.pct + "%</b>" : "Aún sin marca en esta unidad") + "</span></div>";
+    (best ? "Mejor marca en la unidad: " + best.pct + " %" : "Aún sin marca en esta unidad") + "</span></div>";
 
   const panel = $("panel");
   panel.innerHTML = h;
@@ -676,60 +813,44 @@ function panelExamenUD(c) {
     " minutos</b>, sin corrección hasta el final. Se aprueba con <b>75 %</b>.</p>" +
     '<div class="bar"><button class="btn" id="exStart" type="button">Empezar</button>' +
     '<span class="spacer"></span><span class="hint">' +
-    (best && best.examen ? "Mejor examen de la unidad: <b>" + best.examen + "%</b>" : "Aún no lo has hecho") + "</span></div>" +
-    '<div class="why">El cronómetro sigue corriendo aunque cambies de pestaña. Si se agota, se corrige lo respondido.</div>';
+    (best && best.examen ? "Mejor examen de la unidad: " + best.examen + " %" : "Aún no lo has hecho") + "</span></div>" +
+    '<div class="aviso">El cronómetro sigue corriendo aunque cambies de pestaña. Si se agota, se corrige lo respondido.</div>';
   $("exStart").onclick = () => arranca(shuffle(pool.slice()).slice(0, n), true, EXU_MIN);
 }
 
 function vistaExamenGeneral() {
   tCtx = null;
-  const b = S.examBest ? "Mejor examen: <b>" + S.examBest.pct + "%</b> · " + S.examBest.fecha : "Aún no has hecho ningún examen";
-  $("vista").innerHTML = cabeceraSuelta("Examen general", "Todo el certificado a la vez") +
-    '<div id="panel" class="panel-uni"><p class="lead">Simulacro completo: <b>' + EX_N +
+  cabecera("Herramientas", "Examen general");
+  const b = S.examBest ? "Mejor examen: " + S.examBest.pct + " % · " + S.examBest.fecha : "Aún no has hecho ningún examen";
+  $("vista").innerHTML = '<div id="panel"><p class="lead">Simulacro completo: <b>' + EX_N +
     " preguntas</b> de los cuatro módulos en <b>" + EX_MIN + " minutos</b>, sin corrección hasta el final. Se aprueba con <b>75 %</b>.</p>" +
     '<div class="bar"><button class="btn" id="exStart" type="button">Empezar examen</button>' +
     '<span class="spacer"></span><span class="hint">' + b + "</span></div>" +
-    '<div class="why">El cronómetro corre aunque cambies de pestaña. Si se agota, se corrige lo respondido hasta ese momento.</div></div>';
-  enlazaVolver();
+    '<div class="aviso">El cronómetro corre aunque cambies de pestaña. Si se agota, se corrige lo respondido hasta ese momento.</div></div>';
   $("exStart").onclick = () => arranca(shuffle(PREGUNTAS.map((q, i) => Object.assign({}, q, { i }))).slice(0, EX_N), true, EX_MIN);
 }
 
 function vistaFalladas() {
   tCtx = null;
+  cabecera("Herramientas", "Mis falladas");
   const pool = PREGUNTAS.map((q, i) => Object.assign({}, q, { i })).filter(q => S.wrong.includes(q.i));
-  let h = cabeceraSuelta("Mis falladas", pool.length + " preguntas pendientes de todo el certificado");
-  h += '<div id="panel" class="panel-uni">';
+  let h = '<div id="panel">';
   if (!pool.length) {
     h += '<p class="empty">No tienes preguntas falladas pendientes. Aparecen aquí en cuanto falles alguna y salen cuando la aciertas.</p>';
   } else {
     h += '<p class="lead">Repasa solo lo que has fallado. Una pregunta sale de esta lista cuando la aciertas.</p>' +
       '<div class="bar"><button class="btn" id="start" type="button">Repasar las ' + pool.length + "</button></div>";
   }
-  h += "</div>";
-  $("vista").innerHTML = h;
-  enlazaVolver();
+  $("vista").innerHTML = h + "</div>";
   const s = $("start");
   if (s) s.onclick = () => arranca(shuffle(pool.slice()), false, 0);
-}
-
-function cabeceraSuelta(t, sub) {
-  return '<div class="crumb"><button class="volver" type="button" data-volver="1">&larr; Todas las unidades</button></div>' +
-    '<div class="ud-hero"><div class="k">SEA029</div><div class="cuerpo"><h2>' + t + "</h2>" +
-    '<p class="sub">' + sub + "</p></div></div>";
-}
-function enlazaVolver() {
-  document.querySelectorAll("[data-volver]").forEach(b => b.onclick = () => ir("#/"));
 }
 
 function arranca(set, examen, minutos) {
   if (!set.length) return;
   tSet = set; tIdx = 0; tScore = 0; tFails = []; tSel = []; tAnswered = false;
   clearInterval(exTimer);
-  if (examen) {
-    exMin = minutos;
-    exFin = Date.now() + minutos * 60000;
-    exTimer = setInterval(tick, 1000);
-  }
+  if (examen) { exFin = Date.now() + minutos * 60000; exTimer = setInterval(tick, 1000); }
   paintQ(examen);
 }
 
@@ -737,7 +858,7 @@ function paintQ(examen) {
   const p = $("panel"), q = tSet[tIdx], multi = q.c.length > 1, tm = temaById(q.t);
   let h = '<div class="progress"><i style="width:' + (tIdx / tSet.length * 100) + '%"></i></div>';
   h += '<div class="qcard"><div class="qmeta">' +
-    '<span class="pill">' + esc(tm.man) + " UD" + tm.ud + "</span>" +
+    '<span class="pill">' + esc(tm.man) + " UD " + String(tm.ud).padStart(2, "0") + "</span>" +
     '<span class="pill">' + esc(tm.t) + "</span>" +
     '<span class="pill">' + (tIdx + 1) + " de " + tSet.length + "</span>" +
     (q.of ? '<span class="pill of">' + esc(q.of) + "</span>" : "") +
@@ -747,7 +868,7 @@ function paintQ(examen) {
   h += '<div class="qtext">' + q.q + '</div><div class="opts" id="opts">';
   q.o.forEach((o, i) => { h += '<button class="opt" type="button" data-i="' + i + '"><span class="k">' + "abcd"[i] + ')</span><span>' + o + "</span></button>"; });
   h += '</div><div id="fb"></div>';
-  h += '<div class="bar" style="margin:16px 0 0"><button class="btn" id="check" type="button">Comprobar</button>' +
+  h += '<div class="bar" style="margin:18px 0 0"><button class="btn" id="check" type="button">Comprobar</button>' +
     '<button class="btn ghost" id="skip" type="button">Saltar</button>' +
     '<span class="spacer"></span><button class="btn ghost" id="abort" type="button">' +
     (examen ? "Abandonar" : "Terminar") + "</button></div></div>";
@@ -815,20 +936,23 @@ function termina(examen, abortado) {
     save();
   }
   $("panel").innerHTML = abortado
-    ? '<div class="ud-hero"><div class="k">Sesión</div><div class="cuerpo"><h2>Interrumpida · ' + tScore + " de " + hechas + " aciertos</h2></div></div>" +
+    ? '<div class="ud-hero" style="' + tono("mf0080") + '"><div class="txt"><h2>Sesión interrumpida</h2>' +
+      '<p class="sub">' + tScore + " de " + hechas + " aciertos</p></div></div>" +
       '<div class="bar"><button class="btn" id="again" type="button">Volver</button></div>'
     : resultHTML(pct, examen);
   const a = $("again"); if (a) a.onclick = repite;
   const r = $("redo"); if (r) r.onclick = () => arranca(tFails.slice(), false, 0);
-  updHud();
+  updHud(); pintaNav();
 }
 function repite() {
   const r = ruta();
   if (r.vista === "unidad") vistaUnidad(r); else pinta();
 }
 function resultHTML(pct, examen) {
-  let h = '<div class="ud-hero"><div class="k">' + (examen ? "Examen" : "Test") + '</div><div class="cuerpo"><h2>' +
-    (pct >= 75 ? "Apto" : "A repasar") + '</h2></div><div class="ud-pct"><b>' + pct + "%</b><span>nota</span></div></div>";
+  let h = '<div class="ud-hero" style="' + tono(pct >= 75 ? "mf0272" : "mf0082") + '">' +
+    '<div class="txt"><div class="k">' + (examen ? "Examen" : "Test") + "</div>" +
+    "<h2>" + (pct >= 75 ? "Apto" : "A repasar") + "</h2></div>" +
+    '<div class="aro"><b>' + pct + "%</b><span>nota</span></div></div>";
   h += '<div class="score">' +
     '<div class="stat ok"><div class="v">' + tScore + '</div><div class="l">Aciertos</div></div>' +
     '<div class="stat mal"><div class="v">' + (tSet.length - tScore) + '</div><div class="l">Fallos</div></div>' +
@@ -851,7 +975,7 @@ function panelOral(c) {
   const os = oralDe(c.man, c.ud);
   let h = '<p class="lead">Responde en voz alta y solo después despliega el guion. Está ordenado como conviene contestar: definición, clasificación, detalle y cierre.</p><div class="oral">';
   os.forEach((o, i) => {
-    h += '<article class="oq"><button type="button" data-i="' + i + '"><span class="qi">' + String(i + 1).padStart(2, "0") + "</span>" +
+    h += '<article class="oq"><button type="button"><span class="qi">' + String(i + 1).padStart(2, "0") + "</span>" +
       '<span class="qt">' + o.q + '</span><span class="st">ver guion</span></button>' +
       '<div class="oa" hidden><ul>' + o.p.map(x => "<li>" + x + "</li>").join("") + "</ul></div></article>";
   });
@@ -869,53 +993,49 @@ const CIRC = [
   { n: "2º círculo", who: "Puestos de seguridad", d: "Guardan cierta distancia con el protegido, pero lo mantienen dentro de su campo de observación." },
   { n: "3er círculo", who: "Patrullas móviles y grupos de información", d: "El más alejado. No controlan ni vigilan al protegido, pero están dentro del dispositivo para una posible actuación si ocurriese alguna desgracia." }
 ];
-function conv(cap, cars) {
-  return '<div class="conv"><div class="cap">' + cap + "</div>" +
-    cars.slice().reverse().map(c => '<div class="car ' + (c === "VIP" ? "vip" : "ve") + '">' + c + "</div>")
-      .join('<div class="arrow">&#9650;</div>') + "</div>";
-}
+const conv = (cap, cars) => '<div class="conv"><div class="cap">' + cap + "</div>" +
+  cars.slice().reverse().map(c => '<div class="car ' + (c === "VIP" ? "vip" : "ve") + '">' + c + "</div>")
+    .join('<div class="arrow">&#9650;</div>') + "</div>";
 function selCirc(i) {
   const c = CIRC[i];
-  $("cN").textContent = c.n;
-  $("cW").textContent = c.who;
-  $("cD").innerHTML = c.d;
+  $("cN").textContent = c.n; $("cW").textContent = c.who; $("cD").innerHTML = c.d;
   document.querySelectorAll("#cLeg button").forEach(b => b.setAttribute("aria-pressed", String(+b.dataset.c === i)));
 }
-function diagramaCirculos() {
-  return '<div class="diagram"><svg viewBox="0 0 240 240" role="img" aria-label="Diagrama de los tres círculos concéntricos">' +
-    '<circle class="d-ring" data-c="2" cx="120" cy="120" r="112" fill="var(--azul-soft)" stroke="var(--azul)" stroke-width="1.5"></circle>' +
-    '<circle class="d-ring" data-c="1" cx="120" cy="120" r="80" fill="var(--surface-2)" stroke="var(--azul)" stroke-width="1.5"></circle>' +
-    '<circle class="d-ring" data-c="0" cx="120" cy="120" r="48" fill="var(--ambar-soft)" stroke="var(--ambar)" stroke-width="1.5"></circle>' +
-    '<circle cx="120" cy="120" r="20" fill="var(--azul)"></circle>' +
-    '<text x="120" y="124" text-anchor="middle" fill="var(--surface)" font-family="IBM Plex Mono, monospace" font-size="11">VIP</text>' +
-    '<text x="120" y="90" text-anchor="middle" fill="var(--ambar)" font-family="IBM Plex Mono, monospace" font-size="12">1</text>' +
-    '<text x="120" y="58" text-anchor="middle" fill="var(--azul)" font-family="IBM Plex Mono, monospace" font-size="12">2</text>' +
-    '<text x="120" y="26" text-anchor="middle" fill="var(--azul)" font-family="IBM Plex Mono, monospace" font-size="12">3</text>' +
-    '</svg><div class="d-info"><h4 id="cN"></h4><div class="who" id="cW"></div><p id="cD"></p>' +
-    '<div class="d-legend" id="cLeg"></div></div></div>';
-}
-function diagramaCaravana() {
-  return '<div class="ref" style="margin-top:16px"><h3>Posición de los coches</h3><div class="cnt">Sentido de la marcha hacia arriba</div><div class="caravana">' +
-    conv("1 coche de escolta", ["VIP", "VE"]) +
-    conv("2 coches de escolta", ["VE", "VIP", "VE"]) +
-    conv("3 coches de escolta", ["VE", "VIP", "VE", "VE"]) + "</div></div>";
-}
+const diagramaCirculos = () =>
+  '<div class="diagram"><svg viewBox="0 0 240 240" role="img" aria-label="Diagrama de los tres círculos concéntricos">' +
+  '<circle class="d-ring" data-c="2" cx="120" cy="120" r="112" fill="var(--marca-2)" stroke="var(--marca)" stroke-width="1.5"></circle>' +
+  '<circle class="d-ring" data-c="1" cx="120" cy="120" r="80" fill="var(--sup-3)" stroke="var(--marca)" stroke-width="1.5"></circle>' +
+  '<circle class="d-ring" data-c="0" cx="120" cy="120" r="48" fill="var(--acento-2)" stroke="var(--acento)" stroke-width="1.5"></circle>' +
+  '<circle cx="120" cy="120" r="20" fill="var(--marca)"></circle>' +
+  '<text x="120" y="124" text-anchor="middle" fill="var(--sup)" font-family="JetBrains Mono, monospace" font-size="11">VIP</text>' +
+  '<text x="120" y="90" text-anchor="middle" fill="var(--acento)" font-family="JetBrains Mono, monospace" font-size="12">1</text>' +
+  '<text x="120" y="58" text-anchor="middle" fill="var(--marca)" font-family="JetBrains Mono, monospace" font-size="12">2</text>' +
+  '<text x="120" y="26" text-anchor="middle" fill="var(--marca)" font-family="JetBrains Mono, monospace" font-size="12">3</text>' +
+  '</svg><div class="d-info"><h4 id="cN"></h4><div class="who" id="cW"></div><p id="cD"></p>' +
+  '<div class="d-legend" id="cLeg"></div></div></div>';
+const diagramaCaravana = () =>
+  '<div class="ref" style="margin-bottom:14px"><h3>Posición de los coches</h3><div class="cnt">Sentido de la marcha hacia arriba</div><div class="caravana">' +
+  conv("1 coche de escolta", ["VIP", "VE"]) +
+  conv("2 coches de escolta", ["VE", "VIP", "VE"]) +
+  conv("3 coches de escolta", ["VE", "VIP", "VE", "VE"]) + "</div></div>";
+
 function panelChuleta(c, lista, destino) {
   const p = destino ? $(destino) : $("panel");
-  const esUF2676 = c && c.man === "UF2676";
+  const es2676 = c && c.man === "UF2676";
   let h = '<p class="lead">Las listas numeradas y las cifras que caen. Si la pregunta empieza por «cuántos» o «cuáles», la respuesta sale de aquí.</p>';
-  if (esUF2676 && c.ud === 1) h += diagramaCirculos();
-  if (esUF2676 && c.ud === 2) h += diagramaCaravana();
-  if (!c) { h += diagramaCirculos() + diagramaCaravana(); }
-
-  h += '<div class="grid2" style="margin-top:16px">';
+  if (!c) h += diagramaCirculos() + diagramaCaravana();
+  else {
+    if (es2676 && c.ud === 1) h += diagramaCirculos();
+    if (es2676 && c.ud === 2) h += diagramaCaravana();
+  }
+  h += '<div class="grid2">';
   lista.forEach(r => {
     const tag = r.ord ? "ol" : "ul";
     h += '<div class="ref"><h3>' + r.t + '</h3><div class="cnt">' + r.cnt + "</div><" + tag + ">" +
       r.l.map(x => "<li>" + x + "</li>").join("") + "</" + tag + "></div>";
   });
   h += "</div>";
-  if (esUF2676) h += '<div class="aviso" style="margin-top:16px"><b>Fe de erratas del manual.</b> En la página 17 cita «Ley 5/2014, de <s>14</s> de abril». La fecha correcta —y la que repite el propio manual en el resto de páginas— es <b>Ley 5/2014, de 4 de abril, de Seguridad Privada</b>. Si te lo preguntan, di <b>4 de abril</b>.</div>';
+  if (es2676) h += '<div class="aviso" style="margin-top:16px"><b>Fe de erratas del manual.</b> En la página 17 cita «Ley 5/2014, de <s>14</s> de abril». La fecha correcta —y la que repite el propio manual en el resto de páginas— es <b>Ley 5/2014, de 4 de abril, de Seguridad Privada</b>. Si te lo preguntan, di <b>4 de abril</b>.</div>';
   p.innerHTML = h;
 
   const leg = $("cLeg");
@@ -923,7 +1043,7 @@ function panelChuleta(c, lista, destino) {
     CIRC.forEach((cc, i) => {
       const b = document.createElement("button");
       b.type = "button"; b.dataset.c = i;
-      b.innerHTML = '<span class="sw" style="background:' + (i === 0 ? "var(--ambar)" : "var(--azul)") +
+      b.innerHTML = '<span class="sw" style="background:' + (i === 0 ? "var(--acento)" : "var(--marca)") +
         ";opacity:" + (1 - i * 0.3) + '"></span>' + cc.n;
       b.onclick = () => selCirc(i);
       leg.appendChild(b);
@@ -933,21 +1053,20 @@ function panelChuleta(c, lista, destino) {
   }
 }
 function vistaChuletaGeneral() {
-  $("vista").innerHTML = cabeceraSuelta("Chuleta completa", CHULETA.length + " bloques de todo el certificado") +
-    '<div id="panel" class="panel-uni"></div>';
-  enlazaVolver();
+  cabecera("Herramientas", "Chuleta completa");
+  $("vista").innerHTML = '<div id="panel"></div>';
   panelChuleta(null, CHULETA, "panel");
 }
 
 /* ---------------- buscador ---------------- */
 let cargandoTodo = false;
 function vistaBuscar() {
-  $("vista").innerHTML = cabeceraSuelta("Buscar", "En el temario, los resúmenes, las fichas, las preguntas y la chuleta") +
-    '<div id="panel" class="panel-uni">' +
+  cabecera("Herramientas", "Buscar");
+  $("vista").innerHTML =
+    '<p class="lead">Busca a la vez en el temario, los resúmenes, las fichas, las preguntas y la chuleta.</p>' +
     '<div class="bar"><input class="search" id="q" type="search" placeholder="Glasgow, ANFO, detención, balística, armero…" autocomplete="off">' +
     '<button class="btn ghost" id="loadAll" type="button">Incluir el temario completo</button></div>' +
-    '<div id="hits"><p class="empty">Escribe al menos dos caracteres.</p></div></div>';
-  enlazaVolver();
+    '<div id="hits"><p class="empty">Escribe al menos dos caracteres.</p></div>';
   $("q").addEventListener("input", doSearch);
   $("q").focus();
   $("loadAll").onclick = async () => {
@@ -973,24 +1092,24 @@ function doSearch() {
       let i = t.indexOf(q), n = 0;
       while (i >= 0 && n < 3) {
         const a = Math.max(0, i - 90), b = Math.min(e.texto.length, i + 190);
-        hits.push({ k: m.cod + " · UD" + u.n + " · pág. " + e.pag, t: e.n + " " + e.titulo, b: "…" + e.texto.slice(a, b) + "…", ir: "#/u/" + m.clave + "/" + u.n + "/temario" });
+        hits.push({ k: m.cod + " · UD " + u.n + " · pág. " + e.pag, t: e.n + " " + e.titulo, b: "…" + e.texto.slice(a, b) + "…", ir: "#/u/" + m.clave + "/" + u.n + "/temario" });
         i = t.indexOf(q, i + q.length); n++;
       }
     }));
   });
   TEMAS.forEach(t => t.c.forEach(s => s.l.forEach(li => {
-    if (sinAc(plano(li)).includes(q)) hits.push({ k: t.man + " UD" + t.ud + " · Resumen", t: t.t + " — " + s.h, b: li, ir: "#/u/" + t.man + "/" + t.ud + "/resumen" });
+    if (sinAc(plano(li)).includes(q)) hits.push({ k: t.man + " UD " + t.ud + " · Resumen", t: t.t + " — " + s.h, b: li, ir: "#/u/" + t.man + "/" + t.ud + "/resumen" });
   })));
   FICHAS.forEach(f => {
     if (sinAc(plano(f.q + " " + f.a)).includes(q)) {
       const tm = temaById(f.t);
-      hits.push({ k: tm.man + " UD" + tm.ud + " · Ficha", t: plano(f.q), b: f.a, ir: "#/u/" + tm.man + "/" + tm.ud + "/fichas" });
+      hits.push({ k: tm.man + " UD " + tm.ud + " · Ficha", t: plano(f.q), b: f.a, ir: "#/u/" + tm.man + "/" + tm.ud + "/fichas" });
     }
   });
   PREGUNTAS.forEach(p2 => {
     if (sinAc(plano(p2.q + " " + p2.o.join(" ") + " " + p2.w)).includes(q)) {
       const tm = temaById(p2.t);
-      hits.push({ k: tm.man + " UD" + tm.ud + " · Test", t: plano(p2.q), b: "<b>" + p2.c.map(i => plano(p2.o[i])).join(" · ") + "</b> — " + p2.w, ir: "#/u/" + tm.man + "/" + tm.ud + "/test" });
+      hits.push({ k: tm.man + " UD " + tm.ud + " · Test", t: plano(p2.q), b: "<b>" + p2.c.map(i => plano(p2.o[i])).join(" · ") + "</b> — " + p2.w, ir: "#/u/" + tm.man + "/" + tm.ud + "/test" });
     }
   });
   CHULETA.forEach(r => r.l.forEach(li => {
@@ -1012,7 +1131,122 @@ function doSearch() {
 }
 
 /* =========================================================
-   PUERTA: cuentas de usuario
+   PANEL DE ADMINISTRACION
+   ========================================================= */
+const fecha = (ms, conHora) => {
+  if (!ms) return "—";
+  const d = new Date(ms);
+  const dias = Math.floor((new Date() - d) / 86400000);
+  const hora = () => d.toLocaleTimeString("es-ES", { hour: "2-digit", minute: "2-digit" });
+  if (!conHora) return d.toLocaleDateString("es-ES", { day: "2-digit", month: "2-digit", year: "2-digit" });
+  if (dias === 0) return "hoy, " + hora();
+  if (dias === 1) return "ayer, " + hora();
+  if (dias < 30) return "hace " + dias + " días";
+  return d.toLocaleDateString("es-ES", { day: "2-digit", month: "2-digit", year: "2-digit" });
+};
+
+async function vistaAdmin() {
+  cabecera("Administración", "Usuarios");
+  const p = $("vista");
+  if (!ADMIN) { p.innerHTML = '<p class="empty">Esta sección es solo para la cuenta de administración.</p>'; return; }
+  p.innerHTML = '<p class="empty">Cargando usuarios…</p>';
+  let d;
+  try {
+    const r = await fetch(CONFIG.SYNC_URL + "/admin/usuarios", { headers: conSesion() });
+    if (r.status === 401) { caduca(); return; }
+    d = await r.json();
+    if (!r.ok) throw new Error(d.error || "No se pudo cargar");
+  } catch (e) {
+    p.innerHTML = '<p class="empty">' + esc(e.message) + "</p>"; return;
+  }
+
+  const us = d.usuarios || [];
+  const activos = us.filter(u => !u.suspendido).length;
+  const semana = us.filter(u => u.visto && Date.now() - u.visto < 7 * 86400000).length;
+  const epis = us.reduce((a, u) => a + u.progreso.epi, 0);
+
+  let h = '<div class="resumen">' +
+    kpi(us.length, "Cuentas", true) +
+    kpi(activos, "Activas") +
+    kpi(semana, "Vistas esta semana") +
+    kpi(epis, "Epígrafes leídos entre todos") +
+    "</div>";
+
+  h += '<div class="tabla-caja"><table class="usuarios"><thead><tr>' +
+    "<th>Usuario</th><th>Alta</th><th>Conexión</th><th>Actividad</th>" +
+    "<th>Epígrafes</th><th>Fichas</th><th>Notas</th><th>Estado</th><th></th>" +
+    "</tr></thead><tbody>";
+
+  us.forEach(u => {
+    const pr = u.progreso;
+    h += '<tr class="' + (u.suspendido ? "susp" : "") + '">' +
+      '<td><div class="quien"><span class="av">' + esc(u.usuario.slice(0, 1)) + "</span><b>" + esc(u.usuario) + "</b></div></td>" +
+      '<td class="num">' + fecha(u.creado) + "</td>" +
+      '<td class="num">' + fecha(u.visto, true) + "</td>" +
+      '<td class="num">' + fecha(pr.actividad, true) + "</td>" +
+      '<td class="num">' + pr.epi + "</td>" +
+      '<td class="num">' + pr.fichas + "</td>" +
+      '<td class="num" title="Mejor test / mejor examen">' +
+      (pr.mejor != null ? pr.mejor + " %" : "—") + " · " + (pr.examen != null ? pr.examen + " %" : "—") + "</td>" +
+      "<td>" + (u.admin ? '<span class="etiqueta admin">Admin</span>'
+        : u.suspendido ? '<span class="etiqueta susp">Suspendida</span>'
+          : '<span class="etiqueta activo">Activa</span>') + "</td>" +
+      '<td><div class="acc-fila">' +
+      (u.admin ? '<span class="hint">—</span>' :
+        '<button class="btn ghost chico" data-acc="susp" data-u="' + esc(u.usuario) + '" data-v="' + (!u.suspendido) + '">' +
+        (u.suspendido ? "Reactivar" : "Suspender") + "</button>" +
+        '<button class="btn peligro chico" data-acc="borrar" data-u="' + esc(u.usuario) + '">Borrar</button>') +
+      "</div></td></tr>";
+  });
+  h += "</tbody></table></div>";
+  h += '<p class="hint" style="margin-top:14px">La suspensión cierra al momento todas las sesiones abiertas de esa cuenta. Borrar elimina la cuenta y su progreso, y no se puede deshacer.</p>';
+
+  p.innerHTML = h;
+  p.querySelectorAll("[data-acc]").forEach(b => b.onclick = () => {
+    const u = b.dataset.u;
+    if (b.dataset.acc === "susp") {
+      const activar = b.dataset.v === "true";
+      confirma(activar ? "Suspender a " + u : "Reactivar a " + u,
+        activar ? "Se cerrarán sus sesiones y no podrá entrar hasta que lo reactives. Su progreso se conserva."
+          : "Volverá a poder entrar con su usuario y contraseña.",
+        activar ? "Suspender" : "Reactivar", activar,
+        () => accionAdmin("/admin/suspender", { usuario: u, suspendido: activar }));
+    } else {
+      confirma("Borrar a " + u,
+        "Se elimina la cuenta y todo su progreso. Esta acción no se puede deshacer.",
+        "Borrar", true,
+        () => accionAdmin("/admin/borrar", { usuario: u }));
+    }
+  });
+}
+
+async function accionAdmin(ruta, cuerpo) {
+  try {
+    const r = await fetch(CONFIG.SYNC_URL + ruta, {
+      method: "POST", headers: conSesion({ "Content-Type": "application/json" }), body: JSON.stringify(cuerpo)
+    });
+    const d = await r.json().catch(() => ({}));
+    if (!r.ok) throw new Error(d.error || "No se pudo completar.");
+    vistaAdmin();
+  } catch (e) { alert(e.message); }
+}
+
+function confirma(titulo, texto, etiqueta, peligro, alAceptar) {
+  const capa = document.createElement("div");
+  capa.className = "modal";
+  capa.innerHTML = '<div class="modal-card"><h3>' + esc(titulo) + "</h3><p>" + esc(texto) + "</p>" +
+    '<div class="fila"><button class="btn ghost" data-x="no" type="button">Cancelar</button>' +
+    '<button class="btn' + (peligro ? " peligro" : "") + '" data-x="si" type="button">' + esc(etiqueta) + "</button></div></div>";
+  document.body.appendChild(capa);
+  const cierra = () => capa.remove();
+  capa.querySelector('[data-x="no"]').onclick = cierra;
+  capa.querySelector('[data-x="si"]').onclick = () => { cierra(); alAceptar(); };
+  capa.onclick = e => { if (e.target === capa) cierra(); };
+  capa.querySelector('[data-x="si"]').focus();
+}
+
+/* =========================================================
+   PUERTA
    ========================================================= */
 function abrePuerta(mensaje) {
   $("gate").hidden = false;
@@ -1022,7 +1256,6 @@ function abrePuerta(mensaje) {
   u.focus();
   if (mensaje) u.select();
 }
-
 function pintaModo() {
   const registro = modoGate === "registro";
   $("gateTitulo").textContent = registro ? "Crea tu cuenta" : "Entra en tu cuenta";
@@ -1037,8 +1270,7 @@ function pintaModo() {
   document.querySelectorAll("#gateModo button").forEach(b =>
     b.setAttribute("aria-pressed", String(b.dataset.m === modoGate)));
 }
-
-async function envíaGate() {
+async function envia() {
   const err = $("gateErr");
   const usuario = $("gateUser").value.trim().toLowerCase();
   const clave = $("gatePass").value;
@@ -1062,7 +1294,7 @@ async function envíaGate() {
     });
     const d = await r.json().catch(() => ({}));
     if (!r.ok) { err.textContent = d.error || "No se ha podido completar. Inténtalo de nuevo."; return; }
-    SESION = d.sesion; USUARIO = d.usuario;
+    SESION = d.sesion; USUARIO = d.usuario; ADMIN = !!d.admin;
     lsSet(KSES, SESION); lsSet(KUSR, USUARIO);
     $("gatePass").value = "";
     $("gate").hidden = true;
@@ -1074,7 +1306,7 @@ async function envíaGate() {
   }
 }
 
-/* ---- puerta antigua, por si el servicio aún no tiene cuentas ---- */
+/* puerta antigua, por si el servicio no tiene cuentas */
 function genToken() {
   const a = "abcdefghijkmnpqrstuvwxyz23456789";
   let t = ""; for (let i = 0; i < 14; i++) t += a[Math.floor(Math.random() * a.length)];
@@ -1102,7 +1334,6 @@ function puertaToken() {
   };
 }
 
-/* ---- traer el progreso de un token antiguo ---- */
 async function importaToken(token) {
   const r = await fetch(CONFIG.SYNC_URL + "/importar", {
     method: "POST", headers: conSesion({ "Content-Type": "application/json" }),
@@ -1114,6 +1345,10 @@ async function importaToken(token) {
   if (hasData(remoto)) { S = norma(remoto); save(); }
   return true;
 }
+
+/* =========================================================
+   ARRANQUE
+   ========================================================= */
 async function boot() {
   if (!IDX.length) {
     try { IDX = await (await fetch("temario/indice.json")).json(); }
@@ -1125,22 +1360,40 @@ async function boot() {
     ? "Progreso guardado en la cuenta " + USUARIO
     : "Progreso guardado en el token " + TOKEN;
 }
-
 async function servicioTieneCuentas() {
   try {
     const r = await fetch(CONFIG.SYNC_URL + "/");
-    const d = await r.json();
-    return !!d.cuentas;
+    return !!(await r.json()).cuentas;
   } catch (e) { return false; }
+}
+async function compruebaAdmin() {
+  try {
+    const r = await fetch(CONFIG.SYNC_URL + "/yo", { headers: conSesion() });
+    if (r.status === 401) { caduca(); return; }
+    const d = await r.json();
+    ADMIN = !!d.admin;
+  } catch (e) {}
 }
 
 (async function start() {
   $("outBtn").onclick = lock;
-  $("homeBtn").onclick = () => ir("#/");
   $("themeBtn").onclick = () => {
     const r = document.documentElement, cur = r.getAttribute("data-theme");
     const dark = cur ? cur === "dark" : matchMedia("(prefers-color-scheme:dark)").matches;
     r.setAttribute("data-theme", dark ? "light" : "dark");
+    lsSet("sea029:tema", dark ? "light" : "dark");
+  };
+  const temaGuardado = lsGet("sea029:tema");
+  if (temaGuardado) document.documentElement.setAttribute("data-theme", temaGuardado);
+
+  $("hambBtn").onclick = () => {
+    const app = $("app");
+    if (app.dataset.menu === "1") { cierraMenu(); return; }
+    app.dataset.menu = "1";
+    const v = document.createElement("div");
+    v.className = "velo";
+    v.onclick = cierraMenu;
+    app.appendChild(v);
   };
   ["gateUser", "gatePass"].forEach(id =>
     $(id).addEventListener("keydown", e => { if (e.key === "Enter") $("gateGo").click(); }));
@@ -1155,7 +1408,7 @@ async function servicioTieneCuentas() {
     return;
   }
 
-  $("gateGo").onclick = envíaGate;
+  $("gateGo").onclick = envia;
   $("gateOtro").onclick = () => { modoGate = modoGate === "registro" ? "entrar" : "registro"; pintaModo(); $("gateUser").focus(); };
   document.querySelectorAll("#gateModo button").forEach(b => b.onclick = () => { modoGate = b.dataset.m; pintaModo(); $("gateUser").focus(); });
   pintaModo();
@@ -1163,6 +1416,8 @@ async function servicioTieneCuentas() {
   const ses = lsGet(KSES), usr = lsGet(KUSR);
   if (ses && usr) {
     SESION = ses; USUARIO = usr;
+    await compruebaAdmin();
+    if (!SESION) return;
     $("gate").hidden = true;
     await unlock(usr);
   } else abrePuerta("");

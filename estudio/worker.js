@@ -3,8 +3,9 @@
    Cloudflare Worker + KV (binding: PROGRESO)
 
    Claves en KV
-     cuenta:<usuario>  { salt, hash, iter, creado, visto }
-     s:<sesion>     usuario            (caduca a los 90 dias)
+     cuenta:<usuario>   { salt, hash, iter, creado, visto, suspendido }
+     s:<sesion>         { u, admin }   (caduca a los 90 dias)
+     sesiones:<usuario> [ids de sesion abiertos]
      p:<usuario>    progreso en JSON
      r:<usuario>    intentos fallidos  (caduca a los 15 min)
      <token>-sea029 progreso del sistema antiguo de tokens
@@ -17,11 +18,16 @@
      GET  /progreso            devuelve el progreso de la sesion
      PUT  /progreso            guarda el progreso de la sesion
      POST /importar            { token } copia el progreso de un token antiguo
+     GET  /yo                  quien soy y si administro
+     GET  /admin/usuarios      listado con actividad y progreso (solo admin)
+     POST /admin/suspender     { usuario, suspendido } (solo admin)
+     POST /admin/borrar        { usuario } (solo admin)
      GET  /p/<token>           compatibilidad con el sistema antiguo
      PUT  /p/<token>           compatibilidad con el sistema antiguo
    ========================================================= */
 
 const ORIGENES_PERMITIDOS = ["https://lydiel.online", "https://www.lydiel.online"];
+const ADMINS = ["lydiel"];
 const MAX_BYTES = 60000;
 const TOKEN_RE = /^[A-Za-z0-9_-]{6,64}$/;
 const USUARIO_RE = /^[a-z0-9][a-z0-9._-]{2,31}$/;
@@ -92,8 +98,44 @@ async function sesionDe(peticion, env) {
   const cab = peticion.headers.get("Authorization") || "";
   const m = cab.match(/^Bearer\s+(\S+)$/i);
   if (!m) return null;
-  const usuario = await env.PROGRESO.get("s:" + m[1]);
-  return usuario ? { usuario, sesion: m[1] } : null;
+  const crudo = await env.PROGRESO.get("s:" + m[1]);
+  if (!crudo) return null;
+  let d;
+  try { d = JSON.parse(crudo); } catch (e) { d = { u: crudo }; }   // sesiones antiguas
+  if (!d || !d.u) return null;
+  return { usuario: d.u, sesion: m[1], admin: ADMINS.includes(d.u) };
+}
+
+/* indice de sesiones abiertas: permite cerrarlas al suspender o borrar */
+const MAX_SESIONES = 10;
+
+async function abreSesion(env, usuario) {
+  const sesion = aleatorio(32);
+  await env.PROGRESO.put("s:" + sesion, JSON.stringify({ u: usuario, admin: ADMINS.includes(usuario) }),
+    { expirationTtl: SESION_SEG });
+  let abiertas = [];
+  try { abiertas = JSON.parse(await env.PROGRESO.get("sesiones:" + usuario)) || []; } catch (e) {}
+  abiertas.push(sesion);
+  while (abiertas.length > MAX_SESIONES) {
+    await env.PROGRESO.delete("s:" + abiertas.shift());
+  }
+  await env.PROGRESO.put("sesiones:" + usuario, JSON.stringify(abiertas), { expirationTtl: SESION_SEG });
+  return sesion;
+}
+
+async function cierraSesion(env, usuario, sesion) {
+  await env.PROGRESO.delete("s:" + sesion);
+  let abiertas = [];
+  try { abiertas = JSON.parse(await env.PROGRESO.get("sesiones:" + usuario)) || []; } catch (e) {}
+  abiertas = abiertas.filter(x => x !== sesion);
+  await env.PROGRESO.put("sesiones:" + usuario, JSON.stringify(abiertas), { expirationTtl: SESION_SEG });
+}
+
+async function cierraTodas(env, usuario) {
+  let abiertas = [];
+  try { abiertas = JSON.parse(await env.PROGRESO.get("sesiones:" + usuario)) || []; } catch (e) {}
+  for (const id of abiertas) await env.PROGRESO.delete("s:" + id);
+  await env.PROGRESO.delete("sesiones:" + usuario);
 }
 
 /* ---------- rutas ---------- */
@@ -114,9 +156,8 @@ async function registro(peticion, env, origen) {
   const hash = await derivar(clave, salt, ITERACIONES);
   const ahora = Date.now();
   await env.PROGRESO.put("cuenta:" + u, JSON.stringify({ salt, hash, iter: ITERACIONES, creado: ahora, visto: ahora }));
-  const sesion = aleatorio(32);
-  await env.PROGRESO.put("s:" + sesion, u, { expirationTtl: SESION_SEG });
-  return json({ sesion, usuario: u, nuevo: true }, 201, origen);
+  const sesion = await abreSesion(env, u);
+  return json({ sesion, usuario: u, nuevo: true, admin: ADMINS.includes(u) }, 201, origen);
 }
 
 async function entrar(peticion, env, origen) {
@@ -141,6 +182,9 @@ async function entrar(peticion, env, origen) {
     await env.PROGRESO.put("r:" + u, String(intentos + 1), { expirationTtl: INTENTOS_SEG });
     return json(generico, 401, origen);
   }
+  if (cuenta.suspendido) {
+    return json({ error: "Esta cuenta está suspendida." }, 403, origen);
+  }
   const hash = await derivar(clave, cuenta.salt, cuenta.iter || ITERACIONES);
   if (!iguales(hash, cuenta.hash)) {
     await env.PROGRESO.put("r:" + u, String(intentos + 1), { expirationTtl: INTENTOS_SEG });
@@ -149,14 +193,13 @@ async function entrar(peticion, env, origen) {
   await env.PROGRESO.delete("r:" + u);
   cuenta.visto = Date.now();
   await env.PROGRESO.put("cuenta:" + u, JSON.stringify(cuenta));
-  const sesion = aleatorio(32);
-  await env.PROGRESO.put("s:" + sesion, u, { expirationTtl: SESION_SEG });
-  return json({ sesion, usuario: u }, 200, origen);
+  const sesion = await abreSesion(env, u);
+  return json({ sesion, usuario: u, admin: ADMINS.includes(u) }, 200, origen);
 }
 
 async function salir(peticion, env, origen) {
   const s = await sesionDe(peticion, env);
-  if (s) await env.PROGRESO.delete("s:" + s.sesion);
+  if (s) await cierraSesion(env, s.usuario, s.sesion);
   return json({ ok: true }, 200, origen);
 }
 
@@ -198,6 +241,90 @@ async function importar(peticion, env, origen) {
   return json({ ok: true, importado: true }, 200, origen);
 }
 
+async function yo(peticion, env, origen) {
+  const s = await sesionDe(peticion, env);
+  if (!s) return json({ error: "Sesión no válida." }, 401, origen);
+  let c = {};
+  try { c = JSON.parse(await env.PROGRESO.get("cuenta:" + s.usuario)) || {}; } catch (e) {}
+  return json({
+    usuario: s.usuario, admin: s.admin,
+    creado: c.creado || null, visto: c.visto || null, suspendido: !!c.suspendido
+  }, 200, origen);
+}
+
+function resumeProgreso(txt) {
+  const vacio = { epi: 0, temas: 0, fichas: 0, falladas: 0, mejor: null, examen: null, actividad: null, bytes: 0 };
+  if (!txt) return vacio;
+  let d;
+  try { d = JSON.parse(txt); } catch (e) { return Object.assign({}, vacio, { bytes: txt.length }); }
+  const caja = d.box || {};
+  return {
+    epi: Object.values(d.epi || {}).filter(Boolean).length,
+    temas: Object.values(d.done || {}).filter(Boolean).length,
+    fichas: Object.values(caja).filter(v => v >= 2).length,
+    falladas: (d.wrong || []).length,
+    mejor: d.best ? d.best.pct : null,
+    examen: d.examBest ? d.examBest.pct : null,
+    actividad: d._guardado || null,
+    bytes: txt.length
+  };
+}
+
+async function adminUsuarios(peticion, env, origen) {
+  const s = await sesionDe(peticion, env);
+  if (!s) return json({ error: "Sesión no válida." }, 401, origen);
+  if (!s.admin) return json({ error: "No tienes permiso." }, 403, origen);
+
+  const lista = await env.PROGRESO.list({ prefix: "cuenta:" });
+  const usuarios = [];
+  for (const k of lista.keys) {
+    const nombre = k.name.slice("cuenta:".length);
+    let c = {};
+    try { c = JSON.parse(await env.PROGRESO.get(k.name)) || {}; } catch (e) {}
+    usuarios.push({
+      usuario: nombre,
+      creado: c.creado || null,
+      visto: c.visto || null,
+      suspendido: !!c.suspendido,
+      admin: ADMINS.includes(nombre),
+      progreso: resumeProgreso(await env.PROGRESO.get("p:" + nombre))
+    });
+  }
+  usuarios.sort((a, b) => (b.visto || 0) - (a.visto || 0));
+  return json({ usuarios, total: usuarios.length, completa: lista.list_complete !== false }, 200, origen);
+}
+
+async function adminSuspender(peticion, env, origen) {
+  const s = await sesionDe(peticion, env);
+  if (!s) return json({ error: "Sesión no válida." }, 401, origen);
+  if (!s.admin) return json({ error: "No tienes permiso." }, 403, origen);
+  const { usuario, suspendido } = await leerCuerpo(peticion);
+  const u = normaliza(usuario);
+  if (ADMINS.includes(u)) return json({ error: "No puedes suspender una cuenta de administración." }, 400, origen);
+  const crudo = await env.PROGRESO.get("cuenta:" + u);
+  if (!crudo) return json({ error: "Ese usuario no existe." }, 404, origen);
+  const c = JSON.parse(crudo);
+  c.suspendido = !!suspendido;
+  await env.PROGRESO.put("cuenta:" + u, JSON.stringify(c));
+  if (c.suspendido) await cierraTodas(env, u);
+  return json({ ok: true, usuario: u, suspendido: c.suspendido }, 200, origen);
+}
+
+async function adminBorrar(peticion, env, origen) {
+  const s = await sesionDe(peticion, env);
+  if (!s) return json({ error: "Sesión no válida." }, 401, origen);
+  if (!s.admin) return json({ error: "No tienes permiso." }, 403, origen);
+  const { usuario } = await leerCuerpo(peticion);
+  const u = normaliza(usuario);
+  if (ADMINS.includes(u)) return json({ error: "No puedes borrar una cuenta de administración." }, 400, origen);
+  if (!(await env.PROGRESO.get("cuenta:" + u))) return json({ error: "Ese usuario no existe." }, 404, origen);
+  await cierraTodas(env, u);
+  await env.PROGRESO.delete("cuenta:" + u);
+  await env.PROGRESO.delete("p:" + u);
+  await env.PROGRESO.delete("r:" + u);
+  return json({ ok: true, borrado: u }, 200, origen);
+}
+
 /* compatibilidad con el sistema antiguo de tokens */
 async function tokenAntiguo(peticion, env, origen, token) {
   if (!TOKEN_RE.test(token)) return json({ error: "Token no válido." }, 400, origen);
@@ -236,6 +363,10 @@ export default {
       if (ruta === "/importar" && M === "POST") return await importar(peticion, env, origen);
       if (ruta === "/progreso" && M === "GET") return await leerProgreso(peticion, env, origen);
       if (ruta === "/progreso" && M === "PUT") return await guardarProgreso(peticion, env, origen);
+      if (ruta === "/yo" && M === "GET") return await yo(peticion, env, origen);
+      if (ruta === "/admin/usuarios" && M === "GET") return await adminUsuarios(peticion, env, origen);
+      if (ruta === "/admin/suspender" && M === "POST") return await adminSuspender(peticion, env, origen);
+      if (ruta === "/admin/borrar" && M === "POST") return await adminBorrar(peticion, env, origen);
 
       const antiguo = ruta.match(/^\/p\/(.+)$/);
       if (antiguo && (M === "GET" || M === "PUT")) {
