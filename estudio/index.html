@@ -18,7 +18,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&family=JetBrains+Mono:wght@400;500&display=swap">
-<link rel="stylesheet" href="style.css?v=19">
+<link rel="stylesheet" href="style.css?v=20">
 </head>
 <body>
 
@@ -68,8 +68,9 @@
     <p class="gate-err" id="gateErr"></p>
 
     <div class="gate-note" id="gateNota">
-      Tu contraseña se guarda cifrada, nunca en claro. Al crear la cuenta recibirás un
-      <b>código de rescate</b>: guárdalo, es lo único que te devuelve el acceso si la olvidas.
+      Tu contraseña se guarda cifrada, nunca en claro. Si la olvidas, la recuperas desde el
+      <b>correo</b> que confirmes. Además recibirás un <b>código de rescate</b>: guárdalo por si
+      algún día pierdes también el acceso al correo.
     </div>
   </div>
 </div>
@@ -77,7 +78,7 @@
 <div id="codigo" hidden>
   <div class="gate-card codigo-card">
     <h2 id="codTitulo">Guarda tu código de rescate</h2>
-    <p id="codTexto">Es lo único que te devolverá el acceso si olvidas la contraseña. No se puede volver a ver: si lo pierdes, tendrás que pedírselo a quien administra la plataforma.</p>
+    <p id="codTexto">Es tu respaldo: te devuelve el acceso si olvidas la contraseña y tampoco puedes usar el correo. No se puede volver a ver, aunque siempre puedes emitir otro desde tu perfil.</p>
     <div class="codigo-caja"><code id="codValor">—</code></div>
     <div class="bar">
       <button class="btn ghost" id="codCopiar" type="button">Copiar</button>
@@ -126,8 +127,10 @@
         </span>
       </div>
       <div class="mini">
-        <button id="themeBtn" type="button" title="Cambiar el tema"><span>Tema</span></button>
-        <button id="outBtn" type="button" title="Cerrar la sesión"><span>Salir</span></button>
+        <button id="themeBtn" type="button" title="Cambiar el tema" aria-label="Cambiar el tema">
+          <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4.2"/><path d="M12 2.5v2.2M12 19.3v2.2M4.6 4.6l1.6 1.6M17.8 17.8l1.6 1.6M2.5 12h2.2M19.3 12h2.2M4.6 19.4l1.6-1.6M17.8 6.2l1.6-1.6"/></svg><span>Tema</span></button>
+        <button id="outBtn" type="button" title="Cerrar la sesión" aria-label="Cerrar la sesión">
+          <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 3h3.5A1.5 1.5 0 0 1 20 4.5v15a1.5 1.5 0 0 1-1.5 1.5H15"/><path d="M10 17l-5-5 5-5M5 12h11"/></svg><span>Salir</span></button>
       </div>
     </div>
   </aside>
@@ -151,7 +154,7 @@
 
 </div>
 
-<script src="iconos.js?v=19"></script>
-<script src="app.js?v=19"></script>
+<script src="iconos.js?v=20"></script>
+<script src="app.js?v=20"></script>
 </body>
 </html>

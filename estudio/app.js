@@ -1653,7 +1653,7 @@ function vistaPerfil() {
     '<p class="ayuda">' + (PERFIL.rescate
       ? "Tienes uno emitido" + (PERFIL.rescateDesde ? " el " + fecha(PERFIL.rescateDesde) : "") +
         ". Solo se ve una vez, así que si no lo encuentras, emite otro: el anterior dejará de servir."
-      : "Tu cuenta todavía no tiene código. Emite uno y guárdalo: es lo único que te devolverá el acceso si olvidas la contraseña.") + "</p>" +
+      : "Tu cuenta todavía no tiene código. Es el respaldo por si olvidas la contraseña y tampoco puedes usar el correo.") + "</p>" +
     '<div class="campo"><label for="rescClave">Tu contraseña</label>' +
     '<input id="rescClave" type="password" autocomplete="current-password" placeholder="para confirmar que eres tú"></div>' +
     '<div class="fila-acc"><button class="btn' + (PERFIL.rescate ? " ghost" : "") + '" id="nuevoRescate" type="button">' +
@@ -2032,7 +2032,7 @@ function pintaModo() {
     : registro ? "Crea tu cuenta" : "Entra en tu cuenta";
   $("gateTexto").textContent =
     olvido ? "Escribe el correo con el que te registraste y te enviamos un enlace para poner una contraseña nueva."
-    : rescate ? "Escribe tu usuario, el código de rescate que guardaste y la contraseña nueva. El código se gastará y te daremos otro."
+    : rescate ? "Si no puedes usar el correo, entra con el código de rescate que guardaste. Se gastará y te daremos otro."
     : registro ? "Elige un usuario y una contraseña, y deja un correo por si algún día la olvidas. Tu progreso queda guardado en la cuenta."
     : "Tu progreso —epígrafes leídos, fichas dominadas, notas y preguntas falladas— se guarda en tu cuenta, no en este navegador. Entra con los mismos datos en el móvil y sigues donde lo dejaste.";
   $("gateGo").textContent =
@@ -2185,7 +2185,7 @@ function muestraCodigo(codigo, usuario, titulo, texto, alSeguir) {
   $("codBajar").onclick = () => {
     const t = "TemarioVigilanteSeguridad\n\nUsuario: " + usuario +
       "\nCódigo de rescate: " + codigo +
-      "\n\nGuárdalo. Es lo único que te devuelve el acceso si olvidas la contraseña.\n" +
+      "\n\nGuárdalo. Te devuelve el acceso si olvidas la contraseña y tampoco puedes usar el correo.\n" +
       "Se usa una sola vez: al usarlo recibirás otro.\n";
     const a = document.createElement("a");
     a.href = URL.createObjectURL(new Blob([t], { type: "text/plain" }));
@@ -2255,7 +2255,7 @@ async function envia() {
         recuperada ? "Tu código nuevo" : "Guarda tu código de rescate",
         recuperada
           ? "El anterior ya no sirve. Guarda este, que es el que te devolverá el acceso la próxima vez."
-          : "Es lo único que te devolverá el acceso si olvidas la contraseña. No se puede volver a ver: si lo pierdes, tendrás que pedírselo a quien administra la plataforma.",
+          : "Es tu respaldo: te devuelve el acceso si olvidas la contraseña y tampoco puedes usar el correo. No se puede volver a ver, aunque siempre puedes emitir otro desde tu perfil.",
         entra);
       return;
     }

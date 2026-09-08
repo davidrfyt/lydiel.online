@@ -113,7 +113,10 @@ mark{background:var(--acento-2);color:var(--ink);padding:0 3px;border-radius:3px
 /* =========================================================
    PUERTA
    ========================================================= */
-#gate{
+/* la puerta y la pantalla del codigo se pintan igual: capa a pantalla
+   completa y la tarjeta centrada */
+#gate,
+#codigo{
   position:fixed;inset:0;z-index:80;display:grid;place-items:center;
   padding:24px;overflow-y:auto;
   background:
@@ -121,6 +124,7 @@ mark{background:var(--acento-2);color:var(--ink);padding:0 3px;border-radius:3px
     radial-gradient(900px 520px at 108% 108%, var(--acento-2), transparent 60%),
     var(--lienzo);
 }
+#codigo{z-index:90}
 .gate-card{
   width:min(452px,100%);background:var(--sup);
   border:1px solid var(--linea);border-radius:var(--r-l);
@@ -297,7 +301,9 @@ footer{
 .app[data-lat="0"] .mini{flex-direction:column}
 .app[data-lat="0"] .mini button{padding:9px 0;display:grid;place-items:center}
 .app[data-lat="0"] .mini .ic{width:17px;height:17px}
-.mini button .ic{display:none}
+.mini button{display:flex;align-items:center;justify-content:center;gap:7px}
+.mini button .ic{width:16px;height:16px;flex:0 0 auto;display:none}
+.app[data-lat="0"] .mini button .ic{display:block}
 
 /* =========================================================
    PIEZAS COMUNES
@@ -711,7 +717,8 @@ table.usuarios .num{font-family:var(--mono);font-variant-numeric:tabular-nums}
   .app[data-lat="0"] .nav .cifra{position:static;width:auto;height:auto;background:none;
     border-radius:0;font-size:var(--t-xs);margin-left:auto;overflow:visible}
   .app[data-lat="0"] .mini{flex-direction:row}
-  .app[data-lat="0"] .mini button{padding:7px 8px;display:block}
+  .app[data-lat="0"] .mini button{padding:7px 8px;display:flex}
+  .app[data-lat="0"] .mini button .ic{display:none}
   .lateral{
     position:fixed;top:0;left:0;bottom:0;width:270px;z-index:70;
     transform:translateX(-100%);transition:transform .25s cubic-bezier(.2,.7,.2,1);
