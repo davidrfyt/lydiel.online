@@ -3,7 +3,7 @@
    Cloudflare Worker + KV (binding: PROGRESO)
 
    Claves en KV
-     u:<usuario>    { salt, hash, iter, creado, visto }
+     cuenta:<usuario>  { salt, hash, iter, creado, visto }
      s:<sesion>     usuario            (caduca a los 90 dias)
      p:<usuario>    progreso en JSON
      r:<usuario>    intentos fallidos  (caduca a los 15 min)
@@ -27,7 +27,7 @@ const TOKEN_RE = /^[A-Za-z0-9_-]{6,64}$/;
 const USUARIO_RE = /^[a-z0-9][a-z0-9._-]{2,31}$/;
 const CLAVE_MIN = 8;
 const CLAVE_MAX = 200;
-const ITERACIONES = 210000;
+const ITERACIONES = 100000;   // maximo que admite WebCrypto en Workers
 const SESION_SEG = 90 * 24 * 3600;
 const INTENTOS_MAX = 8;
 const INTENTOS_SEG = 900;
@@ -107,13 +107,13 @@ async function registro(peticion, env, origen) {
   if (typeof clave !== "string" || clave.length < CLAVE_MIN || clave.length > CLAVE_MAX) {
     return json({ error: "La contraseña debe tener al menos " + CLAVE_MIN + " caracteres." }, 400, origen);
   }
-  if (await env.PROGRESO.get("u:" + u)) {
+  if (await env.PROGRESO.get("cuenta:" + u)) {
     return json({ error: "Ese usuario ya existe. Entra con él o elige otro." }, 409, origen);
   }
   const salt = aleatorio(16);
   const hash = await derivar(clave, salt, ITERACIONES);
   const ahora = Date.now();
-  await env.PROGRESO.put("u:" + u, JSON.stringify({ salt, hash, iter: ITERACIONES, creado: ahora, visto: ahora }));
+  await env.PROGRESO.put("cuenta:" + u, JSON.stringify({ salt, hash, iter: ITERACIONES, creado: ahora, visto: ahora }));
   const sesion = aleatorio(32);
   await env.PROGRESO.put("s:" + sesion, u, { expirationTtl: SESION_SEG });
   return json({ sesion, usuario: u, nuevo: true }, 201, origen);
@@ -130,12 +130,17 @@ async function entrar(peticion, env, origen) {
     return json({ error: "Demasiados intentos. Espera unos minutos y vuelve a probar." }, 429, origen);
   }
 
-  const crudo = await env.PROGRESO.get("u:" + u);
+  const crudo = await env.PROGRESO.get("cuenta:" + u);
   if (!crudo) {
     await env.PROGRESO.put("r:" + u, String(intentos + 1), { expirationTtl: INTENTOS_SEG });
     return json(generico, 401, origen);
   }
-  const cuenta = JSON.parse(crudo);
+  let cuenta;
+  try { cuenta = JSON.parse(crudo); } catch (e) { cuenta = null; }
+  if (!cuenta || typeof cuenta.salt !== "string" || typeof cuenta.hash !== "string") {
+    await env.PROGRESO.put("r:" + u, String(intentos + 1), { expirationTtl: INTENTOS_SEG });
+    return json(generico, 401, origen);
+  }
   const hash = await derivar(clave, cuenta.salt, cuenta.iter || ITERACIONES);
   if (!iguales(hash, cuenta.hash)) {
     await env.PROGRESO.put("r:" + u, String(intentos + 1), { expirationTtl: INTENTOS_SEG });
@@ -143,7 +148,7 @@ async function entrar(peticion, env, origen) {
   }
   await env.PROGRESO.delete("r:" + u);
   cuenta.visto = Date.now();
-  await env.PROGRESO.put("u:" + u, JSON.stringify(cuenta));
+  await env.PROGRESO.put("cuenta:" + u, JSON.stringify(cuenta));
   const sesion = aleatorio(32);
   await env.PROGRESO.put("s:" + sesion, u, { expirationTtl: SESION_SEG });
   return json({ sesion, usuario: u }, 200, origen);
@@ -182,7 +187,12 @@ async function importar(peticion, env, origen) {
   const { token } = await leerCuerpo(peticion);
   const t = String(token || "").trim();
   if (!TOKEN_RE.test(t)) return json({ error: "Ese token no tiene un formato válido." }, 400, origen);
-  const viejo = await env.PROGRESO.get(t + "-sea029");
+  // los tokens se guardaron con varias formas a lo largo del tiempo
+  let viejo = null;
+  for (const clave of [t + "-sea029", t, "u:" + t + "-sea029", "u:" + t]) {
+    viejo = await env.PROGRESO.get(clave);
+    if (viejo) break;
+  }
   if (!viejo) return json({ error: "No hay progreso guardado con ese token." }, 404, origen);
   await env.PROGRESO.put("p:" + s.usuario, viejo);
   return json({ ok: true, importado: true }, 200, origen);
