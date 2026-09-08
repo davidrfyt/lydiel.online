@@ -9,27 +9,41 @@
 <link rel="icon" href="../lydiel.jpg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600&family=Archivo:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
-<link rel="stylesheet" href="style.css?v=6">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Spectral:wght@400;500;600&family=Public+Sans:wght@400;500;600&family=DM+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="style.css?v=7">
 </head>
 <body>
 
 <div id="gate" hidden>
   <div class="gate-card">
     <div class="eyebrow"><span>SEA029</span><b>Vigilancia y Seguridad Privada</b></div>
-    <h2>Identifica tu progreso</h2>
-    <p>Escribe tu token de estudio. Los epígrafes leídos, las fichas dominadas, las notas y las preguntas falladas quedan asociados a él, no a este navegador: usa el mismo token en el móvil y sigues donde lo dejaste.</p>
-    <div class="gate-field">
-      <label for="gateInput">Token</label>
-      <input id="gateInput" type="text" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="p. ej. david-vigilante-2026">
+
+    <div class="gate-modo" id="gateModo" role="group" aria-label="Acceso">
+      <button type="button" data-m="entrar" aria-pressed="true">Entrar</button>
+      <button type="button" data-m="registro" aria-pressed="false">Crear cuenta</button>
     </div>
+
+    <h2 id="gateTitulo">Entra en tu cuenta</h2>
+    <p id="gateTexto">Tu progreso —epígrafes leídos, fichas dominadas, notas y preguntas falladas— se guarda en tu cuenta, no en este navegador. Entra con los mismos datos en el móvil y sigues donde lo dejaste.</p>
+
+    <div class="gate-field">
+      <label for="gateUser">Usuario</label>
+      <input id="gateUser" type="text" autocomplete="username" autocapitalize="off" spellcheck="false" placeholder="tu nombre de usuario">
+    </div>
+    <div class="gate-field">
+      <label for="gatePass">Contraseña</label>
+      <input id="gatePass" type="password" autocomplete="current-password" placeholder="tu contraseña">
+      <span class="pista" id="gatePista" hidden>Mínimo 8 caracteres. No hay forma de recuperarla: apúntala.</span>
+    </div>
+
     <div class="gate-row">
       <button class="btn" id="gateGo" type="button">Entrar</button>
-      <button class="link" id="gateGen" type="button">Generar uno al azar</button>
+      <button class="link" id="gateOtro" type="button">Crear una cuenta</button>
     </div>
     <p class="gate-err" id="gateErr"></p>
-    <div class="gate-note">
-      <b>Esto no es una contraseña.</b> Es la etiqueta de tu progreso. Cualquiera que escriba tu mismo token verá tus marcas, así que elige algo que no sea obvio. La página es pública: el token identifica, no protege.
+
+    <div class="gate-note" id="gateNota">
+      <b>Lee esto antes de elegir contraseña.</b> Esta página es pública y no hay recuperación por correo: si la pierdes, pierdes el progreso. Usa una contraseña <b>que no uses en ningún otro sitio</b>. Se guarda cifrada, nunca en claro.
     </div>
   </div>
 </div>
@@ -38,21 +52,21 @@
   <div class="top-in">
     <div class="brand">
       <div class="eyebrow"><span>SEA029</span><b>430 h · Vigilante, escolta y vigilante de explosivos</b></div>
-      <h1>Vigilancia y<br>Seguridad Privada</h1>
+      <h1>Vigilancia y Seguridad Privada</h1>
       <p class="sub">Temario íntegro de los manuales, resúmenes, fichas con repaso espaciado, banco de preguntas, exámenes cronometrados y simulacro oral, organizados unidad por unidad.</p>
     </div>
     <div class="hud">
       <svg class="ring" viewBox="0 0 64 64" aria-hidden="true">
-        <circle cx="32" cy="32" r="27" fill="none" stroke="var(--line)" stroke-width="6"></circle>
-        <circle id="ringArc" cx="32" cy="32" r="27" fill="none" stroke="var(--ambar)" stroke-width="6"
-                stroke-linecap="round" stroke-dasharray="170" stroke-dashoffset="170" transform="rotate(-90 32 32)"></circle>
+        <circle cx="32" cy="32" r="27" fill="none" stroke="var(--linea)" stroke-width="2"></circle>
+        <circle id="ringArc" cx="32" cy="32" r="27" fill="none" stroke="var(--sello)" stroke-width="2"
+                stroke-linecap="butt" stroke-dasharray="170" stroke-dashoffset="170" transform="rotate(-90 32 32)"></circle>
         <text id="ringTxt" x="32" y="36" text-anchor="middle">0%</text>
       </svg>
       <div class="hud-txt">
         <b id="hudDone">0 / 0</b>
         epígrafes leídos
         <div class="hud-btns">
-          <button class="theme-btn" id="homeBtn" type="button">Inicio</button>
+          <button class="theme-btn" id="homeBtn" type="button">Índice</button>
           <button class="theme-btn" id="themeBtn" type="button">Tema</button>
           <button class="theme-btn" id="outBtn" type="button">Salir</button>
         </div>
@@ -69,11 +83,11 @@
   <main id="vista"></main>
   <footer>
     <span>Certificado de profesionalidad SEA029 · Vigilancia y Seguridad Privada</span>
-    <span id="savedNote">Tu progreso se guarda en tu token</span>
+    <span id="savedNote">Progreso guardado en tu cuenta</span>
   </footer>
 </div>
 
-<script src="data.js?v=6"></script>
-<script src="app.js?v=6"></script>
+<script src="data.js?v=7"></script>
+<script src="app.js?v=7"></script>
 </body>
 </html>

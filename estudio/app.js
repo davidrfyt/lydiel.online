@@ -8,9 +8,16 @@
 const CONFIG = { SYNC_URL: "https://uf2676.entrenadorespokemon.workers.dev", SUFIJO: "-sea029" };
 
 /* ---------------- estado ---------------- */
-const TKEY = "sea029:token";
+const KSES = "sea029:sesion";
+const KUSR = "sea029:usuario";
+const TKEY = "sea029:token";            // sistema antiguo, solo para importar
 const TOKEN_RE = /^[A-Za-z0-9_-]{6,56}$/;
-let TOKEN = null;
+const USUARIO_RE = /^[a-z0-9][a-z0-9._-]{2,31}$/;
+let SESION = null;
+let USUARIO = null;
+let TOKEN = null;                       // solo si el servicio no tiene cuentas
+let CUENTAS = null;                     // lo dice el servicio al arrancar
+let modoGate = "entrar";
 let S = { done: {}, epi: {}, best: null, wrong: [], box: {}, examBest: null, uBest: {} };
 let pushTimer = null;
 
@@ -21,8 +28,9 @@ const $ = id => document.getElementById(id);
 const lsGet = k => { try { return localStorage.getItem(k); } catch (e) { return null; } };
 const lsSet = (k, v) => { try { localStorage.setItem(k, v); } catch (e) {} };
 const lsDel = k => { try { localStorage.removeItem(k); } catch (e) {} };
-const slotKey = () => "sea029:p:" + TOKEN;
+const slotKey = () => "sea029:p:" + (USUARIO || TOKEN);
 const remoteKey = () => TOKEN + CONFIG.SUFIJO;
+const conSesion = extra => Object.assign({ Authorization: "Bearer " + SESION }, extra || {});
 
 function setSync(state, txt) {
   const b = $("syncBadge"); if (!b) return;
@@ -35,24 +43,47 @@ function save() {
   clearTimeout(pushTimer);
   pushTimer = setTimeout(push, 800);
 }
+const cuerpoProgreso = () => JSON.stringify({
+  done: S.done, epi: S.epi, best: S.best, wrong: S.wrong,
+  box: S.box, examBest: S.examBest, uBest: S.uBest
+});
+
 async function push() {
-  if (!CONFIG.SYNC_URL || !TOKEN) return;
+  if (!CONFIG.SYNC_URL) return;
   try {
-    const r = await fetch(CONFIG.SYNC_URL + "/p/" + encodeURIComponent(remoteKey()), {
-      method: "PUT", headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ done: S.done, epi: S.epi, best: S.best, wrong: S.wrong, box: S.box, examBest: S.examBest, uBest: S.uBest })
-    });
+    let r;
+    if (SESION) {
+      r = await fetch(CONFIG.SYNC_URL + "/progreso", {
+        method: "PUT", headers: conSesion({ "Content-Type": "application/json" }), body: cuerpoProgreso()
+      });
+      if (r.status === 401) { caduca(); return; }
+    } else if (TOKEN) {
+      r = await fetch(CONFIG.SYNC_URL + "/p/" + encodeURIComponent(remoteKey()), {
+        method: "PUT", headers: { "Content-Type": "application/json" }, body: cuerpoProgreso()
+      });
+    } else return;
     if (!r.ok) throw new Error("HTTP " + r.status);
     setSync("ok", "sincronizado");
   } catch (e) { setSync("err", "sin conexion"); }
 }
 async function pull() {
-  if (!CONFIG.SYNC_URL || !TOKEN) return null;
+  if (!CONFIG.SYNC_URL) return null;
   try {
-    const r = await fetch(CONFIG.SYNC_URL + "/p/" + encodeURIComponent(remoteKey()));
+    let r;
+    if (SESION) {
+      r = await fetch(CONFIG.SYNC_URL + "/progreso", { headers: conSesion() });
+      if (r.status === 401) { caduca(); return null; }
+    } else if (TOKEN) {
+      r = await fetch(CONFIG.SYNC_URL + "/p/" + encodeURIComponent(remoteKey()));
+    } else return null;
     if (!r.ok) throw new Error("HTTP " + r.status);
     return await r.json();
   } catch (e) { return null; }
+}
+function caduca() {
+  lsDel(KSES); lsDel(KUSR);
+  SESION = null; USUARIO = null;
+  abrePuerta("Tu sesión ha caducado. Entra otra vez.");
 }
 const hasData = o => !!o && ((o.done && Object.keys(o.done).length) || (o.epi && Object.keys(o.epi).length) ||
   o.best || (o.wrong && o.wrong.length) || (o.box && Object.keys(o.box).length));
@@ -61,11 +92,9 @@ const norma = o => ({
   box: o.box || {}, examBest: o.examBest || null, uBest: o.uBest || {}
 });
 
-async function unlock(token) {
-  TOKEN = token;
-  lsSet(TKEY, token);
-  $("whoChip").textContent = token;
-  $("whoChip").title = "Token de estudio: " + token;
+async function unlock(quien) {
+  $("whoChip").textContent = quien;
+  $("whoChip").title = (SESION ? "Cuenta: " : "Token de estudio: ") + quien;
 
   let local = null;
   try { const raw = lsGet(slotKey()); if (raw) local = JSON.parse(raw); } catch (e) {}
@@ -73,6 +102,7 @@ async function unlock(token) {
   if (CONFIG.SYNC_URL) {
     setSync("wait", "conectando");
     const remoto = await pull();
+    if (!SESION && !TOKEN) return;          // la sesion caduco mientras cargaba
     if (hasData(remoto)) { S = norma(remoto); setSync("ok", "sincronizado"); }
     else if (hasData(local)) { S = norma(local); await push(); }
     else { S = norma({}); setSync(remoto === null ? "err" : "ok", remoto === null ? "sin conexion" : "sincronizado"); }
@@ -84,11 +114,15 @@ async function unlock(token) {
   $("gate").hidden = true;
   await boot();
 }
-function lock() {
-  clearTimeout(pushTimer); lsDel(TKEY); TOKEN = null; S = norma({});
-  $("gate").hidden = false;
-  const i = $("gateInput"); i.value = ""; i.focus();
-  $("gateErr").textContent = "";
+async function lock() {
+  clearTimeout(pushTimer);
+  if (SESION) {
+    try { await fetch(CONFIG.SYNC_URL + "/salir", { method: "POST", headers: conSesion() }); } catch (e) {}
+  }
+  lsDel(KSES); lsDel(KUSR); lsDel(TKEY);
+  SESION = null; USUARIO = null; TOKEN = null;
+  S = norma({});
+  abrePuerta("");
 }
 
 /* ---------------- utilidades ---------------- */
@@ -193,7 +227,7 @@ function pinta() {
   if (r.vista === "falladas") return vistaFalladas();
   return vistaIndice();
 }
-window.addEventListener("hashchange", () => { if (TOKEN) pinta(); });
+window.addEventListener("hashchange", () => { if (SESION || TOKEN) pinta(); });
 
 /* =========================================================
    NIVEL 0 — indice de unidades
@@ -205,9 +239,10 @@ function vistaIndice() {
   const us = unidades();
   const conMaterial = us.filter(u => temasDe(u.man, u.ud).length).length;
 
-  let h = '<section class="intro"><h2>Elige la unidad que vas a estudiar</h2>' +
-    '<p>Cada unidad reúne su temario, su resumen, sus fichas, su test, su examen, su examen oral y su chuleta. ' +
-    'El plan de estudio de la unidad te dice en qué orden usarlos.</p></section>';
+  let h = '<section class="intro"><div class="intro-rail">Índice general</div><div>' +
+    "<h2>Elige la unidad que vas a estudiar</h2>" +
+    "<p>Cada unidad reúne su temario, su resumen, sus fichas, su test, su examen, su examen oral y su chuleta. " +
+    "El plan de estudio de la unidad te dice en qué orden usarlos.</p></div></section>";
 
   h += '<div class="tools">' +
     herramienta("buscar", "Buscar", "En todo el material a la vez", "&#9906;") +
@@ -215,6 +250,13 @@ function vistaIndice() {
     herramienta("chuleta", "Chuleta completa", CHULETA.length + " bloques de memoria", "&#9776;") +
     herramienta("falladas", "Mis falladas", S.wrong.length + " preguntas pendientes", "&#8635;") +
     "</div>";
+
+  const viejo = lsGet(TKEY);
+  if (SESION && viejo && !hasData(S)) {
+    h += '<div class="why" id="traer" style="margin-bottom:26px">Tienes progreso guardado con el token antiguo ' +
+      "<b>" + esc(viejo) + '</b>. <button class="link" id="traerBtn" type="button">Traerlo a esta cuenta</button>' +
+      ' <span class="hint" id="traerMsg"></span></div>';
+  }
 
   h += '<div class="bar"><span class="hint">Módulo</span>' +
     '<button class="chip" data-f="" aria-pressed="' + (filtroMod === "" ? "true" : "false") + '">Todos</button>';
@@ -237,6 +279,19 @@ function vistaIndice() {
   p.innerHTML = h;
   p.querySelectorAll("[data-f]").forEach(c => c.onclick = () => { filtroMod = c.dataset.f; vistaIndice(); });
   p.querySelectorAll("[data-ir]").forEach(b => b.onclick = () => ir(b.dataset.ir));
+  const tb = $("traerBtn");
+  if (tb) tb.onclick = async () => {
+    tb.disabled = true;
+    $("traerMsg").textContent = "importando…";
+    try {
+      await importaToken(lsGet(TKEY));
+      lsDel(TKEY);
+      updHud(); vistaIndice();
+    } catch (e) {
+      $("traerMsg").textContent = e.message;
+      tb.disabled = false;
+    }
+  };
 }
 
 function herramienta(id, t, sub, ico) {
@@ -258,8 +313,10 @@ function tarjetaUD(m, u) {
   if (nO) partes.push(plural(nO, "oral", "orales"));
   if (nC) partes.push(plural(nC, "chuleta", "chuletas"));
 
-  return '<button class="ud-card" type="button" data-ir="#/u/' + man + "/" + ud + '">' +
-    '<div class="ud-top"><span class="num">UD' + ud + "</span>" +
+  const num = String(ud).padStart(2, "0");
+  return '<button class="ud-card' + (pct === 100 ? " completa" : "") + '" type="button" data-ir="#/u/' + man + "/" + ud + '">' +
+    (pct === 100 ? '<span class="sello">Superada</span>' : "") +
+    '<div class="ud-top"><span class="num">UD ' + num + "</span>" +
     (nT ? "" : '<span class="tag">solo temario</span>') +
     '<span class="pct">' + pct + "%</span></div>" +
     "<h4>" + esc(u.titulo) + "</h4>" +
@@ -297,8 +354,9 @@ async function vistaUnidad(r) {
     '<span class="c-sep">/</span><span class="c-k">' + esc(u.cod) + "</span>" +
     '<span class="c-sep">/</span><span class="c-k">UD' + u.ud + "</span></div>";
 
-  h += '<div class="ud-hero"><div><span class="k">' + esc(modById(u.mod).cod) + " · " + esc(u.cod) + "</span>" +
-    "<h2>" + esc(u.titulo) + "</h2>" +
+  h += '<div class="ud-hero"><div class="k">' + esc(modById(u.mod).cod) + "<br>" + esc(u.cod) +
+    " · UD " + String(u.ud).padStart(2, "0") + "</div>" +
+    '<div class="cuerpo"><h2>' + esc(u.titulo) + "</h2>" +
     '<p class="sub">' + esc(u.manNombre) + "</p></div>" +
     '<div class="ud-pct"><b>' + progresoUD(r.man, r.ud) + "%</b><span>de la unidad</span></div></div>";
 
@@ -656,7 +714,7 @@ function vistaFalladas() {
 
 function cabeceraSuelta(t, sub) {
   return '<div class="crumb"><button class="volver" type="button" data-volver="1">&larr; Todas las unidades</button></div>' +
-    '<div class="ud-hero"><div><span class="k">SEA029</span><h2>' + t + "</h2>" +
+    '<div class="ud-hero"><div class="k">SEA029</div><div class="cuerpo"><h2>' + t + "</h2>" +
     '<p class="sub">' + sub + "</p></div></div>";
 }
 function enlazaVolver() {
@@ -757,7 +815,7 @@ function termina(examen, abortado) {
     save();
   }
   $("panel").innerHTML = abortado
-    ? '<div class="ud-hero"><div><span class="k">Sesión interrumpida</span><h2>' + tScore + " de " + hechas + " aciertos</h2></div></div>" +
+    ? '<div class="ud-hero"><div class="k">Sesión</div><div class="cuerpo"><h2>Interrumpida · ' + tScore + " de " + hechas + " aciertos</h2></div></div>" +
       '<div class="bar"><button class="btn" id="again" type="button">Volver</button></div>'
     : resultHTML(pct, examen);
   const a = $("again"); if (a) a.onclick = repite;
@@ -769,8 +827,8 @@ function repite() {
   if (r.vista === "unidad") vistaUnidad(r); else pinta();
 }
 function resultHTML(pct, examen) {
-  let h = '<div class="ud-hero"><div><span class="k">' + (examen ? "Examen" : "Test") + '</span><h2>' +
-    (pct >= 75 ? "Apto" : "A repasar") + "</h2></div><div class=\"ud-pct\"><b>" + pct + "%</b><span>nota</span></div></div>";
+  let h = '<div class="ud-hero"><div class="k">' + (examen ? "Examen" : "Test") + '</div><div class="cuerpo"><h2>' +
+    (pct >= 75 ? "Apto" : "A repasar") + '</h2></div><div class="ud-pct"><b>' + pct + "%</b><span>nota</span></div></div>";
   h += '<div class="score">' +
     '<div class="stat ok"><div class="v">' + tScore + '</div><div class="l">Aciertos</div></div>' +
     '<div class="stat mal"><div class="v">' + (tSet.length - tScore) + '</div><div class="l">Fallos</div></div>' +
@@ -953,19 +1011,108 @@ function doSearch() {
   box.querySelectorAll("[data-ir]").forEach(b => b.onclick = () => ir(b.dataset.ir));
 }
 
-/* ---------------- puerta e init ---------------- */
+/* =========================================================
+   PUERTA: cuentas de usuario
+   ========================================================= */
+function abrePuerta(mensaje) {
+  $("gate").hidden = false;
+  $("gateErr").textContent = mensaje || "";
+  $("gatePass").value = "";
+  const u = $("gateUser");
+  u.focus();
+  if (mensaje) u.select();
+}
+
+function pintaModo() {
+  const registro = modoGate === "registro";
+  $("gateTitulo").textContent = registro ? "Crea tu cuenta" : "Entra en tu cuenta";
+  $("gateTexto").textContent = registro
+    ? "Elige un usuario y una contraseña. Tu progreso queda guardado en la cuenta y lo recuperas desde cualquier dispositivo."
+    : "Tu progreso —epígrafes leídos, fichas dominadas, notas y preguntas falladas— se guarda en tu cuenta, no en este navegador. Entra con los mismos datos en el móvil y sigues donde lo dejaste.";
+  $("gateGo").textContent = registro ? "Crear cuenta" : "Entrar";
+  $("gateOtro").textContent = registro ? "Ya tengo cuenta" : "Crear una cuenta";
+  $("gatePass").setAttribute("autocomplete", registro ? "new-password" : "current-password");
+  $("gatePista").hidden = !registro;
+  $("gateErr").textContent = "";
+  document.querySelectorAll("#gateModo button").forEach(b =>
+    b.setAttribute("aria-pressed", String(b.dataset.m === modoGate)));
+}
+
+async function envíaGate() {
+  const err = $("gateErr");
+  const usuario = $("gateUser").value.trim().toLowerCase();
+  const clave = $("gatePass").value;
+  if (!USUARIO_RE.test(usuario)) {
+    err.textContent = "El usuario: entre 3 y 32 caracteres, en minúsculas, sin espacios.";
+    $("gateUser").focus(); return;
+  }
+  if (modoGate === "registro" && clave.length < 8) {
+    err.textContent = "La contraseña necesita al menos 8 caracteres.";
+    $("gatePass").focus(); return;
+  }
+  if (!clave) { err.textContent = "Escribe tu contraseña."; $("gatePass").focus(); return; }
+
+  err.textContent = "";
+  const boton = $("gateGo"), texto = boton.textContent;
+  boton.disabled = true; boton.textContent = "Un momento…";
+  try {
+    const r = await fetch(CONFIG.SYNC_URL + (modoGate === "registro" ? "/registro" : "/entrar"), {
+      method: "POST", headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ usuario, clave })
+    });
+    const d = await r.json().catch(() => ({}));
+    if (!r.ok) { err.textContent = d.error || "No se ha podido completar. Inténtalo de nuevo."; return; }
+    SESION = d.sesion; USUARIO = d.usuario;
+    lsSet(KSES, SESION); lsSet(KUSR, USUARIO);
+    $("gatePass").value = "";
+    $("gate").hidden = true;
+    await unlock(USUARIO);
+  } catch (e) {
+    err.textContent = "No hay conexión con el servicio de cuentas.";
+  } finally {
+    boton.disabled = false; boton.textContent = texto;
+  }
+}
+
+/* ---- puerta antigua, por si el servicio aún no tiene cuentas ---- */
 function genToken() {
   const a = "abcdefghijkmnpqrstuvwxyz23456789";
   let t = ""; for (let i = 0; i < 14; i++) t += a[Math.floor(Math.random() * a.length)];
   return t.slice(0, 5) + "-" + t.slice(5, 9) + "-" + t.slice(9);
 }
-function tryUnlock() {
-  const i = $("gateInput"), err = $("gateErr"), v = i.value.trim();
-  if (!v) { err.textContent = "Escribe un token o genera uno."; i.focus(); return; }
-  if (!TOKEN_RE.test(v)) { err.textContent = "Entre 6 y 56 caracteres. Solo letras, números, guion y guion bajo."; i.focus(); return; }
-  err.textContent = "";
-  $("gateGo").textContent = "Entrando…";
-  unlock(v).finally(() => { $("gateGo").textContent = "Entrar"; });
+function puertaToken() {
+  $("gateModo").hidden = true;
+  $("gateTitulo").textContent = "Identifica tu progreso";
+  $("gateTexto").textContent = "Escribe tu token de estudio. Tu progreso queda asociado a él, no a este navegador.";
+  $("gateUser").parentElement.hidden = true;
+  $("gatePass").parentElement.querySelector("label").textContent = "Token";
+  $("gatePass").type = "text";
+  $("gatePass").placeholder = "p. ej. david-vigilante-2026";
+  $("gatePass").setAttribute("autocomplete", "off");
+  $("gateGo").textContent = "Entrar";
+  $("gateOtro").textContent = "Generar uno al azar";
+  $("gateNota").innerHTML = "<b>Esto no es una contraseña.</b> Es la etiqueta de tu progreso. La página es pública: el token identifica, no protege.";
+  $("gateOtro").onclick = () => { $("gatePass").value = genToken(); $("gatePass").focus(); };
+  $("gateGo").onclick = async () => {
+    const v = $("gatePass").value.trim();
+    if (!TOKEN_RE.test(v)) { $("gateErr").textContent = "Entre 6 y 56 caracteres. Letras, números, guion y guion bajo."; return; }
+    TOKEN = v; lsSet(TKEY, v);
+    $("gate").hidden = true;
+    await unlock(v);
+  };
+}
+
+/* ---- traer el progreso de un token antiguo ---- */
+async function importaToken(token) {
+  const r = await fetch(CONFIG.SYNC_URL + "/importar", {
+    method: "POST", headers: conSesion({ "Content-Type": "application/json" }),
+    body: JSON.stringify({ token })
+  });
+  const d = await r.json().catch(() => ({}));
+  if (!r.ok) throw new Error(d.error || "No se pudo importar.");
+  const remoto = await pull();
+  if (hasData(remoto)) { S = norma(remoto); save(); }
+  return true;
 }
 async function boot() {
   if (!IDX.length) {
@@ -974,12 +1121,20 @@ async function boot() {
   }
   updHud();
   pinta();
-  $("savedNote").textContent = "Progreso guardado en el token " + TOKEN;
+  $("savedNote").textContent = SESION
+    ? "Progreso guardado en la cuenta " + USUARIO
+    : "Progreso guardado en el token " + TOKEN;
 }
-(function start() {
-  $("gateGo").onclick = tryUnlock;
-  $("gateInput").addEventListener("keydown", e => { if (e.key === "Enter") tryUnlock(); });
-  $("gateGen").onclick = () => { $("gateInput").value = genToken(); $("gateInput").focus(); $("gateErr").textContent = ""; };
+
+async function servicioTieneCuentas() {
+  try {
+    const r = await fetch(CONFIG.SYNC_URL + "/");
+    const d = await r.json();
+    return !!d.cuentas;
+  } catch (e) { return false; }
+}
+
+(async function start() {
   $("outBtn").onclick = lock;
   $("homeBtn").onclick = () => ir("#/");
   $("themeBtn").onclick = () => {
@@ -987,7 +1142,28 @@ async function boot() {
     const dark = cur ? cur === "dark" : matchMedia("(prefers-color-scheme:dark)").matches;
     r.setAttribute("data-theme", dark ? "light" : "dark");
   };
-  const t = lsGet(TKEY);
-  if (t && TOKEN_RE.test(t)) unlock(t);
-  else { $("gate").hidden = false; $("gateInput").focus(); }
+  ["gateUser", "gatePass"].forEach(id =>
+    $(id).addEventListener("keydown", e => { if (e.key === "Enter") $("gateGo").click(); }));
+
+  CUENTAS = await servicioTieneCuentas();
+
+  if (!CUENTAS) {
+    puertaToken();
+    const t = lsGet(TKEY);
+    if (t && TOKEN_RE.test(t)) { TOKEN = t; $("gate").hidden = true; await unlock(t); }
+    else abrePuerta("");
+    return;
+  }
+
+  $("gateGo").onclick = envíaGate;
+  $("gateOtro").onclick = () => { modoGate = modoGate === "registro" ? "entrar" : "registro"; pintaModo(); $("gateUser").focus(); };
+  document.querySelectorAll("#gateModo button").forEach(b => b.onclick = () => { modoGate = b.dataset.m; pintaModo(); $("gateUser").focus(); });
+  pintaModo();
+
+  const ses = lsGet(KSES), usr = lsGet(KUSR);
+  if (ses && usr) {
+    SESION = ses; USUARIO = usr;
+    $("gate").hidden = true;
+    await unlock(usr);
+  } else abrePuerta("");
 })();
