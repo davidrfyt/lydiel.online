@@ -150,7 +150,23 @@ mark{background:var(--acento-2);color:var(--ink);padding:0 3px;border-radius:3px
 .gate-field input:focus{outline:0;border-color:var(--marca);background:var(--sup);box-shadow:0 0 0 3px var(--marca-2)}
 .gate-field .pista{font-size:var(--t-xs);color:var(--gris)}
 .gate-row{display:flex;gap:16px;align-items:center;flex-wrap:wrap;margin-top:22px}
+#gateOlvido{margin-left:auto}
 .gate-err{color:var(--mal);font-size:var(--t-sm);min-height:1.3em;margin:12px 0 0}
+.codigo-card{max-width:520px}
+.codigo-caja{
+  margin:20px 0 4px;padding:20px 16px;border-radius:var(--r);
+  background:var(--sup-2);border:1px dashed var(--linea);text-align:center;
+}
+.codigo-caja code{
+  font-family:var(--mono);font-size:var(--t-lg);font-weight:500;letter-spacing:.08em;
+  color:var(--ink);word-break:break-all;
+}
+.codigo-ok{
+  display:flex;align-items:center;gap:9px;margin:18px 0 4px;
+  font-size:var(--t-sm);color:var(--ink-2);cursor:pointer;
+}
+.codigo-ok input{width:16px;height:16px;accent-color:var(--marca);cursor:pointer}
+.gate-field input.mono{font-family:var(--mono);letter-spacing:.06em;text-transform:uppercase}
 .gate-note{
   margin-top:22px;padding:14px 16px;border-radius:var(--r-s);
   background:var(--acento-2);font-size:var(--t-xs);color:var(--ink-2);line-height:1.6;
@@ -174,8 +190,8 @@ mark{background:var(--acento-2);color:var(--ink);padding:0 3px;border-radius:3px
   width:38px;height:38px;flex:0 0 auto;display:block;object-fit:contain;
 }
 .gate-marca{
-  display:flex;align-items:center;gap:14px;margin-bottom:22px;
-  padding-bottom:18px;border-bottom:1px solid var(--linea-2);
+  display:flex;align-items:center;justify-content:center;gap:14px;margin-bottom:22px;
+  padding-bottom:18px;border-bottom:1px solid var(--linea-2);text-align:center;
 }
 /* el logo se dimensiona contra el bloque de texto, no contra la tarjeta:
    asi el conjunto se lee como una sola pieza y no como dos elementos sueltos */

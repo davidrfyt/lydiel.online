@@ -34,6 +34,9 @@
      GET  /perfil              nombre, avatar y fechas de la cuenta
      PUT  /perfil              { nombre, avatar } actualiza el perfil
      POST /clave               { actual, nueva } cambia la contrasena
+     POST /rescate             { usuario, codigo, nueva } recupera la cuenta
+     POST /rescate/nuevo       emite otro codigo (pide la contrasena)
+     POST /admin/rescate       { usuario } la administracion emite uno
      POST /cerrar-todas        cierra el resto de sesiones abiertas
      POST /baja                { clave } borra la propia cuenta
      GET  /admin/usuarios      listado con actividad y progreso (solo admin)
@@ -143,6 +146,36 @@ async function sesionDe(peticion, env) {
 /* indice de sesiones abiertas: permite cerrarlas al suspender o borrar */
 const MAX_SESIONES = 10;
 
+/* ---------- codigo de rescate ---------- */
+
+/* Alfabeto sin caracteres que se confunden al copiarlos a mano:
+   fuera 0/O, 1/I/L, 5/S y 8/B. Cuatro grupos de cinco: 27^20 combinaciones. */
+const ALFABETO_RESCATE = "ACDEFGHJKMNPQRTUVWXYZ234679";
+
+function generaRescate() {
+  const n = new Uint8Array(20);
+  crypto.getRandomValues(n);
+  let out = "";
+  for (let i = 0; i < 20; i++) {
+    if (i && i % 5 === 0) out += "-";
+    out += ALFABETO_RESCATE[n[i] % ALFABETO_RESCATE.length];
+  }
+  return out;                                   // p.ej. K7QMD-2XHFA-9TRWE-JC4NP
+}
+
+const normalizaRescate = c =>
+  String(c || "").toUpperCase().replace(/[^A-Z0-9]/g, "");
+
+/* Guarda solo la huella. El codigo en claro no vuelve a existir en el servidor. */
+async function ponRescate(cuenta) {
+  const codigo = generaRescate();
+  cuenta.rsal = aleatorio(16);
+  cuenta.rhash = await derivar(normalizaRescate(codigo), cuenta.rsal, ITERACIONES);
+  cuenta.riter = ITERACIONES;
+  cuenta.rdesde = Date.now();
+  return codigo;
+}
+
 async function abreSesion(env, usuario) {
   const sesion = aleatorio(32);
   await env.PROGRESO.put("s:" + sesion, JSON.stringify({ u: usuario, admin: ADMINS.includes(usuario) }),
@@ -215,9 +248,11 @@ async function registro(peticion, env, origen) {
   const salt = aleatorio(16);
   const hash = await derivar(clave, salt, ITERACIONES);
   const ahora = Date.now();
-  await env.PROGRESO.put("cuenta:" + u, JSON.stringify({ salt, hash, iter: ITERACIONES, creado: ahora, visto: ahora }));
+  const cuenta = { salt, hash, iter: ITERACIONES, creado: ahora, visto: ahora };
+  const rescate = await ponRescate(cuenta);
+  await env.PROGRESO.put("cuenta:" + u, JSON.stringify(cuenta));
   const sesion = await abreSesion(env, u);
-  return json({ sesion, usuario: u, nuevo: true, admin: ADMINS.includes(u) }, 201, origen);
+  return json({ sesion, usuario: u, nuevo: true, admin: ADMINS.includes(u), rescate }, 201, origen);
 }
 
 async function entrar(peticion, env, origen) {
@@ -349,6 +384,7 @@ async function adminUsuarios(peticion, env, origen) {
       visto: c.visto || null,
       suspendido: !!c.suspendido,
       admin: ADMINS.includes(nombre),
+      rescate: !!c.rhash,
       pagado: !!c.pagado,
       pagadoEl: c.pagadoEl || null,
       progreso: resumeProgreso(await env.PROGRESO.get("p:" + nombre))
@@ -581,6 +617,7 @@ async function perfil(peticion, env, origen) {
   if (!c) return json({ error: "La cuenta ya no existe." }, 401, origen);
   return json({
     usuario: s.usuario, admin: s.admin,
+    rescate: !!c.rhash, rescateDesde: c.rdesde || null,
     nombre: c.nombre || "", avatar: c.avatar || "",
     creado: c.creado || null, visto: c.visto || null
   }, 200, origen);
@@ -618,10 +655,72 @@ async function cambiaClave(peticion, env, origen) {
   c.salt = aleatorio(16);
   c.hash = await derivar(nueva, c.salt, ITERACIONES);
   c.iter = ITERACIONES;
+  // a las cuentas anteriores al codigo de rescate se les emite aqui el primero
+  const rescate = c.rhash ? null : await ponRescate(c);
   await env.PROGRESO.put("cuenta:" + s.usuario, JSON.stringify(c));
   // cambiar la clave echa al resto de dispositivos, pero no a quien la cambia
   await cierraTodas(env, s.usuario, s.sesion);
-  return json({ ok: true }, 200, origen);
+  return json({ ok: true, rescate }, 200, origen);
+}
+
+/* Recupera la cuenta con el codigo. No exige sesion, por razones obvias.
+   Al usarlo se invalida y se entrega otro: un codigo gastado no sirve dos veces. */
+async function rescate(peticion, env, origen) {
+  const { usuario, codigo, nueva } = await leerCuerpo(peticion);
+  const u = normaliza(usuario);
+  const cod = normalizaRescate(codigo);
+  if (typeof nueva !== "string" || nueva.length < CLAVE_MIN || nueva.length > CLAVE_MAX) {
+    return json({ error: "La contraseña nueva debe tener al menos " + CLAVE_MIN + " caracteres." }, 400, origen);
+  }
+  const c = await leeCuenta(env, u);
+  // misma respuesta exista o no la cuenta: no se confirma quien esta registrado
+  const malo = () => json({ error: "El usuario o el código de rescate no son correctos." }, 401, origen);
+  if (!c || typeof c.rhash !== "string" || cod.length !== 20) return malo();
+  if (c.suspendido) return json({ error: "Esta cuenta está suspendida." }, 403, origen);
+  const h = await derivar(cod, c.rsal, c.riter || ITERACIONES);
+  if (!iguales(h, c.rhash)) return malo();
+
+  c.salt = aleatorio(16);
+  c.hash = await derivar(nueva, c.salt, ITERACIONES);
+  c.iter = ITERACIONES;
+  const rescate = await ponRescate(c);
+  await env.PROGRESO.put("cuenta:" + u, JSON.stringify(c));
+  /* El KV es de consistencia eventual y cachea las lecturas: durante unos
+     segundos, algun borde puede seguir aceptando el codigo recien gastado.
+     Se asume: para aprovecharlo habria que tener ya el codigo, que es
+     justamente lo que la medida presupone perdido. */
+  await cierraTodas(env, u, null);              // quien tuviera la cuenta abierta, fuera
+  const sesion = await abreSesion(env, u);
+  return json({ ok: true, sesion, usuario: u, admin: ADMINS.includes(u), rescate }, 200, origen);
+}
+
+/* Emitir otro codigo desde la cuenta. Se pide la contrasena para que no baste
+   con dejar la sesion abierta un momento en un ordenador ajeno. */
+async function rescateNuevo(peticion, env, origen) {
+  const s = await sesionDe(peticion, env);
+  if (!s) return json({ error: "Sesión no válida." }, 401, origen);
+  const { clave } = await leerCuerpo(peticion);
+  const c = await leeCuenta(env, s.usuario);
+  if (!c || typeof c.salt !== "string") return json({ error: "La cuenta ya no existe." }, 401, origen);
+  const h = await derivar(String(clave || ""), c.salt, c.iter || ITERACIONES);
+  if (!iguales(h, c.hash)) return json({ error: "La contraseña no es correcta." }, 401, origen);
+  const rescate = await ponRescate(c);
+  await env.PROGRESO.put("cuenta:" + s.usuario, JSON.stringify(c));
+  return json({ ok: true, rescate }, 200, origen);
+}
+
+/* Para quien perdio la contrasena y tambien el codigo. */
+async function adminRescate(peticion, env, origen) {
+  const s = await sesionDe(peticion, env);
+  if (!s) return json({ error: "Sesión no válida." }, 401, origen);
+  if (!s.admin) return json({ error: "No tienes permiso." }, 403, origen);
+  const { usuario } = await leerCuerpo(peticion);
+  const u = normaliza(usuario);
+  const c = await leeCuenta(env, u);
+  if (!c) return json({ error: "Ese usuario no existe." }, 404, origen);
+  const rescate = await ponRescate(c);
+  await env.PROGRESO.put("cuenta:" + u, JSON.stringify(c));
+  return json({ ok: true, usuario: u, rescate }, 200, origen);
 }
 
 async function cerrarTodas(peticion, env, origen) {
@@ -701,6 +800,9 @@ export default {
       if (ruta === "/perfil" && M === "GET") return await perfil(peticion, env, origen);
       if (ruta === "/perfil" && M === "PUT") return await guardaPerfil(peticion, env, origen);
       if (ruta === "/clave" && M === "POST") return await cambiaClave(peticion, env, origen);
+      if (ruta === "/rescate" && M === "POST") return await rescate(peticion, env, origen);
+      if (ruta === "/rescate/nuevo" && M === "POST") return await rescateNuevo(peticion, env, origen);
+      if (ruta === "/admin/rescate" && M === "POST") return await adminRescate(peticion, env, origen);
       if (ruta === "/cerrar-todas" && M === "POST") return await cerrarTodas(peticion, env, origen);
       if (ruta === "/baja" && M === "POST") return await baja(peticion, env, origen);
       if (ruta === "/admin/usuarios" && M === "GET") return await adminUsuarios(peticion, env, origen);

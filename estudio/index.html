@@ -5,14 +5,20 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>TemarioVigilanteSeguridad · Certificado SEA029</title>
 <meta name="description" content="Temario completo del certificado SEA029 Vigilancia y Seguridad Privada: los ocho manuales con lectura en voz alta, resúmenes, fichas de repaso espaciado, tests, exámenes cronometrados y simulacro de examen oral, organizados unidad por unidad.">
+<meta property="og:type" content="website">
+<meta property="og:title" content="TemarioVigilanteSeguridad">
+<meta property="og:description" content="Temario, fichas, tests y examen oral del certificado SEA029, unidad por unidad y con lectura en voz alta.">
 <meta name="theme-color" content="#1B4B91">
+<meta property="og:url" content="https://temariovigilanteseguridad.com/">
+<meta property="og:image" content="https://temariovigilanteseguridad.com/social.jpg">
+<meta name="twitter:card" content="summary_large_image">
 <meta name="color-scheme" content="light dark">
 <link rel="icon" href="logo-192.png" type="image/png">
 <link rel="apple-touch-icon" href="logo-192.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&family=JetBrains+Mono:wght@400;500&display=swap">
-<link rel="stylesheet" href="style.css?v=16">
+<link rel="stylesheet" href="style.css?v=17">
 </head>
 <body>
 
@@ -32,21 +38,44 @@
       <label for="gateUser">Usuario</label>
       <input id="gateUser" type="text" autocomplete="username" autocapitalize="off" spellcheck="false" placeholder="tu nombre de usuario">
     </div>
+    <div class="gate-field" id="campoCodigo" hidden>
+      <label for="gateCodigo">Código de rescate</label>
+      <input id="gateCodigo" type="text" autocomplete="off" autocapitalize="characters" spellcheck="false"
+             maxlength="23" placeholder="XXXXX-XXXXX-XXXXX-XXXXX" class="mono">
+      <span class="pista">Los cuatro grupos que guardaste al crear la cuenta. Da igual mayúsculas o guiones.</span>
+    </div>
     <div class="gate-field">
-      <label for="gatePass">Contraseña</label>
+      <label for="gatePass" id="gatePassLab">Contraseña</label>
       <input id="gatePass" type="password" autocomplete="current-password" placeholder="tu contraseña">
-      <span class="pista" id="gatePista" hidden>Mínimo 8 caracteres. No hay forma de recuperarla: apúntala.</span>
+      <span class="pista" id="gatePista" hidden>Mínimo 8 caracteres.</span>
     </div>
 
     <div class="gate-row">
       <button class="btn" id="gateGo" type="button">Entrar</button>
       <button class="link" id="gateOtro" type="button">Crear una cuenta</button>
+      <button class="link" id="gateOlvido" type="button">He olvidado la contraseña</button>
     </div>
     <p class="gate-err" id="gateErr"></p>
 
     <div class="gate-note" id="gateNota">
-      <b>Lee esto antes de elegir contraseña.</b> Esta página es pública y no hay recuperación por correo: si la pierdes, pierdes el progreso. Usa una contraseña <b>que no uses en ningún otro sitio</b>. Se guarda cifrada, nunca en claro.
+      Tu contraseña se guarda cifrada, nunca en claro. Al crear la cuenta recibirás un
+      <b>código de rescate</b>: guárdalo, es lo único que te devuelve el acceso si la olvidas.
     </div>
+  </div>
+</div>
+
+<div id="codigo" hidden>
+  <div class="gate-card codigo-card">
+    <h2 id="codTitulo">Guarda tu código de rescate</h2>
+    <p id="codTexto">Es lo único que te devolverá el acceso si olvidas la contraseña. No se puede volver a ver: si lo pierdes, tendrás que pedírselo a quien administra la plataforma.</p>
+    <div class="codigo-caja"><code id="codValor">—</code></div>
+    <div class="bar">
+      <button class="btn ghost" id="codCopiar" type="button">Copiar</button>
+      <button class="btn ghost" id="codBajar" type="button">Descargar</button>
+      <span class="aviso-linea" id="codMsg"></span>
+    </div>
+    <label class="codigo-ok"><input type="checkbox" id="codVisto"> Lo he guardado en un sitio seguro</label>
+    <div class="bar"><button class="btn" id="codSeguir" type="button" disabled>Continuar</button></div>
   </div>
 </div>
 
@@ -112,7 +141,7 @@
 
 </div>
 
-<script src="iconos.js?v=16"></script>
-<script src="app.js?v=16"></script>
+<script src="iconos.js?v=17"></script>
+<script src="app.js?v=17"></script>
 </body>
 </html>

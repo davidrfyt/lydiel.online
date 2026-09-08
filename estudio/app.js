@@ -1635,6 +1635,16 @@ function vistaPerfil() {
     '<span class="aviso-linea" id="claveMsg"></span></div></section>';
 
   /* sesiones y datos */
+  h += '<section class="tarjeta-perfil"><h3>Código de rescate</h3>' +
+    '<p class="ayuda">' + (PERFIL.rescate
+      ? "Tienes uno emitido" + (PERFIL.rescateDesde ? " el " + fecha(PERFIL.rescateDesde) : "") +
+        ". Solo se ve una vez, así que si no lo encuentras, emite otro: el anterior dejará de servir."
+      : "Tu cuenta todavía no tiene código. Emite uno y guárdalo: es lo único que te devolverá el acceso si olvidas la contraseña.") + "</p>" +
+    '<div class="campo"><label for="rescClave">Tu contraseña</label>' +
+    '<input id="rescClave" type="password" autocomplete="current-password" placeholder="para confirmar que eres tú"></div>' +
+    '<div class="fila-acc"><button class="btn' + (PERFIL.rescate ? " ghost" : "") + '" id="nuevoRescate" type="button">' +
+    (PERFIL.rescate ? "Emitir un código nuevo" : "Emitir mi código") + "</button>" +
+    '<span class="aviso-linea" id="rescMsg"></span></div></section>';
   h += '<section class="tarjeta-perfil"><h3>Sesiones y datos</h3>' +
     '<p class="ayuda">Si has entrado en un ordenador prestado, ciérralas todas desde aquí.</p>' +
     '<div class="fila-acc"><button class="btn ghost" id="cerrarTodas" type="button">Cerrar el resto de sesiones</button>' +
@@ -1710,6 +1720,25 @@ function vistaPerfil() {
   };
 
   /* --- sesiones y descarga --- */
+  $("nuevoRescate").onclick = async () => {
+    const b = $("nuevoRescate"), msg = $("rescMsg"), clave = $("rescClave").value;
+    if (!clave) { msg.textContent = "escribe tu contraseña"; msg.className = "aviso-linea mal"; return; }
+    b.disabled = true; msg.textContent = "emitiendo…"; msg.className = "aviso-linea";
+    try {
+      const r = await fetch(CONFIG.SYNC_URL + "/rescate/nuevo", {
+        method: "POST", headers: conSesion({ "Content-Type": "application/json" }), body: JSON.stringify({ clave })
+      });
+      const d = await r.json().catch(() => ({}));
+      if (!r.ok) throw new Error(d.error || "No se ha podido emitir.");
+      $("rescClave").value = "";
+      muestraCodigo(d.rescate, USUARIO, "Tu código nuevo",
+        "El anterior ya no sirve. Guarda este en un sitio seguro: no volverá a mostrarse.",
+        async () => { await cargaPerfil(); pinta(); });
+    } catch (e) {
+      msg.textContent = e.message; msg.className = "aviso-linea mal";
+    } finally { b.disabled = false; }
+  };
+
   $("cerrarTodas").onclick = () => confirma(
     "Cerrar el resto de sesiones",
     "Se cerrará la sesión en cualquier otro dispositivo donde hayas entrado. En este te quedas.",
@@ -1831,6 +1860,7 @@ async function vistaAdmin() {
           : '<span class="etiqueta activo">Activa</span>') + "</td>" +
       '<td><div class="acc-fila">' +
       (u.admin ? '<span class="hint">—</span>' :
+        '<button class="btn ghost chico" data-acc="rescate" data-u="' + esc(u.usuario) + '">Código</button>' +
         '<button class="btn ghost chico" data-acc="acceso" data-u="' + esc(u.usuario) + '" data-v="' + (!u.pagado) + '">' +
         (u.pagado ? "Quitar acceso" : "Dar acceso") + "</button>" +
         '<button class="btn ghost chico" data-acc="susp" data-u="' + esc(u.usuario) + '" data-v="' + (!u.suspendido) + '">' +
@@ -1844,7 +1874,20 @@ async function vistaAdmin() {
   p.innerHTML = h;
   p.querySelectorAll("[data-acc]").forEach(b => b.onclick = () => {
     const u = b.dataset.u;
-    if (b.dataset.acc === "acceso") {
+    if (b.dataset.acc === "rescate") {
+      confirma("Emitir un código de rescate para " + u,
+        "Se anulará el que tuviera. Tendrás que hacérselo llegar tú: no se envía solo.",
+        "Emitir", false, async () => {
+          const r = await fetch(CONFIG.SYNC_URL + "/admin/rescate", {
+            method: "POST", headers: conSesion({ "Content-Type": "application/json" }), body: JSON.stringify({ usuario: u })
+          });
+          const d = await r.json().catch(() => ({}));
+          if (!r.ok) { alert(d.error || "No se ha podido emitir."); return; }
+          muestraCodigo(d.rescate, u, "Código de rescate de " + u,
+            "Entrégaselo por un canal seguro. Con él podrá poner una contraseña nueva, y al hacerlo recibirá otro.",
+            () => vistaAdmin());
+        });
+    } else if (b.dataset.acc === "acceso") {
       const dar = b.dataset.v === "true";
       confirma(dar ? "Dar acceso a " + u : "Quitar el acceso a " + u,
         dar ? "Podrá usar todo el material sin haber pagado. Útil para invitaciones o incidencias con un cobro."
@@ -1896,26 +1939,80 @@ function confirma(titulo, texto, etiqueta, peligro, alAceptar) {
    PUERTA
    ========================================================= */
 function abrePuerta(mensaje) {
+  $("codigo").hidden = true;
+  modoGate = "entrar";                 // se vuelve siempre al modo normal
+  pintaModo();
   $("gate").hidden = false;
   $("gateErr").textContent = mensaje || "";
   $("gatePass").value = "";
+  $("gateCodigo").value = "";
   const u = $("gateUser");
   u.focus();
   if (mensaje) u.select();
 }
 function pintaModo() {
-  const registro = modoGate === "registro";
-  $("gateTitulo").textContent = registro ? "Crea tu cuenta" : "Entra en tu cuenta";
-  $("gateTexto").textContent = registro
-    ? "Elige un usuario y una contraseña. Tu progreso queda guardado en la cuenta y lo recuperas desde cualquier dispositivo."
-    : "Tu progreso —epígrafes leídos, fichas dominadas, notas y preguntas falladas— se guarda en tu cuenta, no en este navegador. Entra con los mismos datos en el móvil y sigues donde lo dejaste.";
-  $("gateGo").textContent = registro ? "Crear cuenta" : "Entrar";
-  $("gateOtro").textContent = registro ? "Ya tengo cuenta" : "Crear una cuenta";
-  $("gatePass").setAttribute("autocomplete", registro ? "new-password" : "current-password");
-  $("gatePista").hidden = !registro;
+  const registro = modoGate === "registro", rescate = modoGate === "rescate";
+  $("gateTitulo").textContent = rescate ? "Recupera tu cuenta"
+    : registro ? "Crea tu cuenta" : "Entra en tu cuenta";
+  $("gateTexto").textContent = rescate
+    ? "Escribe tu usuario, el código de rescate que guardaste y la contraseña nueva. El código se gastará y te daremos otro."
+    : registro
+      ? "Elige un usuario y una contraseña. Tu progreso queda guardado en la cuenta y lo recuperas desde cualquier dispositivo."
+      : "Tu progreso —epígrafes leídos, fichas dominadas, notas y preguntas falladas— se guarda en tu cuenta, no en este navegador. Entra con los mismos datos en el móvil y sigues donde lo dejaste.";
+  $("gateGo").textContent = rescate ? "Recuperar" : registro ? "Crear cuenta" : "Entrar";
+  $("gateOtro").textContent = registro || rescate ? "Ya tengo cuenta" : "Crear una cuenta";
+  $("gatePassLab").textContent = rescate ? "Contraseña nueva" : "Contraseña";
+  $("gatePass").placeholder = rescate ? "la contraseña nueva" : "tu contraseña";
+  $("gatePass").setAttribute("autocomplete", registro || rescate ? "new-password" : "current-password");
+  $("gatePista").hidden = !(registro || rescate);
+  $("campoCodigo").hidden = !rescate;
+  $("gateNota").hidden = rescate;
+  $("gateOlvido").textContent = rescate ? "Volver a entrar" : "He olvidado la contraseña";
+  $("gateOlvido").hidden = registro;
   $("gateErr").textContent = "";
   document.querySelectorAll("#gateModo button").forEach(b =>
     b.setAttribute("aria-pressed", String(b.dataset.m === modoGate)));
+}
+
+/* ---------- pantalla del codigo de rescate ---------- */
+let alCerrarCodigo = null;
+
+function muestraCodigo(codigo, usuario, titulo, texto, alSeguir) {
+  $("codValor").textContent = codigo;
+  if (titulo) $("codTitulo").textContent = titulo;
+  if (texto) $("codTexto").textContent = texto;
+  $("codMsg").textContent = "";
+  $("codVisto").checked = false;
+  $("codSeguir").disabled = true;
+  $("gate").hidden = true;
+  $("codigo").hidden = false;
+  alCerrarCodigo = alSeguir;
+
+  $("codVisto").onchange = () => { $("codSeguir").disabled = !$("codVisto").checked; };
+  $("codCopiar").onclick = async () => {
+    try {
+      await navigator.clipboard.writeText(codigo);
+      $("codMsg").textContent = "copiado"; $("codMsg").className = "aviso-linea bien";
+    } catch (e) {
+      $("codMsg").textContent = "cópialo a mano"; $("codMsg").className = "aviso-linea mal";
+    }
+  };
+  $("codBajar").onclick = () => {
+    const t = "TemarioVigilanteSeguridad\n\nUsuario: " + usuario +
+      "\nCódigo de rescate: " + codigo +
+      "\n\nGuárdalo. Es lo único que te devuelve el acceso si olvidas la contraseña.\n" +
+      "Se usa una sola vez: al usarlo recibirás otro.\n";
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(new Blob([t], { type: "text/plain" }));
+    a.download = "rescate-" + usuario + ".txt";
+    a.click();
+    setTimeout(() => URL.revokeObjectURL(a.href), 4000);
+  };
+  $("codSeguir").onclick = () => {
+    $("codigo").hidden = true;
+    const f = alCerrarCodigo; alCerrarCodigo = null;
+    if (f) f();
+  };
 }
 async function envia() {
   const err = $("gateErr");
@@ -1925,19 +2022,28 @@ async function envia() {
     err.textContent = "El usuario: entre 3 y 32 caracteres, en minúsculas, sin espacios.";
     $("gateUser").focus(); return;
   }
-  if (modoGate === "registro" && clave.length < 8) {
+  if (modoGate !== "entrar" && clave.length < 8) {
     err.textContent = "La contraseña necesita al menos 8 caracteres.";
     $("gatePass").focus(); return;
   }
   if (!clave) { err.textContent = "Escribe tu contraseña."; $("gatePass").focus(); return; }
+  const codigo = $("gateCodigo").value.trim();
+  if (modoGate === "rescate" && codigo.replace(/[^a-zA-Z0-9]/g, "").length !== 20) {
+    err.textContent = "El código de rescate tiene veinte caracteres en cuatro grupos.";
+    $("gateCodigo").focus(); return;
+  }
 
   err.textContent = "";
   const boton = $("gateGo"), texto = boton.textContent;
   boton.disabled = true; boton.textContent = "Un momento…";
   try {
-    const r = await fetch(CONFIG.SYNC_URL + (modoGate === "registro" ? "/registro" : "/entrar"), {
+    const ruta = modoGate === "registro" ? "/registro"
+      : modoGate === "rescate" ? "/rescate" : "/entrar";
+    const cuerpo = modoGate === "rescate"
+      ? { usuario, codigo, nueva: clave } : { usuario, clave };
+    const r = await fetch(CONFIG.SYNC_URL + ruta, {
       method: "POST", headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ usuario, clave })
+      body: JSON.stringify(cuerpo)
     });
     const d = await r.json().catch(() => ({}));
     if (!r.ok) { err.textContent = d.error || "No se ha podido completar. Inténtalo de nuevo."; return; }
@@ -1946,9 +2052,19 @@ async function envia() {
     PERFIL = { nombre: "", avatar: "", creado: null, visto: null };
     await cargaPerfil();
     await cargaEstadoPago();
-    $("gatePass").value = "";
-    $("gate").hidden = true;
-    await unlock(USUARIO);
+    $("gatePass").value = ""; $("gateCodigo").value = "";
+    const entra = async () => { $("gate").hidden = true; await unlock(USUARIO); };
+    if (d.rescate) {
+      const recuperada = modoGate === "rescate";
+      muestraCodigo(d.rescate, USUARIO,
+        recuperada ? "Tu código nuevo" : "Guarda tu código de rescate",
+        recuperada
+          ? "El anterior ya no sirve. Guarda este, que es el que te devolverá el acceso la próxima vez."
+          : "Es lo único que te devolverá el acceso si olvidas la contraseña. No se puede volver a ver: si lo pierdes, tendrás que pedírselo a quien administra la plataforma.",
+        entra);
+      return;
+    }
+    await entra();
   } catch (e) {
     err.textContent = "No hay conexión con el servicio de cuentas.";
   } finally {
@@ -1998,7 +2114,8 @@ async function cargaPerfil() {
     if (r.status === 401) { caduca(); return; }
     const d = await r.json();
     ADMIN = !!d.admin;
-    PERFIL = { nombre: d.nombre || "", avatar: d.avatar || "", creado: d.creado, visto: d.visto };
+    PERFIL = { nombre: d.nombre || "", avatar: d.avatar || "", creado: d.creado, visto: d.visto,
+               rescate: !!d.rescate, rescateDesde: d.rescateDesde || null };
   } catch (e) {}
 }
 
@@ -2033,7 +2150,12 @@ async function cargaPerfil() {
   CUENTAS = await servicioTieneCuentas();
 
   $("gateGo").onclick = envia;
-  $("gateOtro").onclick = () => { modoGate = modoGate === "registro" ? "entrar" : "registro"; pintaModo(); $("gateUser").focus(); };
+  $("gateOtro").onclick = () => { modoGate = modoGate === "entrar" ? "registro" : "entrar"; pintaModo(); $("gateUser").focus(); };
+  $("gateOlvido").onclick = () => {
+    modoGate = modoGate === "rescate" ? "entrar" : "rescate";
+    pintaModo();
+    (modoGate === "rescate" ? $("gateCodigo") : $("gateUser")).focus();
+  };
   document.querySelectorAll("#gateModo button").forEach(b => b.onclick = () => { modoGate = b.dataset.m; pintaModo(); $("gateUser").focus(); });
   pintaModo();
 
