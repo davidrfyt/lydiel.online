@@ -20,7 +20,8 @@ let PERFIL = { nombre: "", avatar: "", creado: null, visto: null };
 let TOKEN = null;                       // solo si el servicio no tiene cuentas
 let CUENTAS = null;
 let modoGate = "entrar";
-let S = { done: {}, epi: {}, best: null, wrong: [], box: {}, examBest: null, uBest: {} };
+let S = { done: {}, epi: {}, best: null, wrong: [], box: {}, sr: {}, oral: {},
+          acc: {}, racha: { ultimo: "", dias: 0 }, examBest: null, uBest: {} };
 let pushTimer = null;
 
 let IDX = [];
@@ -51,7 +52,8 @@ function save() {
 }
 const cuerpoProgreso = () => JSON.stringify({
   done: S.done, epi: S.epi, best: S.best, wrong: S.wrong,
-  box: S.box, examBest: S.examBest, uBest: S.uBest
+  box: S.box, sr: S.sr, oral: S.oral, acc: S.acc, racha: S.racha,
+  examBest: S.examBest, uBest: S.uBest
 });
 async function push() {
   if (!CONFIG.SYNC_URL) return;
@@ -92,10 +94,22 @@ function caduca() {
 }
 const hasData = o => !!o && ((o.done && Object.keys(o.done).length) || (o.epi && Object.keys(o.epi).length) ||
   o.best || (o.wrong && o.wrong.length) || (o.box && Object.keys(o.box).length));
-const norma = o => ({
-  done: o.done || {}, epi: o.epi || {}, best: o.best || null, wrong: o.wrong || [],
-  box: o.box || {}, examBest: o.examBest || null, uBest: o.uBest || {}
-});
+function norma(o) {
+  const S2 = {
+    done: o.done || {}, epi: o.epi || {}, best: o.best || null, wrong: o.wrong || [],
+    box: o.box || {}, sr: o.sr || {}, oral: o.oral || {}, acc: o.acc || {},
+    racha: o.racha || { ultimo: "", dias: 0 },
+    examBest: o.examBest || null, uBest: o.uBest || {}
+  };
+  // quien venia del sistema de dos cajas conserva lo aprendido
+  Object.keys(S2.box).forEach(k => {
+    if (S2.sr[k]) return;
+    const caja = S2.box[k] || 0;
+    if (caja >= 2) S2.sr[k] = { n: 3, v: hoyISO(DIAS_SR[3]) };
+    else if (caja === 1) S2.sr[k] = { n: 1, v: hoyISO(DIAS_SR[1]) };
+  });
+  return S2;
+}
 
 function pintaIdentidad() {
   const quien = USUARIO || TOKEN || "";
@@ -157,6 +171,62 @@ const epiKey = (clave, un, en) => clave + "|" + un + "|" + en;
 const uKey = (man, ud) => man + "|" + ud;
 const fKey = f => f.t + ":" + FICHAS.indexOf(f);
 
+/* =========================================================
+   REPASO ESPACIADO
+   Cada ficha guarda cuantas veces seguidas la has acertado y
+   la fecha en que vuelve. Fallar la devuelve al principio.
+   ========================================================= */
+const DIAS_SR = [0, 1, 3, 7, 21, 60];
+const DIA_MS = 86400000;
+
+const hoyClave = d => new Date((d || Date.now()) - new Date().getTimezoneOffset() * 60000)
+  .toISOString().slice(0, 10);
+const hoyISO = dias => hoyClave(Date.now() + (dias || 0) * DIA_MS);
+
+/* una ficha toca si no se ha visto nunca o si su fecha ya llego */
+function toca(f) {
+  const e = S.sr[fKey(f)];
+  return !e || !e.v || e.v <= hoyClave();
+}
+function dominada(f) {
+  const e = S.sr[fKey(f)];
+  return !!e && e.n >= DIAS_SR.length - 1;
+}
+function califica(f, acierto) {
+  const k = fKey(f);
+  const e = S.sr[k] || { n: 0, v: "" };
+  e.n = acierto ? Math.min(DIAS_SR.length - 1, e.n + 1) : 0;
+  e.v = hoyISO(DIAS_SR[e.n] || 1);
+  S.sr[k] = e;
+  S.box[k] = Math.min(2, e.n);          // compatibilidad con lo ya guardado
+  marcaRacha();
+  save();
+}
+const pendientesHoy = lista => (lista || FICHAS).filter(toca);
+
+/* ---- racha ---- */
+function marcaRacha() {
+  const hoy = hoyClave();
+  const r = S.racha || (S.racha = { ultimo: "", dias: 0 });
+  if (r.ultimo === hoy) return;
+  const ayer = hoyISO(-1);
+  r.dias = r.ultimo === ayer ? (r.dias || 0) + 1 : 1;
+  r.ultimo = hoy;
+}
+
+/* ---- aciertos por unidad, para el mapa de puntos flacos ---- */
+function apunta(man, ud, acierto) {
+  const k = uKey(man, ud);
+  const a = S.acc[k] || { ok: 0, ko: 0 };
+  acierto ? a.ok++ : a.ko++;
+  S.acc[k] = a;
+}
+function tino(man, ud) {
+  const a = S.acc[uKey(man, ud)];
+  if (!a || a.ok + a.ko < 4) return null;      // sin muestra suficiente no se opina
+  return Math.round(a.ok / (a.ok + a.ko) * 100);
+}
+
 const TONOS = { mf0080: "--m80", mf0081: "--m81", mf0082: "--m82", mf0272: "--m272" };
 const tono = mod => { const k = TONOS[mod] || "--m80"; return "--tono:var(" + k + ");--tono-2:var(" + k + "-2)"; };
 
@@ -184,7 +254,7 @@ function epiHechos(man, ud) {
   const u = unidad(man, ud); if (!u) return 0;
   return u.epis.filter(e => S.epi[epiKey(man, ud, e.n)]).length;
 }
-const fichasDominadas = (man, ud) => fichasDe(man, ud).filter(f => (S.box[fKey(f)] || 0) >= 2).length;
+const fichasDominadas = (man, ud) => fichasDe(man, ud).filter(dominada).length;
 
 function progresoUD(man, ud) {
   const u = unidad(man, ud); if (!u) return 0;
@@ -290,7 +360,7 @@ function ruta() {
   const p = h.split("/").filter(Boolean);
   if (!p.length) return { vista: "indice" };
   if (p[0] === "u" && p[1] && p[2]) return { vista: "unidad", man: p[1], ud: +p[2], sec: p[3] || "plan" };
-  return { vista: p[0] };
+  return { vista: p[0], sub: p[1] };
 }
 
 const MENU = [
@@ -305,6 +375,9 @@ function pintaNav() {
   const r = ruta();
   const actual = r.vista === "unidad" ? "indice" : r.vista;
   let h = '<div class="titulo">Estudio</div>';
+  h += '<button type="button" data-ir="#/hoy" aria-current="' + (actual === "hoy") + '" class="hoy-nav">' +
+    icono("hoy") + "<span>Estudiar hoy</span>" +
+    (pendientesHoy().length ? '<span class="cifra">' + pendientesHoy().length + "</span>" : "") + "</button>";
   MENU.forEach(([id, txt, ic, hash]) => {
     let n = "";
     if (id === "falladas") n = S.wrong.length || "";
@@ -346,6 +419,7 @@ function pinta() {
   if (r.vista === "falladas") return vistaFalladas();
   if (r.vista === "panel") return vistaAdmin();
   if (r.vista === "perfil") return vistaPerfil();
+  if (r.vista === "hoy") return ruta().sub === "fichas" ? vistaHoyFichas() : vistaHoy();
   return vistaIndice();
 }
 window.addEventListener("hashchange", () => { if (SESION || TOKEN) pinta(); });
@@ -370,6 +444,8 @@ function vistaIndice() {
     kpi(fichasOk + " / " + FICHAS.length, "Fichas dominadas") +
     kpi(completas + " / " + us.length, "Unidades al 100 %") +
     "</div>";
+
+  h += mapaFlacos();
 
   h += '<div class="acciones">' +
     accion("buscar", "Buscar", "En todo el material", "buscar") +
@@ -412,6 +488,40 @@ function vistaIndice() {
     try { await importaToken(lsGet(TKEY)); lsDel(TKEY); updHud(); vistaIndice(); }
     catch (e) { $("traerMsg").textContent = e.message; tb.disabled = false; }
   };
+}
+
+/* cuadricula de las 32 unidades tenida por tu acierto: se ve de un vistazo
+   donde estas fallando en vez de repasar a ciegas */
+/* la clave del manual entra en una celda; el nombre largo no */
+const cortito = u => u.man === "INSTRUM" ? "INSTR" : u.man.replace("_2", "");
+
+function mapaFlacos() {
+  const us = unidades().filter(u => preguntasDe(u.man, u.ud).length);
+  const con = us.filter(u => tino(u.man, u.ud) !== null);
+  if (!con.length) return "";
+  const flojas = con.filter(u => tino(u.man, u.ud) < 75)
+    .sort((a, b) => tino(a.man, a.ud) - tino(b.man, b.ud));
+
+  let h = '<section class="flacos"><div class="flacos-cab"><h3>Dónde estás fallando</h3>' +
+    '<span class="hint">' + con.length + " de " + us.length + " unidades con test suficiente</span></div>" +
+    '<div class="mapa">';
+  us.forEach(u => {
+    const t = tino(u.man, u.ud);
+    const clase = t === null ? "sin" : t >= 85 ? "bien" : t >= 75 ? "regular" : "mal";
+    h += '<button class="celda ' + clase + '" type="button" data-ir="#/u/' + u.man + "/" + u.ud + '/test" ' +
+      'title="' + esc(u.cod + " UD " + u.ud + " · " + u.titulo) + (t === null ? " · sin datos" : " · " + t + " % de acierto") + '">' +
+      '<span class="c-k">' + esc(cortito(u)) + " · " + u.ud + "</span>" +
+      '<span class="c-t">' + (t === null ? "—" : t + "%") + "</span></button>";
+  });
+  h += "</div>";
+  if (flojas.length) {
+    h += '<p class="flacos-pie">Empieza por <b>' + esc(flojas[0].titulo) + "</b> (" +
+      tino(flojas[0].man, flojas[0].ud) + " % de acierto)" +
+      (flojas.length > 1 ? " y <b>" + esc(flojas[1].titulo) + "</b> (" + tino(flojas[1].man, flojas[1].ud) + " %)" : "") + ".</p>";
+  } else {
+    h += '<p class="flacos-pie">Vas por encima del 75 % en todo lo que has probado.</p>';
+  }
+  return h + "</section>";
 }
 
 const kpi = (v, l, acento) => '<div class="kpi' + (acento ? " acento" : "") + '"><div class="v">' + v + '</div><div class="l">' + l + "</div></div>";
@@ -597,7 +707,8 @@ async function panelTemario(c) {
       '<span class="hint">Velocidad</span><select id="vozVel" aria-label="Velocidad">' +
       [0.8, 0.9, 1, 1.1, 1.25, 1.5].map(v => '<option value="' + v + '"' + (v === VOZ.vel ? " selected" : "") + ">" + v + "×</option>").join("") +
       '</select><span class="spacer"></span>' +
-      '<button class="btn ghost chico" id="vozStop" type="button">Detener</button></div>';
+      '<button class="btn ghost chico" id="vozTodo" type="button">Escuchar la unidad entera</button>' +
+    '<button class="btn ghost chico" id="vozStop" type="button">Detener</button></div>';
   } else {
     h += '<div class="aviso" style="margin-bottom:16px">Este navegador no tiene lectura en voz alta. En Chrome, Edge o Safari sí funciona.</div>';
   }
@@ -638,6 +749,12 @@ async function panelTemario(c) {
       if (VOZ.estado !== "parado") { const t = VOZ.trozos.slice(VOZ.i).join(" "); const li = VOZ.li; const rp = VOZ.pinta; lee(t, li, rp); }
     };
     $("vozStop").onclick = paraVoz;
+    $("vozTodo").onclick = () => {
+      const entera = real.epigrafes.map(e => e.n + ". " + e.titulo + ". " + e.texto).join("\n\n");
+      lee(entera, null, null);
+      $("vozTodo").textContent = "Sonando…";
+      setTimeout(() => { const b = $("vozTodo"); if (b) b.textContent = "Escuchar la unidad entera"; }, 3000);
+    };
   }
 
   panel.querySelectorAll(".epi").forEach(li => {
@@ -715,17 +832,20 @@ function panelResumen(c) {
 /* ---------------- fichas ---------------- */
 let fDeck = [], fIdx = 0, fModo = "esp", fCtx = null;
 function buildDeck() {
-  let base = fichasDe(fCtx.man, fCtx.ud);
+  const base = fCtx.lista || fichasDe(fCtx.man, fCtx.ud);
   if (fModo === "esp") {
-    base = base.slice().sort((a, b) => (S.box[fKey(a)] || 0) - (S.box[fKey(b)] || 0));
-    const pend = base.filter(f => (S.box[fKey(f)] || 0) < 2);
-    fDeck = pend.length ? pend : base;
+    const hoy = pendientesHoy(base);
+    fDeck = hoy.length ? shuffle(hoy.slice()) : shuffle(base.slice());
   } else fDeck = shuffle(base.slice());
   fIdx = 0;
 }
 function panelFichas(c) {
   fCtx = c;
-  let h = '<p class="lead">Pregunta delante, respuesta detrás. En <b>repaso espaciado</b> vuelven antes las que fallas y salen de la rotación las que aciertas dos veces.</p>';
+  const base = c.lista || fichasDe(c.man, c.ud);
+  const pend = pendientesHoy(base).length;
+  let h = '<p class="lead">Pregunta delante, respuesta detrás. En <b>repaso espaciado</b> cada ficha vuelve el día que toca: ' +
+    "acertarla la aleja (1, 3, 7, 21 y 60 días) y fallarla la devuelve al principio. " +
+    (pend ? "<b>Hoy te tocan " + pend + "</b>." : "Hoy no te toca ninguna: vuelve mañana.") + "</p>";
   h += '<div class="bar"><span class="hint">Modo</span>' +
     '<button class="chip" data-md="esp" aria-pressed="' + (fModo === "esp") + '">Repaso espaciado</button>' +
     '<button class="chip" data-md="all" aria-pressed="' + (fModo === "all") + '">Todas, al azar</button>' +
@@ -756,19 +876,31 @@ function panelFichas(c) {
 }
 function gradeFicha(ok) {
   const f = fDeck[fIdx]; if (!f) return;
-  const k = fKey(f);
-  S.box[k] = ok ? Math.min(2, (S.box[k] || 0) + 1) : 0;
-  save();
+  califica(f, ok);
+  const quedan = fDeck.filter((x, i) => i !== fIdx && toca(x));
+  if (fModo === "esp" && !quedan.length) { paintFicha(true); return; }
   if (fDeck.length) { fIdx = (fIdx + 1) % fDeck.length; paintFicha(); }
 }
-function paintFicha() {
+function paintFicha(terminado) {
   const f = fDeck[fIdx];
-  if (!f) { $("fQ").textContent = "No quedan fichas."; $("fA").textContent = ""; $("fCount").textContent = "0 / 0"; return; }
-  $("card").dataset.flip = "0";
-  $("fLbl").textContent = temaById(f.t).t;
-  $("fQ").innerHTML = f.q; $("fA").innerHTML = f.a;
-  $("fCount").textContent = (fIdx + 1) + " / " + fDeck.length;
-  $("fStats").textContent = fichasDominadas(fCtx.man, fCtx.ud) + " de " + fichasDe(fCtx.man, fCtx.ud).length + " dominadas";
+  const base = fCtx.lista || fichasDe(fCtx.man, fCtx.ud);
+  if (terminado || !f) {
+    $("fQ").innerHTML = terminado
+      ? "Has terminado el repaso de hoy.<br><span style=\"font-weight:400;font-size:var(--t-base);color:var(--gris)\">Vuelve mañana: las que has acertado no tocan hasta dentro de unos días.</span>"
+      : "No quedan fichas.";
+    $("fA").textContent = "";
+    $("fCount").textContent = "";
+    $("card").dataset.flip = "0";
+  } else {
+    $("card").dataset.flip = "0";
+    const e = S.sr[fKey(f)];
+    $("fLbl").textContent = temaById(f.t).t + (e && e.n ? " · acertada " + e.n + (e.n > 1 ? " veces seguidas" : " vez") : " · nueva");
+    $("fQ").innerHTML = f.q; $("fA").innerHTML = f.a;
+    $("fCount").textContent = (fIdx + 1) + " / " + fDeck.length;
+  }
+  const pend = pendientesHoy(base).length;
+  $("fStats").textContent = base.filter(dominada).length + " de " + base.length + " dominadas · " +
+    (pend ? pend + " tocan hoy" : "ninguna toca hoy");
 }
 document.addEventListener("keydown", e => {
   if (!$("card") || !fDeck.length || !$("gate").hidden) return;
@@ -921,6 +1053,9 @@ function check(examen) {
     else if (tSel.includes(i)) { b.classList.add("wrong"); b.querySelector(".k").classList.add("wrong"); }
   });
   if (ok) tScore++; else registerFail(q);
+  const tmq = temaById(q.t);
+  if (tmq) apunta(tmq.man, tmq.ud, ok);
+  marcaRacha();
   if (!examen) $("fb").innerHTML = '<div class="why"><b>' + (ok ? "Correcto." : "Incorrecto.") + "</b> " + q.w + "</div>";
   $("check").textContent = (tIdx + 1 === tSet.length) ? "Ver resultado" : "Siguiente";
 }
@@ -996,19 +1131,52 @@ function resultHTML(pct, examen) {
 }
 
 /* ---------------- oral ---------------- */
+const oKey = o => o.t + ":" + ORAL.indexOf(o);
+const NOTA_ORAL = { 0: "Ni idea", 1: "A medias", 2: "Clavada" };
+
 function panelOral(c) {
   const os = oralDe(c.man, c.ud);
-  let h = '<p class="lead">Responde en voz alta y solo después despliega el guion. Está ordenado como conviene contestar: definición, clasificación, detalle y cierre.</p><div class="oral">';
+  const hechas = os.filter(o => (S.oral[oKey(o)] || 0) >= 2).length;
+
+  let h = '<p class="lead">En el examen oral no vale reconocer la respuesta: hay que producirla. ' +
+    'Escribe la tuya de memoria, luego destapa el guion y <b>califícate sin piedad</b>. ' +
+    "Las que no claves vuelven a salirte marcadas.</p>";
+  h += '<div class="bar"><span class="hint">' + hechas + " de " + os.length + " clavadas</span></div>";
+  h += '<div class="oral">';
   os.forEach((o, i) => {
-    h += '<article class="oq"><button type="button"><span class="qi">' + String(i + 1).padStart(2, "0") + "</span>" +
-      '<span class="qt">' + o.q + '</span><span class="st">ver guion</span></button>' +
-      '<div class="oa" hidden><ul>' + o.p.map(x => "<li>" + x + "</li>").join("") + "</ul></div></article>";
+    const nota = S.oral[oKey(o)];
+    const marca = nota === 2 ? "clavada" : nota === 1 ? "media" : nota === 0 ? "floja" : "";
+    h += '<article class="oq ' + marca + '" data-k="' + esc(oKey(o)) + '">' +
+      '<button type="button"><span class="qi">' + String(i + 1).padStart(2, "0") + "</span>" +
+      '<span class="qt">' + o.q + "</span>" +
+      '<span class="st">' + (nota == null ? "responder" : NOTA_ORAL[nota]) + "</span></button>" +
+      '<div class="oa" hidden>' +
+      '<textarea class="respuesta" rows="5" placeholder="Escribe aquí tu respuesta de memoria, sin mirar. Luego destapa el guion."></textarea>' +
+      '<div class="bar" style="margin:12px 0 0"><button class="btn ghost chico" data-act="ver" type="button">Ver el guion</button></div>' +
+      '<div class="guion" hidden><ul>' + o.p.map(x => "<li>" + x + "</li>").join("") + "</ul>" +
+      '<div class="bar" style="margin:14px 0 0"><span class="hint">¿Cómo ha ido?</span>' +
+      '<button class="chip" data-nota="0" type="button">Ni idea</button>' +
+      '<button class="chip" data-nota="1" type="button">A medias</button>' +
+      '<button class="chip" data-nota="2" type="button">Clavada</button></div></div>' +
+      "</div></article>";
   });
   const panel = $("panel");
   panel.innerHTML = h + "</div>";
-  panel.querySelectorAll(".oq > button").forEach(b => b.onclick = () => {
-    const a = b.nextElementSibling; a.hidden = !a.hidden;
-    b.querySelector(".st").textContent = a.hidden ? "ver guion" : "ocultar";
+
+  panel.querySelectorAll(".oq").forEach(art => {
+    const cab = art.querySelector("button");
+    const cuerpo = art.querySelector(".oa");
+    const guion = art.querySelector(".guion");
+    cab.onclick = () => {
+      cuerpo.hidden = !cuerpo.hidden;
+      if (!cuerpo.hidden) art.querySelector(".respuesta").focus();
+    };
+    art.querySelector('[data-act="ver"]').onclick = () => { guion.hidden = false; };
+    art.querySelectorAll("[data-nota]").forEach(b => b.onclick = () => {
+      S.oral[art.dataset.k] = +b.dataset.nota;
+      marcaRacha(); save();
+      panelOral(c);
+    });
   });
 }
 
@@ -1153,6 +1321,86 @@ function doSearch() {
       '<button class="hit" type="button" data-ir="' + x.ir + '"><div class="hk">' + esc(x.k) + '</div><div class="ht">' +
       esc(x.t).replace(re, "<mark>$1</mark>") + '</div><div class="hb">' + x.b.replace(re, "<mark>$1</mark>") + "</div></button>").join("");
   box.querySelectorAll("[data-ir]").forEach(b => b.onclick = () => ir(b.dataset.ir));
+}
+
+/* =========================================================
+   LA SESION DE HOY
+   Arma sola lo que toca: repaso vencido, lo fallado y algo nuevo.
+   Elegir que estudiar es tiempo que no se estudia.
+   ========================================================= */
+function vistaHoy() {
+  cabecera("Estudio", "Estudiar hoy");
+  const p = $("vista");
+
+  const fichas = pendientesHoy();
+  const falladas = PREGUNTAS.map((q, i) => Object.assign({}, q, { i })).filter(q => S.wrong.includes(q.i));
+  const sinLeer = unidades()
+    .map(u => ({ u, faltan: u.epis.filter(e => !S.epi[epiKey(u.man, u.ud, e.n)]).length }))
+    .filter(x => x.faltan)
+    .sort((a, b) => a.faltan - b.faltan);
+  const siguiente = sinLeer[0];
+  const r = S.racha || { dias: 0, ultimo: "" };
+  const vivaHoy = r.ultimo === hoyClave() || r.ultimo === hoyISO(-1);
+  const racha = vivaHoy ? r.dias : 0;
+
+  const minutos = Math.round(Math.min(fichas.length, 20) * 0.5 + Math.min(falladas.length, 10) * 0.6 + 8);
+
+  let h = '<div class="hoy-cab">' +
+    "<div><h2>Tu sesión de hoy</h2>" +
+    '<p class="lead" style="margin:6px 0 0">Unos <b>' + minutos + " minutos</b>. No hace falta que decidas nada: " +
+    "empieza por arriba y baja.</p></div>" +
+    '<div class="racha' + (racha >= 3 ? " viva" : "") + '"><b>' + racha + "</b><span>" +
+    (racha === 1 ? "día seguido" : "días seguidos") + "</span></div></div>";
+
+  h += '<ol class="plan">';
+
+  h += tareaHoy(1, fichas.length > 0,
+    "Repasar " + Math.min(fichas.length, 20) + " fichas",
+    fichas.length
+      ? "Son las que hoy toca repasar según cuándo las acertaste por última vez. Es el paso que más fija."
+      : "Hoy no vence ninguna ficha. Si quieres adelantar, entra igual y repasa al azar.",
+    fichas.length ? "#/hoy/fichas" : "", "Empezar");
+
+  h += tareaHoy(2, falladas.length > 0,
+    falladas.length ? "Volver a tus " + Math.min(falladas.length, 15) + " falladas" : "No tienes falladas pendientes",
+    falladas.length
+      ? "Repasa solo lo que has fallado. Una pregunta sale de la lista en cuanto la aciertas."
+      : "Cuando falles alguna pregunta aparecerá aquí para que vuelvas a ella.",
+    falladas.length ? "#/falladas" : "", "Repasar");
+
+  h += siguiente
+    ? tareaHoy(3, true, "Leer algo nuevo: " + esc(siguiente.u.titulo),
+      "Te faltan " + siguiente.faltan + " epígrafes de esta unidad, y es la que tienes más cerca de terminar. " +
+      "Con uno o dos al día llegas.",
+      "#/u/" + siguiente.u.man + "/" + siguiente.u.ud + "/temario", "Abrir")
+    : tareaHoy(3, false, "Has leído todo el temario", "Ya no queda ningún epígrafe por leer.", "", "");
+
+  h += "</ol>";
+
+  h += '<div class="metodo"><h3>Por qué en este orden</h3><ul>' +
+    "<li><b>Primero lo vencido</b>: el repaso pierde casi todo su valor si se hace tarde.</li>" +
+    "<li><b>Después lo fallado</b>: es donde está tu nota, no en lo que ya te sale.</li>" +
+    "<li><b>Al final lo nuevo</b>: con la cabeza ya caliente y sin la excusa de haber leído mucho.</li>" +
+    "<li><b>Todos los días, aunque sean diez minutos.</b> La racha vale más que la sesión larga del domingo.</li>" +
+    "</ul></div>";
+
+  p.innerHTML = h;
+  p.querySelectorAll("[data-ir]").forEach(b => b.onclick = () => ir(b.dataset.ir));
+}
+
+function tareaHoy(n, activa, titulo, texto, destino, etiqueta) {
+  return '<li class="paso' + (activa ? "" : " done") + '">' +
+    '<span class="pn">' + (activa ? n : "&#10003;") + "</span>" +
+    "<div><h4>" + titulo + "</h4><p>" + texto + "</p></div>" +
+    (destino ? '<button class="btn' + (n === 1 ? "" : " ghost") + '" type="button" data-ir="' + destino + '">' + etiqueta + "</button>" : "") +
+    "</li>";
+}
+
+/* el repaso del dia, con todas las fichas que vencen, sin importar la unidad */
+function vistaHoyFichas() {
+  cabecera("Estudiar hoy", "Repaso del día");
+  $("vista").innerHTML = '<div id="panel" class="panel-uni"></div>';
+  panelFichas({ man: null, ud: null, lista: FICHAS });
 }
 
 /* =========================================================
