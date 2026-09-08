@@ -736,13 +736,24 @@ table.usuarios td:last-child{width:1%}
 /* =========================================================
    MI PERFIL
    ========================================================= */
-.perfil{display:grid;grid-template-columns:repeat(auto-fit,minmax(340px,1fr));gap:16px;align-items:start}
+/* Dos columnas y no mas: en pantalla ancha, repartirlo en cinco dejaba
+   tarjetas estrechas y con el borde inferior a distinta altura. */
+.perfil{
+  display:grid;grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:16px;align-items:stretch;max-width:1080px;
+}
+.perfil > .ancha{grid-column:1/-1}
+@media (max-width:920px){
+  .perfil{grid-template-columns:minmax(0,1fr);max-width:640px}
+}
 .tarjeta-perfil{
   background:var(--sup);border:1px solid var(--linea);border-radius:var(--r);
   padding:20px 22px;box-shadow:var(--sombra-1);
+  display:flex;flex-direction:column;min-width:0;
 }
 .tarjeta-perfil h3{font-size:var(--t-md);margin-bottom:4px}
-.tarjeta-perfil.peligrosa{border-color:var(--mal);grid-column:1/-1}
+.tarjeta-perfil .fila-acc{padding-top:4px}
+.tarjeta-perfil.peligrosa{border-color:var(--mal)}
 .tarjeta-perfil.peligrosa h3{color:var(--mal)}
 .ayuda{font-size:var(--t-sm);color:var(--gris);margin:0 0 16px;line-height:1.55;max-width:52ch}
 
@@ -770,7 +781,11 @@ table.usuarios td:last-child{width:1%}
 .aviso-linea.ok{color:var(--ok);font-weight:600}
 .aviso-linea.mal{color:var(--mal);font-weight:600}
 
-.datos{margin:18px 0 0;padding-top:14px;border-top:1px solid var(--linea-2);display:flex;flex-direction:column;gap:9px}
+.datos{margin:18px 0 0;padding-top:16px;border-top:1px solid var(--linea-2);display:flex;flex-direction:column;gap:9px}
+/* en la tarjeta ancha caben las dos listas en paralelo */
+.datos-par{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0 44px}
+.datos-par .datos{margin-top:18px}
+@media (max-width:920px){.datos-par{grid-template-columns:minmax(0,1fr);gap:0}}
 .datos > div{display:flex;justify-content:space-between;gap:14px;align-items:baseline}
 .datos dt{font-size:var(--t-sm);color:var(--gris)}
 .datos dd{margin:0;font-size:var(--t-sm);font-weight:600;text-align:right}

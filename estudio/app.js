@@ -1624,25 +1624,9 @@ function vistaPerfil() {
     '<div class="campo"><label for="nombreIn">Nombre visible</label>' +
     '<input id="nombreIn" type="text" maxlength="40" placeholder="' + esc(USUARIO) + '" value="' + esc(PERFIL.nombre) + '"></div>' +
     '<div class="fila-acc"><button class="btn" id="guardaNombre" type="button">Guardar</button>' +
-    '<span class="aviso-linea" id="nombreMsg"></span></div>' +
-    '<dl class="datos"><div><dt>Usuario</dt><dd class="mono">' + esc(USUARIO) + "</dd></div>" +
-    "<div><dt>Cuenta creada</dt><dd>" + fecha(PERFIL.creado) + "</dd></div>" +
-    "<div><dt>Última conexión</dt><dd>" + fecha(PERFIL.visto, true) + "</dd></div>" +
-    "<div><dt>Inscripción</dt><dd>" +
-    (PAGO.pagado ? '<span class="etiqueta activo">Pagada</span> ' + fecha(PAGO.fecha)
-      : PAGO.acceso ? '<span class="etiqueta activo">Acceso libre</span>'
-        : '<span class="etiqueta susp">Pendiente</span>') + "</dd></div></dl></section>";
+    '<span class="aviso-linea" id="nombreMsg"></span></div></section>';
 
-  /* seguridad */
-  h += '<section class="tarjeta-perfil"><h3>Contraseña</h3>' +
-    '<p class="ayuda">Al cambiarla se cierran las sesiones abiertas en otros dispositivos. En este sigues dentro.</p>' +
-    '<div class="campo"><label for="claveAct">Contraseña actual</label><input id="claveAct" type="password" autocomplete="current-password"></div>' +
-    '<div class="campo"><label for="claveNue">Contraseña nueva</label><input id="claveNue" type="password" autocomplete="new-password" placeholder="mínimo 8 caracteres"></div>' +
-    '<div class="campo"><label for="claveRep">Repite la nueva</label><input id="claveRep" type="password" autocomplete="new-password"></div>' +
-    '<div class="fila-acc"><button class="btn" id="cambiaClave" type="button">Cambiar contraseña</button>' +
-    '<span class="aviso-linea" id="claveMsg"></span></div></section>';
-
-  /* sesiones y datos */
+  /* correo: la via principal para recuperar la cuenta */
   h += '<section class="tarjeta-perfil"><h3>Correo</h3>' +
     '<p class="ayuda">' + (PERFIL.email
       ? (PERFIL.emailok
@@ -1657,6 +1641,14 @@ function vistaPerfil() {
     (PERFIL.email && !PERFIL.emailok
       ? '<button class="btn ghost" id="reenviaCorreo" type="button">Reenviar la confirmación</button>' : "") +
     '<span class="aviso-linea" id="correoMsg"></span></div></section>';
+  /* acceso */
+  h += '<section class="tarjeta-perfil"><h3>Contraseña</h3>' +
+    '<p class="ayuda">Al cambiarla se cierran las sesiones abiertas en otros dispositivos. En este sigues dentro.</p>' +
+    '<div class="campo"><label for="claveAct">Contraseña actual</label><input id="claveAct" type="password" autocomplete="current-password"></div>' +
+    '<div class="campo"><label for="claveNue">Contraseña nueva</label><input id="claveNue" type="password" autocomplete="new-password" placeholder="mínimo 8 caracteres"></div>' +
+    '<div class="campo"><label for="claveRep">Repite la nueva</label><input id="claveRep" type="password" autocomplete="new-password"></div>' +
+    '<div class="fila-acc"><button class="btn" id="cambiaClave" type="button">Cambiar contraseña</button>' +
+    '<span class="aviso-linea" id="claveMsg"></span></div></section>';
   h += '<section class="tarjeta-perfil"><h3>Código de rescate</h3>' +
     '<p class="ayuda">' + (PERFIL.rescate
       ? "Tienes uno emitido" + (PERFIL.rescateDesde ? " el " + fecha(PERFIL.rescateDesde) : "") +
@@ -1667,19 +1659,29 @@ function vistaPerfil() {
     '<div class="fila-acc"><button class="btn' + (PERFIL.rescate ? " ghost" : "") + '" id="nuevoRescate" type="button">' +
     (PERFIL.rescate ? "Emitir un código nuevo" : "Emitir mi código") + "</button>" +
     '<span class="aviso-linea" id="rescMsg"></span></div></section>';
-  h += '<section class="tarjeta-perfil"><h3>Sesiones y datos</h3>' +
-    '<p class="ayuda">Si has entrado en un ordenador prestado, ciérralas todas desde aquí.</p>' +
+  /* sesiones y datos, a lo ancho */
+  h += '<section class="tarjeta-perfil ancha"><h3>Tu cuenta</h3>' +
+    '<p class="ayuda">Un resumen de la cuenta y de lo que llevas hecho. Si has entrado en un ordenador ' +
+    "prestado, cierra desde aquí el resto de sesiones.</p>" +
     '<div class="fila-acc"><button class="btn ghost" id="cerrarTodas" type="button">Cerrar el resto de sesiones</button>' +
     '<button class="btn ghost" id="bajarDatos" type="button">Descargar mi progreso</button>' +
     '<span class="aviso-linea" id="sesMsg"></span></div>' +
+    '<div class="datos-par">' +
+    '<dl class="datos"><div><dt>Usuario</dt><dd class="mono">' + esc(USUARIO) + "</dd></div>" +
+    "<div><dt>Cuenta creada</dt><dd>" + fecha(PERFIL.creado) + "</dd></div>" +
+    "<div><dt>Última conexión</dt><dd>" + fecha(PERFIL.visto, true) + "</dd></div>" +
+    "<div><dt>Inscripción</dt><dd>" +
+    (PAGO.pagado ? '<span class="etiqueta activo">Pagada</span> ' + fecha(PAGO.fecha)
+      : PAGO.acceso ? '<span class="etiqueta activo">Acceso libre</span>'
+        : '<span class="etiqueta susp">Pendiente</span>') + "</dd></div></dl>" +
     '<dl class="datos"><div><dt>Epígrafes leídos</dt><dd class="mono">' + hechosEpi() + " / " + totalEpi() + "</dd></div>" +
     '<div><dt>Fichas dominadas</dt><dd class="mono">' + fichasOk + " / " + FICHAS.length + "</dd></div>" +
     '<div><dt>Unidades al 100 %</dt><dd class="mono">' + completas + " / " + us.length + "</dd></div>" +
-    '<div><dt>Preguntas falladas</dt><dd class="mono">' + S.wrong.length + "</dd></div></dl></section>";
-
+    '<div><dt>Preguntas falladas</dt><dd class="mono">' + S.wrong.length + "</dd></div></dl>" +
+    "</div></section>";
   /* baja */
   if (!ADMIN) {
-    h += '<section class="tarjeta-perfil peligrosa"><h3>Darse de baja</h3>' +
+    h += '<section class="tarjeta-perfil peligrosa ancha"><h3>Darse de baja</h3>' +
       '<p class="ayuda">Se borra la cuenta y todo tu progreso. No se puede deshacer y el nombre de usuario queda libre.</p>' +
       '<div class="fila-acc"><button class="btn peligro" id="darBaja" type="button">Borrar mi cuenta</button></div></section>';
   }
