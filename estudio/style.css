@@ -269,8 +269,8 @@ footer{
   background:var(--marca);color:#fff;font-size:var(--t-sm);font-weight:700;
   box-shadow:var(--sombra-1);transition:.15s;
 }
-:root[data-theme="dark"] .btn{color:#0B111C}
-@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .btn{color:#0B111C}}
+:root[data-theme="dark"] .btn:not(.ghost){color:#0B111C}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .btn:not(.ghost){color:#0B111C}}
 .btn:hover{background:var(--marca-int);box-shadow:var(--sombra-2)}
 .btn.ghost{background:var(--sup);color:var(--ink-2);border:1px solid var(--linea);box-shadow:none}
 .btn.ghost:hover{border-color:var(--marca);color:var(--marca);background:var(--sup)}

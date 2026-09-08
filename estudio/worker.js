@@ -26,7 +26,12 @@
      PUT  /p/<token>           compatibilidad con el sistema antiguo
    ========================================================= */
 
-const ORIGENES_PERMITIDOS = ["https://lydiel.online", "https://www.lydiel.online"];
+const ORIGENES_PERMITIDOS = [
+  "https://temariovigilantesdeseguridad.com",
+  "https://www.temariovigilantesdeseguridad.com",
+  "https://lydiel.online",              // se retira al completar la mudanza
+  "https://www.lydiel.online",
+];
 const ADMINS = ["lydiel"];
 const MAX_BYTES = 60000;
 const TOKEN_RE = /^[A-Za-z0-9_-]{6,64}$/;
