@@ -3,7 +3,8 @@
    Cloudflare Worker + KV (binding: PROGRESO)
 
    Claves en KV
-     cuenta:<usuario>   { salt, hash, iter, creado, visto, suspendido }
+     cuenta:<usuario>   { salt, hash, iter, creado, visto, suspendido,
+                          nombre, avatar }
      s:<sesion>         { u, admin }   (caduca a los 90 dias)
      sesiones:<usuario> [ids de sesion abiertos]
      p:<usuario>    progreso en JSON
@@ -19,6 +20,11 @@
      PUT  /progreso            guarda el progreso de la sesion
      POST /importar            { token } copia el progreso de un token antiguo
      GET  /yo                  quien soy y si administro
+     GET  /perfil              nombre, avatar y fechas de la cuenta
+     PUT  /perfil              { nombre, avatar } actualiza el perfil
+     POST /clave               { actual, nueva } cambia la contrasena
+     POST /cerrar-todas        cierra el resto de sesiones abiertas
+     POST /baja                { clave } borra la propia cuenta
      GET  /admin/usuarios      listado con actividad y progreso (solo admin)
      POST /admin/suspender     { usuario, suspendido } (solo admin)
      POST /admin/borrar        { usuario } (solo admin)
@@ -33,7 +39,10 @@ const ORIGENES_PERMITIDOS = [
   "https://www.lydiel.online",
 ];
 const ADMINS = ["lydiel"];
-const MAX_BYTES = 60000;
+const MAX_BYTES = 160000;      // el avatar viaja dentro del cuerpo
+const AVATAR_MAX = 60000;      // ~44 KB de imagen en base64
+const NOMBRE_MAX = 40;
+const AVATAR_RE = /^data:image\/(png|jpeg|webp);base64,[A-Za-z0-9+/=]+$/;
 const TOKEN_RE = /^[A-Za-z0-9_-]{6,64}$/;
 const USUARIO_RE = /^[a-z0-9][a-z0-9._-]{2,31}$/;
 const CLAVE_MIN = 8;
@@ -136,11 +145,37 @@ async function cierraSesion(env, usuario, sesion) {
   await env.PROGRESO.put("sesiones:" + usuario, JSON.stringify(abiertas), { expirationTtl: SESION_SEG });
 }
 
-async function cierraTodas(env, usuario) {
+async function cierraTodas(env, usuario, salvo) {
   let abiertas = [];
   try { abiertas = JSON.parse(await env.PROGRESO.get("sesiones:" + usuario)) || []; } catch (e) {}
-  for (const id of abiertas) await env.PROGRESO.delete("s:" + id);
-  await env.PROGRESO.delete("sesiones:" + usuario);
+  for (const id of abiertas) if (id !== salvo) await env.PROGRESO.delete("s:" + id);
+  if (salvo) {
+    await env.PROGRESO.put("sesiones:" + usuario, JSON.stringify([salvo]), { expirationTtl: SESION_SEG });
+  } else {
+    await env.PROGRESO.delete("sesiones:" + usuario);
+  }
+}
+
+function limpiaNombre(n) {
+  return String(n == null ? "" : n)
+    .replace(/[\u0000-\u001F\u007F]/g, "")
+    .trim()
+    .slice(0, NOMBRE_MAX);
+}
+
+/* el avatar se pinta en un <img>: solo mapa de bits, nunca SVG (puede llevar script) */
+function validaAvatar(a) {
+  if (a === null || a === "") return { ok: true, valor: "" };
+  if (typeof a !== "string") return { ok: false, error: "El avatar no es válido." };
+  if (a.length > AVATAR_MAX) return { ok: false, error: "La imagen es demasiado grande." };
+  if (!AVATAR_RE.test(a)) return { ok: false, error: "Formato de imagen no admitido. Usa PNG, JPG o WebP." };
+  return { ok: true, valor: a };
+}
+
+async function leeCuenta(env, usuario) {
+  const crudo = await env.PROGRESO.get("cuenta:" + usuario);
+  if (!crudo) return null;
+  try { return JSON.parse(crudo); } catch (e) { return null; }
 }
 
 /* ---------- rutas ---------- */
@@ -288,6 +323,8 @@ async function adminUsuarios(peticion, env, origen) {
     try { c = JSON.parse(await env.PROGRESO.get(k.name)) || {}; } catch (e) {}
     usuarios.push({
       usuario: nombre,
+      nombre: c.nombre || "",
+      avatar: c.avatar || "",
       creado: c.creado || null,
       visto: c.visto || null,
       suspendido: !!c.suspendido,
@@ -330,6 +367,82 @@ async function adminBorrar(peticion, env, origen) {
   return json({ ok: true, borrado: u }, 200, origen);
 }
 
+async function perfil(peticion, env, origen) {
+  const s = await sesionDe(peticion, env);
+  if (!s) return json({ error: "Sesión no válida." }, 401, origen);
+  const c = await leeCuenta(env, s.usuario);
+  if (!c) return json({ error: "La cuenta ya no existe." }, 401, origen);
+  return json({
+    usuario: s.usuario, admin: s.admin,
+    nombre: c.nombre || "", avatar: c.avatar || "",
+    creado: c.creado || null, visto: c.visto || null
+  }, 200, origen);
+}
+
+async function guardaPerfil(peticion, env, origen) {
+  const s = await sesionDe(peticion, env);
+  if (!s) return json({ error: "Sesión no válida." }, 401, origen);
+  const datos = await leerCuerpo(peticion);
+  const c = await leeCuenta(env, s.usuario);
+  if (!c) return json({ error: "La cuenta ya no existe." }, 401, origen);
+
+  if (Object.prototype.hasOwnProperty.call(datos, "nombre")) c.nombre = limpiaNombre(datos.nombre);
+  if (Object.prototype.hasOwnProperty.call(datos, "avatar")) {
+    const v = validaAvatar(datos.avatar);
+    if (!v.ok) return json({ error: v.error }, 400, origen);
+    c.avatar = v.valor;
+  }
+  await env.PROGRESO.put("cuenta:" + s.usuario, JSON.stringify(c));
+  return json({ ok: true, nombre: c.nombre || "", avatar: c.avatar || "" }, 200, origen);
+}
+
+async function cambiaClave(peticion, env, origen) {
+  const s = await sesionDe(peticion, env);
+  if (!s) return json({ error: "Sesión no válida." }, 401, origen);
+  const { actual, nueva } = await leerCuerpo(peticion);
+  if (typeof nueva !== "string" || nueva.length < CLAVE_MIN || nueva.length > CLAVE_MAX) {
+    return json({ error: "La contraseña nueva debe tener al menos " + CLAVE_MIN + " caracteres." }, 400, origen);
+  }
+  const c = await leeCuenta(env, s.usuario);
+  if (!c || typeof c.salt !== "string") return json({ error: "La cuenta ya no existe." }, 401, origen);
+  const hash = await derivar(String(actual || ""), c.salt, c.iter || ITERACIONES);
+  if (!iguales(hash, c.hash)) return json({ error: "La contraseña actual no es correcta." }, 401, origen);
+
+  c.salt = aleatorio(16);
+  c.hash = await derivar(nueva, c.salt, ITERACIONES);
+  c.iter = ITERACIONES;
+  await env.PROGRESO.put("cuenta:" + s.usuario, JSON.stringify(c));
+  // cambiar la clave echa al resto de dispositivos, pero no a quien la cambia
+  await cierraTodas(env, s.usuario, s.sesion);
+  return json({ ok: true }, 200, origen);
+}
+
+async function cerrarTodas(peticion, env, origen) {
+  const s = await sesionDe(peticion, env);
+  if (!s) return json({ error: "Sesión no válida." }, 401, origen);
+  await cierraTodas(env, s.usuario, s.sesion);
+  return json({ ok: true }, 200, origen);
+}
+
+async function baja(peticion, env, origen) {
+  const s = await sesionDe(peticion, env);
+  if (!s) return json({ error: "Sesión no válida." }, 401, origen);
+  if (ADMINS.includes(s.usuario)) {
+    return json({ error: "La cuenta de administración no puede darse de baja desde aquí." }, 400, origen);
+  }
+  const { clave } = await leerCuerpo(peticion);
+  const c = await leeCuenta(env, s.usuario);
+  if (!c || typeof c.salt !== "string") return json({ error: "La cuenta ya no existe." }, 401, origen);
+  const hash = await derivar(String(clave || ""), c.salt, c.iter || ITERACIONES);
+  if (!iguales(hash, c.hash)) return json({ error: "La contraseña no es correcta." }, 401, origen);
+
+  await cierraTodas(env, s.usuario);
+  await env.PROGRESO.delete("cuenta:" + s.usuario);
+  await env.PROGRESO.delete("p:" + s.usuario);
+  await env.PROGRESO.delete("r:" + s.usuario);
+  return json({ ok: true, baja: true }, 200, origen);
+}
+
 /* compatibilidad con el sistema antiguo de tokens */
 async function tokenAntiguo(peticion, env, origen, token) {
   if (!TOKEN_RE.test(token)) return json({ error: "Token no válido." }, 400, origen);
@@ -369,6 +482,11 @@ export default {
       if (ruta === "/progreso" && M === "GET") return await leerProgreso(peticion, env, origen);
       if (ruta === "/progreso" && M === "PUT") return await guardarProgreso(peticion, env, origen);
       if (ruta === "/yo" && M === "GET") return await yo(peticion, env, origen);
+      if (ruta === "/perfil" && M === "GET") return await perfil(peticion, env, origen);
+      if (ruta === "/perfil" && M === "PUT") return await guardaPerfil(peticion, env, origen);
+      if (ruta === "/clave" && M === "POST") return await cambiaClave(peticion, env, origen);
+      if (ruta === "/cerrar-todas" && M === "POST") return await cerrarTodas(peticion, env, origen);
+      if (ruta === "/baja" && M === "POST") return await baja(peticion, env, origen);
       if (ruta === "/admin/usuarios" && M === "GET") return await adminUsuarios(peticion, env, origen);
       if (ruta === "/admin/suspender" && M === "POST") return await adminSuspender(peticion, env, origen);
       if (ruta === "/admin/borrar" && M === "POST") return await adminBorrar(peticion, env, origen);

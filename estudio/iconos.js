@@ -56,6 +56,7 @@ const ICONOS = {
   chuleta: '<path d="M4 5h16M4 10h16M4 15h11M4 20h7"/>',
   falladas: '<path d="M3 12a9 9 0 1 0 3-6.7M3 4v5h5"/>',
   panel: '<path d="M3 20h18M6 20v-7M11 20V7M16 20v-4M21 20V10"/>',
+  perfil: '<circle cx="12" cy="8" r="4"/><path d="M5 21c0-3.9 3.1-7 7-7s7 3.1 7 7"/>',
   volver: '<path d="M19 12H5M11 18l-6-6 6-6"/>',
 };
 

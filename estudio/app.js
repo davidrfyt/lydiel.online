@@ -16,6 +16,7 @@ const USUARIO_RE = /^[a-z0-9][a-z0-9._-]{2,31}$/;
 let SESION = null;
 let USUARIO = null;
 let ADMIN = false;
+let PERFIL = { nombre: "", avatar: "", creado: null, visto: null };
 let TOKEN = null;                       // solo si el servicio no tiene cuentas
 let CUENTAS = null;
 let modoGate = "entrar";
@@ -92,10 +93,23 @@ const norma = o => ({
   box: o.box || {}, examBest: o.examBest || null, uBest: o.uBest || {}
 });
 
-async function unlock(quien) {
-  $("whoChip").textContent = quien;
+function pintaIdentidad() {
+  const quien = USUARIO || TOKEN || "";
+  const visible = PERFIL.nombre || quien;
+  $("whoChip").textContent = visible;
   $("whoChip").title = (SESION ? "Cuenta: " : "Token de estudio: ") + quien;
-  $("avatar").textContent = quien.slice(0, 1);
+  const av = $("avatar");
+  if (PERFIL.avatar) {
+    av.innerHTML = '<img src="' + esc(PERFIL.avatar) + '" alt="">';
+    av.classList.add("con-foto");
+  } else {
+    av.textContent = visible.slice(0, 1);
+    av.classList.remove("con-foto");
+  }
+}
+
+async function unlock(quien) {
+  pintaIdentidad();
 
   let local = null;
   try { const raw = lsGet(slotKey()); if (raw) local = JSON.parse(raw); } catch (e) {}
@@ -123,6 +137,7 @@ async function lock() {
   }
   lsDel(KSES); lsDel(KUSR); lsDel(TKEY);
   SESION = null; USUARIO = null; TOKEN = null; ADMIN = false;
+  PERFIL = { nombre: "", avatar: "", creado: null, visto: null };
   S = norma({});
   abrePuerta("");
 }
@@ -293,6 +308,11 @@ function pintaNav() {
     h += '<button type="button" data-ir="' + hash + '" aria-current="' + (actual === id) + '">' +
       icono(ic) + "<span>" + txt + "</span>" + (n ? '<span class="cifra">' + n + "</span>" : "") + "</button>";
   });
+  if (SESION) {
+    h += '<div class="titulo" style="margin-top:16px">Cuenta</div>' +
+      '<button type="button" data-ir="#/perfil" aria-current="' + (actual === "perfil") + '">' +
+      icono("perfil") + "<span>Mi perfil</span></button>";
+  }
   if (ADMIN) {
     h += '<div class="titulo" style="margin-top:16px">Administración</div>' +
       '<button type="button" data-ir="#/panel" aria-current="' + (actual === "panel") + '">' +
@@ -321,6 +341,7 @@ function pinta() {
   if (r.vista === "chuleta") return vistaChuletaGeneral();
   if (r.vista === "falladas") return vistaFalladas();
   if (r.vista === "panel") return vistaAdmin();
+  if (r.vista === "perfil") return vistaPerfil();
   return vistaIndice();
 }
 window.addEventListener("hashchange", () => { if (SESION || TOKEN) pinta(); });
@@ -1131,6 +1152,233 @@ function doSearch() {
 }
 
 /* =========================================================
+   MI PERFIL
+   ========================================================= */
+const AVATAR_MAX = 60000;
+
+/* recorta al cuadrado, reduce y comprime hasta que quepa */
+function preparaAvatar(fichero) {
+  return new Promise((resolve, reject) => {
+    if (!/^image\//.test(fichero.type)) return reject(new Error("Eso no es una imagen."));
+    if (fichero.size > 12 * 1024 * 1024) return reject(new Error("La imagen pesa demasiado. Prueba con una menor de 12 MB."));
+    const lector = new FileReader();
+    lector.onerror = () => reject(new Error("No se pudo leer el fichero."));
+    lector.onload = () => {
+      const img = new Image();
+      img.onerror = () => reject(new Error("No se pudo abrir la imagen."));
+      img.onload = () => {
+        const lado = Math.min(img.width, img.height);
+        const sx = (img.width - lado) / 2, sy = (img.height - lado) / 2;
+        for (const [px, calidad] of [[192, .85], [160, .8], [128, .75], [96, .7]]) {
+          const c = document.createElement("canvas");
+          c.width = c.height = px;
+          const g = c.getContext("2d");
+          g.imageSmoothingQuality = "high";
+          g.drawImage(img, sx, sy, lado, lado, 0, 0, px, px);
+          let url = c.toDataURL("image/webp", calidad);
+          if (!/^data:image\/webp/.test(url)) url = c.toDataURL("image/jpeg", calidad);
+          if (url.length <= AVATAR_MAX) return resolve(url);
+        }
+        reject(new Error("No se ha podido comprimir esa imagen lo suficiente."));
+      };
+      img.src = lector.result;
+    };
+    lector.readAsDataURL(fichero);
+  });
+}
+
+async function guardaPerfil(cambios) {
+  const r = await fetch(CONFIG.SYNC_URL + "/perfil", {
+    method: "PUT", headers: conSesion({ "Content-Type": "application/json" }),
+    body: JSON.stringify(cambios)
+  });
+  const d = await r.json().catch(() => ({}));
+  if (r.status === 401) { caduca(); throw new Error("Sesión caducada."); }
+  if (!r.ok) throw new Error(d.error || "No se pudo guardar.");
+  PERFIL.nombre = d.nombre; PERFIL.avatar = d.avatar;
+  pintaIdentidad();
+  return d;
+}
+
+function descargaProgreso() {
+  const datos = JSON.stringify({ usuario: USUARIO, exportado: new Date().toISOString(), progreso: JSON.parse(cuerpoProgreso()) }, null, 1);
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(new Blob([datos], { type: "application/json" }));
+  a.download = "progreso-sea029-" + (USUARIO || "cuenta") + ".json";
+  a.click();
+  setTimeout(() => URL.revokeObjectURL(a.href), 4000);
+}
+
+function vistaPerfil() {
+  cabecera("Cuenta", "Mi perfil");
+  const p = $("vista");
+  if (!SESION) { p.innerHTML = '<p class="empty">Esta sección necesita una cuenta. Ahora mismo estás con un token de estudio.</p>'; return; }
+
+  const us = unidades();
+  const completas = us.filter(u => progresoUD(u.man, u.ud) === 100).length;
+  const fichasOk = FICHAS.filter(f => (S.box[fKey(f)] || 0) >= 2).length;
+
+  let h = '<div class="perfil">';
+
+  /* identidad */
+  h += '<section class="tarjeta-perfil"><h3>Identidad</h3>' +
+    '<p class="ayuda">Así apareces en la barra lateral. El nombre de usuario con el que entras no cambia.</p>' +
+    '<div class="identidad">' +
+    '<div class="foto" id="fotoPrev">' + (PERFIL.avatar
+      ? '<img src="' + esc(PERFIL.avatar) + '" alt="Tu avatar">'
+      : '<span>' + esc((PERFIL.nombre || USUARIO).slice(0, 1)) + "</span>") + "</div>" +
+    '<div class="foto-acc">' +
+    '<input type="file" id="fotoIn" accept="image/png,image/jpeg,image/webp" hidden>' +
+    '<button class="btn ghost chico" id="fotoBtn" type="button">Cambiar avatar</button>' +
+    (PERFIL.avatar ? '<button class="btn ghost chico" id="fotoQuita" type="button">Quitar</button>' : "") +
+    '<span class="ayuda">PNG, JPG o WebP. Se recorta en cuadrado y se reduce sola.</span>' +
+    '<span class="aviso-linea" id="fotoMsg"></span></div></div>' +
+    '<div class="campo"><label for="nombreIn">Nombre visible</label>' +
+    '<input id="nombreIn" type="text" maxlength="40" placeholder="' + esc(USUARIO) + '" value="' + esc(PERFIL.nombre) + '"></div>' +
+    '<div class="fila-acc"><button class="btn" id="guardaNombre" type="button">Guardar</button>' +
+    '<span class="aviso-linea" id="nombreMsg"></span></div>' +
+    '<dl class="datos"><div><dt>Usuario</dt><dd class="mono">' + esc(USUARIO) + "</dd></div>" +
+    "<div><dt>Cuenta creada</dt><dd>" + fecha(PERFIL.creado) + "</dd></div>" +
+    "<div><dt>Última conexión</dt><dd>" + fecha(PERFIL.visto, true) + "</dd></div></dl></section>";
+
+  /* seguridad */
+  h += '<section class="tarjeta-perfil"><h3>Contraseña</h3>' +
+    '<p class="ayuda">Al cambiarla se cierran las sesiones abiertas en otros dispositivos. En este sigues dentro.</p>' +
+    '<div class="campo"><label for="claveAct">Contraseña actual</label><input id="claveAct" type="password" autocomplete="current-password"></div>' +
+    '<div class="campo"><label for="claveNue">Contraseña nueva</label><input id="claveNue" type="password" autocomplete="new-password" placeholder="mínimo 8 caracteres"></div>' +
+    '<div class="campo"><label for="claveRep">Repite la nueva</label><input id="claveRep" type="password" autocomplete="new-password"></div>' +
+    '<div class="fila-acc"><button class="btn" id="cambiaClave" type="button">Cambiar contraseña</button>' +
+    '<span class="aviso-linea" id="claveMsg"></span></div></section>';
+
+  /* sesiones y datos */
+  h += '<section class="tarjeta-perfil"><h3>Sesiones y datos</h3>' +
+    '<p class="ayuda">Si has entrado en un ordenador prestado, ciérralas todas desde aquí.</p>' +
+    '<div class="fila-acc"><button class="btn ghost" id="cerrarTodas" type="button">Cerrar el resto de sesiones</button>' +
+    '<button class="btn ghost" id="bajarDatos" type="button">Descargar mi progreso</button>' +
+    '<span class="aviso-linea" id="sesMsg"></span></div>' +
+    '<dl class="datos"><div><dt>Epígrafes leídos</dt><dd class="mono">' + hechosEpi() + " / " + totalEpi() + "</dd></div>" +
+    '<div><dt>Fichas dominadas</dt><dd class="mono">' + fichasOk + " / " + FICHAS.length + "</dd></div>" +
+    '<div><dt>Unidades al 100 %</dt><dd class="mono">' + completas + " / " + us.length + "</dd></div>" +
+    '<div><dt>Preguntas falladas</dt><dd class="mono">' + S.wrong.length + "</dd></div></dl></section>";
+
+  /* baja */
+  if (!ADMIN) {
+    h += '<section class="tarjeta-perfil peligrosa"><h3>Darse de baja</h3>' +
+      '<p class="ayuda">Se borra la cuenta y todo tu progreso. No se puede deshacer y el nombre de usuario queda libre.</p>' +
+      '<div class="fila-acc"><button class="btn peligro" id="darBaja" type="button">Borrar mi cuenta</button></div></section>';
+  }
+
+  h += "</div>";
+  p.innerHTML = h;
+
+  /* --- avatar --- */
+  const fotoIn = $("fotoIn");
+  $("fotoBtn").onclick = () => fotoIn.click();
+  fotoIn.onchange = async () => {
+    const f = fotoIn.files && fotoIn.files[0];
+    if (!f) return;
+    const msg = $("fotoMsg");
+    msg.textContent = "preparando la imagen…"; msg.className = "aviso-linea";
+    try {
+      const url = await preparaAvatar(f);
+      await guardaPerfil({ avatar: url });
+      vistaPerfil();
+    } catch (e) {
+      msg.textContent = e.message; msg.className = "aviso-linea mal";
+    }
+    fotoIn.value = "";
+  };
+  const quita = $("fotoQuita");
+  if (quita) quita.onclick = async () => {
+    try { await guardaPerfil({ avatar: "" }); vistaPerfil(); }
+    catch (e) { $("fotoMsg").textContent = e.message; $("fotoMsg").className = "aviso-linea mal"; }
+  };
+
+  /* --- nombre --- */
+  $("guardaNombre").onclick = async () => {
+    const msg = $("nombreMsg");
+    msg.textContent = "guardando…"; msg.className = "aviso-linea";
+    try {
+      await guardaPerfil({ nombre: $("nombreIn").value });
+      msg.textContent = "guardado"; msg.className = "aviso-linea ok";
+    } catch (e) { msg.textContent = e.message; msg.className = "aviso-linea mal"; }
+  };
+
+  /* --- contraseña --- */
+  $("cambiaClave").onclick = async () => {
+    const msg = $("claveMsg"), act = $("claveAct").value, nue = $("claveNue").value, rep = $("claveRep").value;
+    msg.className = "aviso-linea mal";
+    if (!act) { msg.textContent = "Escribe tu contraseña actual."; return; }
+    if (nue.length < 8) { msg.textContent = "La nueva necesita al menos 8 caracteres."; return; }
+    if (nue !== rep) { msg.textContent = "Las dos contraseñas nuevas no coinciden."; return; }
+    if (nue === act) { msg.textContent = "La nueva es igual que la actual."; return; }
+    msg.textContent = "cambiando…"; msg.className = "aviso-linea";
+    try {
+      const r = await fetch(CONFIG.SYNC_URL + "/clave", {
+        method: "POST", headers: conSesion({ "Content-Type": "application/json" }),
+        body: JSON.stringify({ actual: act, nueva: nue })
+      });
+      const d = await r.json().catch(() => ({}));
+      if (!r.ok) throw new Error(d.error || "No se pudo cambiar.");
+      $("claveAct").value = $("claveNue").value = $("claveRep").value = "";
+      msg.textContent = "contraseña cambiada"; msg.className = "aviso-linea ok";
+    } catch (e) { msg.textContent = e.message; msg.className = "aviso-linea mal"; }
+  };
+
+  /* --- sesiones y descarga --- */
+  $("cerrarTodas").onclick = () => confirma(
+    "Cerrar el resto de sesiones",
+    "Se cerrará la sesión en cualquier otro dispositivo donde hayas entrado. En este te quedas.",
+    "Cerrar las demás", false, async () => {
+      const msg = $("sesMsg");
+      try {
+        const r = await fetch(CONFIG.SYNC_URL + "/cerrar-todas", { method: "POST", headers: conSesion() });
+        if (!r.ok) throw new Error("No se pudo completar.");
+        msg.textContent = "sesiones cerradas"; msg.className = "aviso-linea ok";
+      } catch (e) { msg.textContent = e.message; msg.className = "aviso-linea mal"; }
+    });
+  $("bajarDatos").onclick = descargaProgreso;
+
+  /* --- baja --- */
+  const baja = $("darBaja");
+  if (baja) baja.onclick = () => pideClaveYBorra();
+}
+
+function pideClaveYBorra() {
+  const capa = document.createElement("div");
+  capa.className = "modal";
+  capa.innerHTML = '<div class="modal-card"><h3>Borrar mi cuenta</h3>' +
+    "<p>Se elimina la cuenta y todo el progreso: epígrafes, fichas, notas y falladas. No se puede deshacer. " +
+    "Escribe tu contraseña para confirmarlo.</p>" +
+    '<div class="campo"><label for="bajaClave">Contraseña</label><input id="bajaClave" type="password" autocomplete="current-password"></div>' +
+    '<p class="aviso-linea mal" id="bajaMsg"></p>' +
+    '<div class="fila"><button class="btn ghost" data-x="no" type="button">Cancelar</button>' +
+    '<button class="btn peligro" data-x="si" type="button">Borrar mi cuenta</button></div></div>';
+  document.body.appendChild(capa);
+  const cierra = () => capa.remove();
+  capa.querySelector('[data-x="no"]').onclick = cierra;
+  capa.onclick = e => { if (e.target === capa) cierra(); };
+  $("bajaClave").focus();
+  capa.querySelector('[data-x="si"]').onclick = async () => {
+    const msg = $("bajaMsg");
+    msg.textContent = "borrando…";
+    try {
+      const r = await fetch(CONFIG.SYNC_URL + "/baja", {
+        method: "POST", headers: conSesion({ "Content-Type": "application/json" }),
+        body: JSON.stringify({ clave: $("bajaClave").value })
+      });
+      const d = await r.json().catch(() => ({}));
+      if (!r.ok) throw new Error(d.error || "No se pudo borrar.");
+      cierra();
+      lsDel(KSES); lsDel(KUSR);
+      SESION = null; USUARIO = null; ADMIN = false;
+      S = norma({});
+      abrePuerta("Tu cuenta se ha borrado.");
+    } catch (e) { msg.textContent = e.message; }
+  };
+}
+
+/* =========================================================
    PANEL DE ADMINISTRACION
    ========================================================= */
 const fecha = (ms, conHora) => {
@@ -1180,7 +1428,10 @@ async function vistaAdmin() {
   us.forEach(u => {
     const pr = u.progreso;
     h += '<tr class="' + (u.suspendido ? "susp" : "") + '">' +
-      '<td><div class="quien"><span class="av">' + esc(u.usuario.slice(0, 1)) + "</span><b>" + esc(u.usuario) + "</b></div></td>" +
+      '<td><div class="quien"><span class="av' + (u.avatar ? " con-foto" : "") + '">' +
+      (u.avatar ? '<img src="' + esc(u.avatar) + '" alt="">' : esc(u.usuario.slice(0, 1))) + "</span>" +
+      "<b>" + esc(u.usuario) + "</b>" +
+      (u.nombre ? '<span class="alias">' + esc(u.nombre) + "</span>" : "") + "</div></td>" +
       '<td class="num">' + fecha(u.creado) + "</td>" +
       '<td class="num">' + fecha(u.visto, true) + "</td>" +
       '<td class="num">' + fecha(pr.actividad, true) + "</td>" +
@@ -1296,6 +1547,8 @@ async function envia() {
     if (!r.ok) { err.textContent = d.error || "No se ha podido completar. Inténtalo de nuevo."; return; }
     SESION = d.sesion; USUARIO = d.usuario; ADMIN = !!d.admin;
     lsSet(KSES, SESION); lsSet(KUSR, USUARIO);
+    PERFIL = { nombre: "", avatar: "", creado: null, visto: null };
+    await cargaPerfil();
     $("gatePass").value = "";
     $("gate").hidden = true;
     await unlock(USUARIO);
@@ -1366,12 +1619,13 @@ async function servicioTieneCuentas() {
     return !!(await r.json()).cuentas;
   } catch (e) { return false; }
 }
-async function compruebaAdmin() {
+async function cargaPerfil() {
   try {
-    const r = await fetch(CONFIG.SYNC_URL + "/yo", { headers: conSesion() });
+    const r = await fetch(CONFIG.SYNC_URL + "/perfil", { headers: conSesion() });
     if (r.status === 401) { caduca(); return; }
     const d = await r.json();
     ADMIN = !!d.admin;
+    PERFIL = { nombre: d.nombre || "", avatar: d.avatar || "", creado: d.creado, visto: d.visto };
   } catch (e) {}
 }
 
@@ -1416,7 +1670,7 @@ async function compruebaAdmin() {
   const ses = lsGet(KSES), usr = lsGet(KUSR);
   if (ses && usr) {
     SESION = ses; USUARIO = usr;
-    await compruebaAdmin();
+    await cargaPerfil();
     if (!SESION) return;
     $("gate").hidden = true;
     await unlock(usr);
