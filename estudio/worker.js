@@ -7,6 +7,8 @@
                           nombre, avatar }
      s:<sesion>         { u, admin }   (caduca a los 90 dias)
      sesiones:<usuario> [ids de sesion abiertos]
+     contenido          material de estudio (resumenes, fichas, tests, oral)
+     manual:<clave>     texto de un manual
      p:<usuario>    progreso en JSON
      r:<usuario>    intentos fallidos  (caduca a los 15 min)
      <token>-sea029 progreso del sistema antiguo de tokens
@@ -20,6 +22,10 @@
      PUT  /progreso            guarda el progreso de la sesion
      POST /importar            { token } copia el progreso de un token antiguo
      GET  /yo                  quien soy y si administro
+     GET  /contenido           material de estudio (requiere sesion)
+     GET  /manual/<clave>      texto de un manual (requiere sesion)
+     PUT  /contenido           carga el material (solo admin)
+     PUT  /manual/<clave>      carga un manual (solo admin)
      GET  /perfil              nombre, avatar y fechas de la cuenta
      PUT  /perfil              { nombre, avatar } actualiza el perfil
      POST /clave               { actual, nueva } cambia la contrasena
@@ -40,6 +46,7 @@ const ORIGENES_PERMITIDOS = [
 ];
 const ADMINS = ["lydiel"];
 const MAX_BYTES = 160000;      // el avatar viaja dentro del cuerpo
+const MAX_CONTENIDO = 6000000; // el temario se sube entero de una vez
 const AVATAR_MAX = 60000;      // ~44 KB de imagen en base64
 const NOMBRE_MAX = 40;
 const AVATAR_RE = /^data:image\/(png|jpeg|webp);base64,[A-Za-z0-9+/=]+$/;
@@ -367,6 +374,46 @@ async function adminBorrar(peticion, env, origen) {
   return json({ ok: true, borrado: u }, 200, origen);
 }
 
+/* ---------- material de estudio, detras de la sesion ---------- */
+
+function sirveJSON(txt, origen, segundos) {
+  return new Response(txt || "null", {
+    headers: {
+      "Content-Type": "application/json; charset=utf-8",
+      "Cache-Control": "private, max-age=" + (segundos || 0),
+      ...cors(origen),
+    },
+  });
+}
+
+async function contenido(peticion, env, origen) {
+  const s = await sesionDe(peticion, env);
+  if (!s) return json({ error: "Sesión no válida." }, 401, origen);
+  const d = await env.PROGRESO.get("contenido");
+  if (!d) return json({ error: "El material aún no está cargado." }, 503, origen);
+  return sirveJSON(d, origen, 3600);
+}
+
+async function manual(peticion, env, origen, clave) {
+  const s = await sesionDe(peticion, env);
+  if (!s) return json({ error: "Sesión no válida." }, 401, origen);
+  if (!/^[A-Za-z0-9_]{3,20}$/.test(clave)) return json({ error: "Manual no válido." }, 400, origen);
+  const d = await env.PROGRESO.get("manual:" + clave);
+  if (!d) return json({ error: "Ese manual no existe." }, 404, origen);
+  return sirveJSON(d, origen, 3600);
+}
+
+async function cargaContenido(peticion, env, origen, clave) {
+  const s = await sesionDe(peticion, env);
+  if (!s) return json({ error: "Sesión no válida." }, 401, origen);
+  if (!s.admin) return json({ error: "No tienes permiso." }, 403, origen);
+  const txt = await peticion.text();
+  if (!txt || txt.length > MAX_CONTENIDO) return json({ error: "Tamaño no válido." }, 400, origen);
+  try { JSON.parse(txt); } catch (e) { return json({ error: "No es JSON válido." }, 400, origen); }
+  await env.PROGRESO.put(clave, txt);
+  return json({ ok: true, clave, bytes: txt.length }, 200, origen);
+}
+
 async function perfil(peticion, env, origen) {
   const s = await sesionDe(peticion, env);
   if (!s) return json({ error: "Sesión no válida." }, 401, origen);
@@ -482,6 +529,11 @@ export default {
       if (ruta === "/progreso" && M === "GET") return await leerProgreso(peticion, env, origen);
       if (ruta === "/progreso" && M === "PUT") return await guardarProgreso(peticion, env, origen);
       if (ruta === "/yo" && M === "GET") return await yo(peticion, env, origen);
+      if (ruta === "/contenido" && M === "GET") return await contenido(peticion, env, origen);
+      if (ruta === "/contenido" && M === "PUT") return await cargaContenido(peticion, env, origen, "contenido");
+      const man = ruta.match(/^\/manual\/([A-Za-z0-9_]+)$/);
+      if (man && M === "GET") return await manual(peticion, env, origen, man[1]);
+      if (man && M === "PUT") return await cargaContenido(peticion, env, origen, "manual:" + man[1]);
       if (ruta === "/perfil" && M === "GET") return await perfil(peticion, env, origen);
       if (ruta === "/perfil" && M === "PUT") return await guardaPerfil(peticion, env, origen);
       if (ruta === "/clave" && M === "POST") return await cambiaClave(peticion, env, origen);

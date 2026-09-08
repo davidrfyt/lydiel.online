@@ -27,6 +27,11 @@ let pushTimer = null;
 let IDX = [];
 const CACHE = {};
 
+/* El material ya no viaja en un fichero suelto: lo sirve el servicio a quien
+   presenta una sesion. Hasta entonces estas listas estan vacias. */
+let MODULOS = [], TEMAS = [], FICHAS = [], PREGUNTAS = [], ORAL = [], CHULETA = [];
+let CONTENIDO = false;
+
 const $ = id => document.getElementById(id);
 const lsGet = k => { try { return localStorage.getItem(k); } catch (e) { return null; } };
 const lsSet = (k, v) => { try { localStorage.setItem(k, v); } catch (e) {} };
@@ -281,11 +286,26 @@ function updHud() {
   $("hudDone").textContent = n + " / " + tot;
 }
 
+async function pideMaterial(ruta) {
+  const cab = SESION ? conSesion() : {};
+  const r = await fetch(CONFIG.SYNC_URL + ruta, { headers: cab });
+  if (r.status === 401) { caduca(); throw new Error("Sesión no válida."); }
+  if (!r.ok) throw new Error("No se pudo cargar el material.");
+  return await r.json();
+}
+
+async function cargaContenido() {
+  if (CONTENIDO) return true;
+  const d = await pideMaterial("/contenido");
+  MODULOS = d.MODULOS || []; TEMAS = d.TEMAS || []; FICHAS = d.FICHAS || [];
+  PREGUNTAS = d.PREGUNTAS || []; ORAL = d.ORAL || []; CHULETA = d.CHULETA || [];
+  CONTENIDO = true;
+  return true;
+}
+
 async function cargaManual(clave) {
   if (CACHE[clave]) return CACHE[clave];
-  const r = await fetch("temario/" + clave + ".json");
-  if (!r.ok) throw new Error("No se pudo cargar " + clave);
-  CACHE[clave] = await r.json();
+  CACHE[clave] = await pideMaterial("/manual/" + encodeURIComponent(clave));
   return CACHE[clave];
 }
 
@@ -1811,34 +1831,6 @@ async function envia() {
   }
 }
 
-/* puerta antigua, por si el servicio no tiene cuentas */
-function genToken() {
-  const a = "abcdefghijkmnpqrstuvwxyz23456789";
-  let t = ""; for (let i = 0; i < 14; i++) t += a[Math.floor(Math.random() * a.length)];
-  return t.slice(0, 5) + "-" + t.slice(5, 9) + "-" + t.slice(9);
-}
-function puertaToken() {
-  $("gateModo").hidden = true;
-  $("gateTitulo").textContent = "Identifica tu progreso";
-  $("gateTexto").textContent = "Escribe tu token de estudio. Tu progreso queda asociado a él, no a este navegador.";
-  $("gateUser").parentElement.hidden = true;
-  $("gatePass").parentElement.querySelector("label").textContent = "Token";
-  $("gatePass").type = "text";
-  $("gatePass").placeholder = "p. ej. david-vigilante-2026";
-  $("gatePass").setAttribute("autocomplete", "off");
-  $("gateGo").textContent = "Entrar";
-  $("gateOtro").textContent = "Generar uno al azar";
-  $("gateNota").innerHTML = "<b>Esto no es una contraseña.</b> Es la etiqueta de tu progreso. La página es pública: el token identifica, no protege.";
-  $("gateOtro").onclick = () => { $("gatePass").value = genToken(); $("gatePass").focus(); };
-  $("gateGo").onclick = async () => {
-    const v = $("gatePass").value.trim();
-    if (!TOKEN_RE.test(v)) { $("gateErr").textContent = "Entre 6 y 56 caracteres. Letras, números, guion y guion bajo."; return; }
-    TOKEN = v; lsSet(TKEY, v);
-    $("gate").hidden = true;
-    await unlock(v);
-  };
-}
-
 async function importaToken(token) {
   const r = await fetch(CONFIG.SYNC_URL + "/importar", {
     method: "POST", headers: conSesion({ "Content-Type": "application/json" }),
@@ -1855,9 +1847,14 @@ async function importaToken(token) {
    ARRANQUE
    ========================================================= */
 async function boot() {
-  if (!IDX.length) {
-    try { IDX = await (await fetch("temario/indice.json")).json(); }
-    catch (e) { IDX = []; }
+  try {
+    await cargaContenido();
+    if (!IDX.length) IDX = await pideMaterial("/manual/indice");
+  } catch (e) {
+    if (!SESION && !TOKEN) return;              // la sesion ha caducado
+    $("vista").innerHTML = '<p class="empty">No se ha podido cargar el material. ' +
+      "Comprueba tu conexión y vuelve a entrar.</p>";
+    return;
   }
   updHud();
   pinta();
@@ -1903,14 +1900,6 @@ async function cargaPerfil() {
     $(id).addEventListener("keydown", e => { if (e.key === "Enter") $("gateGo").click(); }));
 
   CUENTAS = await servicioTieneCuentas();
-
-  if (!CUENTAS) {
-    puertaToken();
-    const t = lsGet(TKEY);
-    if (t && TOKEN_RE.test(t)) { TOKEN = t; $("gate").hidden = true; await unlock(t); }
-    else abrePuerta("");
-    return;
-  }
 
   $("gateGo").onclick = envia;
   $("gateOtro").onclick = () => { modoGate = modoGate === "registro" ? "entrar" : "registro"; pintaModo(); $("gateUser").focus(); };
