@@ -17,7 +17,7 @@ const TEMAS = [
 
 /* ============ MF0080 ============ */
 {
-  id: "t01", mod: "mf0080", n: 1, t: "La central de alarmas",
+  id: "t01", mod: "mf0080", man: "UF2675", ud: 1, n: 1, t: "La central de alarmas",
   c: [
     { h: "Definición y funciones", l: [
       "Núcleo operativo de los sistemas de seguridad: <b>recibe, verifica y gestiona</b> las señales de los dispositivos de detección.",
@@ -57,7 +57,7 @@ const TEMAS = [
   ]
 },
 {
-  id: "t02", mod: "mf0080", n: 2, t: "Medios de protección",
+  id: "t02", mod: "mf0080", man: "UF2675", ud: 2, n: 2, t: "Medios de protección",
   c: [
     { h: "Concepto y división", l: [
       "Dispositivos, sistemas y elementos, físicos o electrónicos, que permiten <b>prevenir, detectar o actuar</b> ante una amenaza.",
@@ -91,7 +91,7 @@ const TEMAS = [
   ]
 },
 {
-  id: "t03", mod: "mf0080", n: 3, t: "Técnicas y medios de control de accesos",
+  id: "t03", mod: "mf0080", man: "UF2675", ud: 3, n: 3, t: "Técnicas y medios de control de accesos",
   c: [
     { h: "Definición y objetivo", l: [
       "Conjunto de procedimientos y dispositivos técnicos para <b>autorizar, restringir o registrar</b> la entrada o salida de personas, vehículos u objetos en zonas protegidas.",
@@ -122,7 +122,7 @@ const TEMAS = [
   ]
 },
 {
-  id: "t04", mod: "mf0080", n: 4, t: "Manejo de armas y medidas de seguridad",
+  id: "t04", mod: "mf0080", man: "UF2675", ud: 4, n: 4, t: "Manejo de armas y medidas de seguridad",
   c: [
     { h: "Normativa y armas autorizadas", l: [
       "Los vigilantes pueden portar armas <b>solo en servicios autorizados por el Ministerio del Interior</b>.",
@@ -153,7 +153,7 @@ const TEMAS = [
   ]
 },
 {
-  id: "t05", mod: "mf0080", n: 5, t: "La preparación física",
+  id: "t05", mod: "mf0080", man: "UF2675", ud: 5, n: 5, t: "La preparación física",
   c: [
     { h: "Por qué importa", l: [
       "Mejora la <b>capacidad de respuesta</b> ante situaciones de riesgo.",
@@ -189,7 +189,7 @@ const TEMAS = [
   ]
 },
 {
-  id: "t06", mod: "mf0080", n: 6, t: "Fundamentos de seguridad",
+  id: "t06", mod: "mf0080", man: "UF2674", ud: 1, n: 6, t: "Fundamentos de seguridad",
   c: [
     { h: "Planes de emergencia y evacuación", l: [
       "Conjunto de medidas para actuar ante situaciones imprevistas que dañen a personas, instalaciones o medio ambiente.",
@@ -246,7 +246,7 @@ const TEMAS = [
   ]
 },
 {
-  id: "t07", mod: "mf0080", n: 7, t: "Medidas de protección y control de accesos",
+  id: "t07", mod: "mf0082", man: "MF0082", ud: 2, n: 7, t: "Medidas de protección y control de accesos",
   c: [
     { h: "Concepto y tipos de seguridad", l: [
       "Seguridad: estado deseado en el que los riesgos están <b>identificados y controlados</b>; implica prevención de incidentes y protección de personas, bienes e información.",
@@ -282,7 +282,7 @@ const TEMAS = [
 
 /* ============ MF0082 ============ */
 {
-  id: "t10", mod: "mf0082", n: 1, t: "Aspectos jurídicos del vigilante de explosivos",
+  id: "t10", mod: "mf0082", man: "MF0082", ud: 1, n: 1, t: "Aspectos jurídicos del vigilante de explosivos",
   c: [
     { h: "Naturaleza y protección jurídica", l: [
       "Profesional legalmente habilitado que garantiza la protección de personas, bienes e instalaciones donde se manejen explosivos o materiales peligrosos.",
@@ -327,7 +327,7 @@ const TEMAS = [
   ]
 },
 {
-  id: "t11", mod: "mf0082", n: 2, t: "Protección de fondos y objetos valiosos",
+  id: "t11", mod: "mf0080", man: "UF2674", ud: 2, n: 2, t: "Protección de fondos y objetos valiosos",
   c: [
     { h: "Objetivo y normativa", l: [
       "Garantizar la seguridad en <b>transporte, manipulación, custodia y almacenamiento</b> de efectivo, objetos valiosos, obras de arte, joyas y documentos confidenciales.",
@@ -355,7 +355,7 @@ const TEMAS = [
   ]
 },
 {
-  id: "t12", mod: "mf0082", n: 3, t: "Técnicas de protección y defensa",
+  id: "t12", mod: "mf0081", man: "UF2676", ud: 1, n: 3, t: "Técnicas de protección y defensa",
   c: [
     { h: "Principios de la protección personal", l: [
       "Prevenir agresiones, atentados o secuestros.",
@@ -388,7 +388,7 @@ const TEMAS = [
   ]
 },
 {
-  id: "t13", mod: "mf0082", n: 4, t: "Clasificación de los explosivos y medidas de seguridad",
+  id: "t13", mod: "mf0082", man: "MF0082", ud: 4, n: 4, t: "Clasificación de los explosivos y medidas de seguridad",
   c: [
     { h: "Concepto", l: [
       "Sustancia o mezcla que, ante un estímulo adecuado (calor, fricción, impacto, chispa), reacciona violentamente <b>liberando gases, calor y presión</b>."
@@ -424,7 +424,7 @@ const TEMAS = [
 
 /* ============ MF0272 ============ */
 {
-  id: "t14", mod: "mf0272", n: 1, t: "Primeros auxilios: conceptos y soporte vital básico",
+  id: "t14", mod: "mf0272", man: "MF0272", ud: 1, n: 1, t: "Primeros auxilios: conceptos y soporte vital básico",
   c: [
     { h: "Conceptos y objetivos", l: [
       "<b>Primeros auxilios</b>: atención inmediata y temporal a una persona accidentada o con enfermedad súbita antes de la llegada de profesionales.",
@@ -469,7 +469,7 @@ const TEMAS = [
   ]
 },
 {
-  id: "t15", mod: "mf0272", n: 2, t: "Atención sanitaria en lesiones: valoración ABCDE",
+  id: "t15", mod: "mf0272", man: "MF0272", ud: 3, n: 2, t: "Atención sanitaria en lesiones: valoración ABCDE",
   c: [
     { h: "Protocolo ABCDE", l: [
       "<b>A</b> (Airway): vía aérea con <b>control cervical</b>; collarín si hay sospecha de trauma.",
@@ -508,7 +508,7 @@ const TEMAS = [
   ]
 },
 {
-  id: "t16", mod: "mf0272", n: 3, t: "Inmovilización, movilización y transporte sanitario",
+  id: "t16", mod: "mf0272", man: "MF0272", ud: 3, n: 3, t: "Inmovilización, movilización y transporte sanitario",
   c: [
     { h: "Materiales de inmovilización", l: [
       "<b>Collarín cervical</b>.",
@@ -534,7 +534,7 @@ const TEMAS = [
 },
 /* ============ Módulo instrumental (MF0080) ============ */
 {
-  id: "t17", mod: "mf0080", n: 10, t: "Comunicaciones: radioteléfono y teléfono",
+  id: "t17", mod: "mf0080", man: "INSTRUM", ud: 1, n: 10, t: "Comunicaciones: radioteléfono y teléfono",
   c: [
     { h: "Conceptos básicos", l: [
       "<b>Telecomunicación</b>: toda transmisión, emisión o recepción de signos, señales escritas, imágenes, sonidos e informaciones por hilo, radio, medios ópticos u otros sistemas electromagnéticos.",
@@ -592,7 +592,7 @@ const TEMAS = [
   ]
 },
 {
-  id: "t18", mod: "mf0080", n: 11, t: "Informática y ordenadores",
+  id: "t18", mod: "mf0080", man: "INSTRUM", ud: 2, n: 11, t: "Informática y ordenadores",
   c: [
     { h: "Tipos de ordenadores", l: [
       "<b>Sistema</b>: conjunto de partes o dispositivos que trabajan coordinadamente para un fin común.",
@@ -639,7 +639,7 @@ const TEMAS = [
   ]
 },
 {
-  id: "t19", mod: "mf0080", n: 12, t: "Mecanismos de extinción de incendios",
+  id: "t19", mod: "mf0080", man: "INSTRUM", ud: 3, n: 12, t: "Mecanismos de extinción de incendios",
   c: [
     { h: "El fuego y el tetraedro", l: [
       "<b>Fuego</b>: reacción química de oxidación con desprendimiento de calor y luz, en la que intervienen un <b>reductor (combustible)</b> y un <b>comburente (oxidante)</b>.",
@@ -699,7 +699,7 @@ const TEMAS = [
   ]
 },
 {
-  id: "t20", mod: "mf0080", n: 13, t: "Armas de fuego: clasificación y categorías",
+  id: "t20", mod: "mf0080", man: "INSTRUM", ud: 4, n: 13, t: "Armas de fuego: clasificación y categorías",
   c: [
     { h: "Concepto y clases de arma", l: [
       "<b>Arma</b>: cualquier instrumento, máquina o aparato empleado para el ataque o la defensa.",
@@ -754,7 +754,7 @@ const TEMAS = [
   ]
 },
 {
-  id: "t21", mod: "mf0080", n: 14, t: "Armas reglamentarias: revólver, pistola, escopeta y carabina",
+  id: "t21", mod: "mf0080", man: "INSTRUM", ud: 4, n: 14, t: "Armas reglamentarias: revólver, pistola, escopeta y carabina",
   c: [
     { h: "El revólver 38 especial de 4 pulgadas", l: [
       "Arma de <b>acción manual de recámaras múltiples giratorias</b>, clasificada como <b>arma de repetición</b>. Dispara en <b>simple y doble acción</b>.",
@@ -808,7 +808,7 @@ const TEMAS = [
   ]
 },
 {
-  id: "t22", mod: "mf0080", n: 15, t: "Munición, balística y precisión del tiro",
+  id: "t22", mod: "mf0080", man: "INSTRUM", ud: 4, n: 15, t: "Munición, balística y precisión del tiro",
   c: [
     { h: "El cartucho", l: [
       "<b>Munición</b>: la carga de las armas de fuego. <b>Cartucho</b>: unidad organizada que reúne en un solo cuerpo los factores esenciales de un disparo. Es <b>sólido, sensible, impermeable y económico</b>.",
@@ -851,7 +851,7 @@ const TEMAS = [
 },
 /* ============ UF2676 · Protección de personas (MF0081) ============ */
 {
-  id: "t23", mod: "mf0081", n: 1, t: "UF2676 · Seguridad, seguridad privada y protección",
+  id: "t23", mod: "mf0081", man: "UF2676", ud: 1, n: 1, t: "UF2676 · Seguridad, seguridad privada y protección",
   c: [
     { h: "Conceptos", l: [
       "<b>Seguridad</b>: no es solo un valor jurídico, normativo o político; también es un <b>valor social</b>. Pilar de la sociedad, base de la libertad y la igualdad.",
@@ -869,7 +869,7 @@ const TEMAS = [
   ]
 },
 {
-  id: "t24", mod: "mf0081", n: 2, t: "UF2676 · Personal de seguridad privada y habilitación",
+  id: "t24", mod: "mf0081", man: "UF2676", ud: 1, n: 2, t: "UF2676 · Personal de seguridad privada y habilitación",
   c: [
     { h: "Quién puede ejercer (Ley 5/2014)", l: [
       "Vigilantes de seguridad y su especialidad de <b>vigilantes de explosivos</b>.",
@@ -897,7 +897,7 @@ const TEMAS = [
   ]
 },
 {
-  id: "t25", mod: "mf0081", n: 3, t: "UF2676 · Principios básicos de actuación",
+  id: "t25", mod: "mf0081", man: "UF2676", ud: 1, n: 3, t: "UF2676 · Principios básicos de actuación",
   c: [
     { h: "Los nueve principios", l: [
       "<b>Legalidad</b>: solo medios y acciones conforme al ordenamiento jurídico vigente.",
@@ -916,7 +916,7 @@ const TEMAS = [
   ]
 },
 {
-  id: "t26", mod: "mf0081", n: 4, t: "UF2676 · Técnicas y fundamentos de la protección",
+  id: "t26", mod: "mf0081", man: "UF2676", ud: 1, n: 4, t: "UF2676 · Técnicas y fundamentos de la protección",
   c: [
     { h: "Las tres técnicas", l: [
       "<b>Integral</b>: cobertura en <b>todos los aspectos</b> de la persona, esfera profesional <b>y</b> personal. Contempla la dinámica y la estática.",
@@ -935,7 +935,7 @@ const TEMAS = [
   ]
 },
 {
-  id: "t27", mod: "mf0081", n: 5, t: "UF2676 · Fuentes de peligro y gestión de riesgos",
+  id: "t27", mod: "mf0081", man: "UF2676", ud: 1, n: 5, t: "UF2676 · Fuentes de peligro y gestión de riesgos",
   c: [
     { h: "Peligro", l: [
       "Situación —<b>acción o condición</b>— que ostenta el <b>potencial de producir un daño</b> sobre una persona o cosa.",
@@ -958,7 +958,7 @@ const TEMAS = [
   ]
 },
 {
-  id: "t28", mod: "mf0081", n: 6, t: "UF2676 · La protección integral y las medidas de la Ley 5/2014",
+  id: "t28", mod: "mf0081", man: "UF2676", ud: 1, n: 6, t: "UF2676 · La protección integral y las medidas de la Ley 5/2014",
   c: [
     { h: "Protección integral", l: [
       "Servicio cuyo objetivo es un <b>entorno seguro</b> mediante un dispositivo que <b>neutralice</b> los peligros; debe ser <b>preventivo y disuasorio</b>, y permitir controlar y reaccionar mediante <b>neutralización, cobertura y evacuación</b>.",
@@ -976,7 +976,7 @@ const TEMAS = [
   ]
 },
 {
-  id: "t29", mod: "mf0081", n: 7, t: "UF2676 · Protección dinámica: teoría esférica y círculos concéntricos",
+  id: "t29", mod: "mf0081", man: "UF2676", ud: 1, n: 7, t: "UF2676 · Protección dinámica: teoría esférica y círculos concéntricos",
   c: [
     { h: "Teoría esférica", l: [
       "Consiste en abrir un <b>espacio contenido en una esfera</b> cuyo <b>centro es la persona protegida</b>.",
@@ -991,7 +991,7 @@ const TEMAS = [
   ]
 },
 {
-  id: "t30", mod: "mf0081", n: 8, t: "UF2676 · Escalones, niveles de seguridad y evaluación",
+  id: "t30", mod: "mf0081", man: "UF2676", ud: 1, n: 8, t: "UF2676 · Escalones, niveles de seguridad y evaluación",
   c: [
     { h: "Tres niveles o escalones", l: [
       "<b>Puestos de vigilancia</b>: observar una zona específica; fijos o móviles. Funciones: observar el área señalada, observar a las personas del perímetro y <b>comunicar cualquier novedad o sospecha a un superior</b>.",
@@ -1008,7 +1008,7 @@ const TEMAS = [
   ]
 },
 {
-  id: "t31", mod: "mf0081", n: 9, t: "UF2676 · Coordinación con el Departamento de Seguridad y con las FCS",
+  id: "t31", mod: "mf0081", man: "UF2676", ud: 1, n: 9, t: "UF2676 · Coordinación con el Departamento de Seguridad y con las FCS",
   c: [
     { h: "Planes de seguridad", l: [
       "Se elaboran <b>conjuntamente</b> con el departamento de seguridad; comprenden todas las medidas frente a cualquier riesgo, <b>real o imaginario</b>.",
@@ -1030,7 +1030,7 @@ const TEMAS = [
   ]
 },
 {
-  id: "t32", mod: "mf0081", n: 10, t: "UF2676 · Técnicas de protección en movimiento",
+  id: "t32", mod: "mf0081", man: "UF2676", ud: 1, n: 10, t: "UF2676 · Técnicas de protección en movimiento",
   c: [
     { h: "Secuencia ante una agresión", l: [
       "<b>1. Avisar del ataque</b>: especificar el <b>tipo de agresión</b>, el <b>agresor</b> y la <b>dirección</b> por la que viene. Se avisa a los compañeros por cualquier medio (walkie talkie o señales).",
@@ -1053,7 +1053,7 @@ const TEMAS = [
   ]
 },
 {
-  id: "t33", mod: "mf0081", n: 11, t: "UF2676 · Protección estática y coordinación de servicios",
+  id: "t33", mod: "mf0081", man: "UF2676", ud: 1, n: 11, t: "UF2676 · Protección estática y coordinación de servicios",
   c: [
     { h: "Protección estática", l: [
       "Dispositivo organizado para custodiar a una persona en un <b>lugar fijo</b>: lugar de trabajo o residencia <b>habitual u ocasional</b>.",
@@ -1071,7 +1071,7 @@ const TEMAS = [
   ]
 },
 {
-  id: "t34", mod: "mf0081", n: 12, t: "UF2676 · Características del vehículo de seguridad",
+  id: "t34", mod: "mf0081", man: "UF2676", ud: 2, n: 12, t: "UF2676 · Características del vehículo de seguridad",
   c: [
     { h: "Condiciones que debe reunir", l: [
       "<b>Cómodo</b>: capacidad para el invitado, el conductor y un miembro del equipo de seguridad.",
@@ -1090,7 +1090,7 @@ const TEMAS = [
   ]
 },
 {
-  id: "t35", mod: "mf0081", n: 13, t: "UF2676 · El conductor y la requisa del vehículo",
+  id: "t35", mod: "mf0081", man: "UF2676", ud: 2, n: 13, t: "UF2676 · El conductor y la requisa del vehículo",
   c: [
     { h: "Características del conductor", l: [
       "Debe haber recibido <b>entrenamiento de conducción de alta seguridad</b>. A veces es uno de los propios escoltas.",
@@ -1107,7 +1107,7 @@ const TEMAS = [
   ]
 },
 {
-  id: "t36", mod: "mf0081", n: 14, t: "UF2676 · Conducción evasiva y maniobras",
+  id: "t36", mod: "mf0081", man: "UF2676", ud: 2, n: 14, t: "UF2676 · Conducción evasiva y maniobras",
   c: [
     { h: "Conducción evasiva", l: [
       "Busca <b>llegar lo más rápido posible al destino evitando las situaciones de peligro</b>, consiguiendo mejor rendimiento del vehículo. Su finalidad es la <b>destreza y pericia</b> para evitar emboscadas y evadirse con una simple maniobra.",
@@ -1125,7 +1125,7 @@ const TEMAS = [
   ]
 },
 {
-  id: "t37", mod: "mf0081", n: 15, t: "UF2676 · Normas de seguridad en la conducción",
+  id: "t37", mod: "mf0081", man: "UF2676", ud: 2, n: 15, t: "UF2676 · Normas de seguridad en la conducción",
   c: [
     { h: "Reglas básicas", l: [
       "Mantener los <b>cristales subidos</b> y las <b>puertas aseguradas</b>.",
@@ -1140,7 +1140,7 @@ const TEMAS = [
   ]
 },
 {
-  id: "t38", mod: "mf0081", n: 16, t: "UF2676 · Caravanas: clasificación y posiciones",
+  id: "t38", mod: "mf0081", man: "UF2676", ud: 2, n: 16, t: "UF2676 · Caravanas: clasificación y posiciones",
   c: [
     { h: "Concepto", l: [
       "<b>Caravana</b>: conjunto de vehículos utilizados para desplazar a la persona protegida y a todo su personal de seguridad. <b>Cuantos más vehículos, más complicada y problemática</b>.",
@@ -1165,7 +1165,7 @@ const TEMAS = [
   ]
 },
 {
-  id: "t39", mod: "mf0081", n: 17, t: "UF2676 · Itinerarios",
+  id: "t39", mod: "mf0081", man: "UF2676", ud: 2, n: 17, t: "UF2676 · Itinerarios",
   c: [
     { h: "Definición y clases", l: [
       "<b>Itinerario</b>: ruta o recorrido con <b>dirección y descripción concreta</b> que permite llegar hasta el lugar deseado; se busca el <b>más seguro</b>.",
@@ -1185,7 +1185,7 @@ const TEMAS = [
   ]
 },
 {
-  id: "t40", mod: "mf0081", n: 18, t: "UF2676 · Funciones, medios y entorno del escolta",
+  id: "t40", mod: "mf0081", man: "UF2676", ud: 2, n: 18, t: "UF2676 · Funciones, medios y entorno del escolta",
   c: [
     { h: "El escolta", l: [
       "Profesional de la seguridad —<b>pública o privada</b>— especializado en la <b>protección de personalidades</b>. Debe pertenecer a las FCS del Estado o a una empresa de seguridad privada.",
@@ -1214,7 +1214,7 @@ const TEMAS = [
   ]
 },
 {
-  id: "t41", mod: "mf0081", n: 19, t: "UF2676 · Valores éticos en seguridad",
+  id: "t41", mod: "mf0081", man: "UF2676", ud: 2, n: 19, t: "UF2676 · Valores éticos en seguridad",
   c: [
     { h: "Los seis valores", l: [
       "<b>Espíritu de servicio</b>: encaminar los esfuerzos al mantenimiento del orden y la seguridad del protegido.",
@@ -1853,81 +1853,81 @@ const ORAL = [
    CHULETA — listas que caen en el examen
    --------------------------------------------------------- */
 const CHULETA = [
-{ t:"Equipos de emergencia", cnt:"4 equipos", ord:false, l:[
+{ man:"UF2674", ud:1, t:"Equipos de emergencia", cnt:"4 equipos", ord:false, l:[
   "<b>EPI</b> — primera intervención","<b>ESI</b> — segunda intervención, bomberos internos","<b>EPA</b> — primeros auxilios","<b>EAE</b> — alarma y evacuación"] },
-{ t:"Medios de protección por función", cnt:"5 funciones", ord:false, l:[
+{ man:"UF2675", ud:2, t:"Medios de protección por función", cnt:"5 funciones", ord:false, l:[
   "<b>Disuasivos</b> — carteles, iluminación, cámaras visibles","<b>Retardadores</b> — cerraduras, rejas","<b>Detectores</b> — sensores","<b>Alarmas</b> — sirenas, comunicaciones","<b>Actuadores</b> — niebla de seguridad, bloqueo de puertas"] },
-{ t:"Principios de la protección física", cnt:"4 principios", ord:false, l:[
+{ man:"MF0082", ud:2, t:"Principios de la protección física", cnt:"4 principios", ord:false, l:[
   "<b>Defensa en profundidad</b> — capas sucesivas","<b>Zonificación</b> — áreas por nivel de seguridad","<b>Redundancia</b> — duplicidad de medios críticos","<b>Tiempo de reacción</b> — retardar hasta la intervención"] },
-{ t:"Análisis de riesgos", cnt:"4 etapas", ord:true, l:[
+{ man:"MF0082", ud:2, t:"Análisis de riesgos", cnt:"4 etapas", ord:true, l:[
   "Identificación de <b>activos</b> a proteger","Evaluación de <b>amenazas y vulnerabilidades</b>","Análisis de <b>impacto</b>","Propuesta de <b>medidas de mitigación</b>"] },
-{ t:"Teoría esférica de la seguridad", cnt:"3 capas", ord:true, l:[
+{ man:"UF2674", ud:1, t:"Teoría esférica de la seguridad", cnt:"3 capas", ord:true, l:[
   "<b>Inmediata</b> — contacto directo: puertas blindadas, escoltas","<b>Próxima</b> — CCTV, vigilantes estáticos","<b>Lejana</b> — perímetro externo, control de accesos"] },
-{ t:"Círculos concéntricos (protección de personas)", cnt:"3 círculos", ord:true, l:[
+{ man:"UF2676", ud:1, t:"Círculos concéntricos (protección de personas)", cnt:"3 círculos", ord:true, l:[
   "<b>Escolta personal</b> — cubrir, proteger y evacuar","<b>Puestos de seguridad</b> — protegido en su campo de observación","<b>Patrullas móviles y grupos de información</b> — no vigilan al protegido"] },
-{ t:"Reglas de manipulación del arma", cnt:"4 reglas", ord:true, l:[
+{ man:"UF2675", ud:4, t:"Reglas de manipulación del arma", cnt:"4 reglas", ord:true, l:[
   "Tratarla siempre como si estuviera <b>cargada</b>","<b>No apuntar</b> salvo necesidad estricta","<b>Dedo fuera del gatillo</b> hasta decidir disparar","<b>Comprobar su estado</b> antes y después del servicio"] },
-{ t:"Divisiones ADR de la Clase 1", cnt:"6 divisiones", ord:true, l:[
+{ man:"MF0082", ud:4, t:"Divisiones ADR de la Clase 1", cnt:"6 divisiones", ord:true, l:[
   "<b>1.1</b> explosión en masa (TNT)","<b>1.2</b> proyección, sin explosión en masa","<b>1.3</b> incendio y ligera onda de presión","<b>1.4</b> riesgo menor, explosión localizada","<b>1.5</b> muy insensibles (ANFO)","<b>1.6</b> extremadamente insensibles"] },
-{ t:"Categorías pirotécnicas por uso", cnt:"F, T y P", ord:false, l:[
+{ man:"MF0082", ud:4, t:"Categorías pirotécnicas por uso", cnt:"F, T y P", ord:false, l:[
   "<b>F1</b> muy baja peligrosidad — interiores","<b>F2</b> baja — exteriores controlados","<b>F3</b> media — zonas amplias","<b>F4</b> alta — uso profesional","<b>T1 / T2</b> teatro; T2 solo expertos","<b>P1 / P2</b> otros usos; P2 solo expertos"] },
-{ t:"Protocolo ABCDE", cnt:"5 pasos", ord:true, l:[
+{ man:"MF0272", ud:3, t:"Protocolo ABCDE", cnt:"5 pasos", ord:true, l:[
   "<b>A</b> vía aérea con control cervical","<b>B</b> respiración y ventilación","<b>C</b> circulación y control de hemorragias","<b>D</b> estado neurológico (Glasgow)","<b>E</b> exposición y control ambiental"] },
-{ t:"Conducta PAS", cnt:"3 pasos", ord:true, l:[
+{ man:"MF0272", ud:1, t:"Conducta PAS", cnt:"3 pasos", ord:true, l:[
   "<b>Proteger</b> el lugar del accidente","<b>Avisar</b> al 112","<b>Socorrer</b> según los propios conocimientos"] },
-{ t:"Itinerarios", cnt:"4 tipos", ord:false, l:[
+{ man:"UF2676", ud:2, t:"Itinerarios", cnt:"4 tipos", ord:false, l:[
   "<b>Principal</b>","<b>Alternativo</b>","<b>De evacuación</b> — centro de urgencia o asistencial","<b>De fuga</b> — puntos seguros elegidos de antemano"] },
-{ t:"Valores éticos en seguridad", cnt:"6 valores", ord:false, l:[
+{ man:"UF2676", ud:2, t:"Valores éticos en seguridad", cnt:"6 valores", ord:false, l:[
   "Espíritu de servicio","Conciencia de grupo","Honor","Disciplina consciente","Excelencia en las labores","Respeto legal"] },
 { t:"Cifras que preguntan", cnt:"Números", ord:false, l:[
   "<b>112</b> — teléfono de emergencias","<b>30:2</b> a <b>100-120/min</b>, profundidad <b>5-6 cm</b> — RCP adulto","<b>10-15 min</b> — enfriar una quemadura","<b>14-15 / 9-13 / ≤8</b> — Glasgow leve, moderado, grave","<b>300 m</b> — distancia de alejamiento tras explosión","<b>9 mm parabellum</b> — calibre autorizado","<b>1 semestre</b> — periodicidad de prácticas de tiro","<b>3 años</b> — revisión del plan de la ITC nº 12","<b>2 min</b> — retardo máximo del sistema de bloqueo del vehículo","<b>5 meses</b> — revisión de itinerarios","<b>1 a 5</b> — miembros de una cápsula de protección","<b>7-8 h</b> — sueño diario recomendado","<b>3-5 días</b> — frecuencia semanal de entrenamiento","<b>0,3 g</b> — pólvora máxima en cartuchería de juguete excluida"] },
 { t:"Normas de cabecera", cnt:"Legislación", ord:false, l:[
   "<b>Ley 5/2014</b> — Seguridad Privada","<b>RD 2364/1994</b> — Reglamento de Seguridad Privada","<b>RD 137/1993</b> — Reglamento de Armas","<b>RD 130/2017</b> — Reglamento de Explosivos","<b>RD 989/2015</b> — pirotecnia y cartuchería","<b>Ley 31/1995</b> — Prevención de Riesgos Laborales","<b>LO 2/1986</b> — Fuerzas y Cuerpos de Seguridad","<b>Orden INT/314/2011</b> — empresas de seguridad","<b>Orden INT/316/2011</b> — centrales de alarmas","<b>Directiva 2012/18/UE</b> — Seveso III"] },
-{ t:"Alfabeto fonético internacional", cnt:"26 letras", ord:true, l:[
+{ man:"INSTRUM", ud:1, t:"Alfabeto fonético internacional", cnt:"26 letras", ord:true, l:[
   "<b>A</b> Alfa","<b>B</b> Bravo","<b>C</b> Charlie","<b>D</b> Delta","<b>E</b> Echo","<b>F</b> Foxtrot","<b>G</b> Golf","<b>H</b> Hotel","<b>I</b> India","<b>J</b> Juliett","<b>K</b> Kilo","<b>L</b> Lima","<b>M</b> Mike","<b>N</b> November","<b>O</b> Oscar","<b>P</b> Papa","<b>Q</b> Quebec","<b>R</b> Romeo","<b>S</b> Sierra","<b>T</b> Tango","<b>U</b> Uniform","<b>V</b> Victor","<b>W</b> Whiskey","<b>X</b> X-ray","<b>Y</b> Yankee","<b>Z</b> Zulu"] },
-{ t:"Tetraedro del fuego", cnt:"4 factores", ord:false, l:[
+{ man:"INSTRUM", ud:3, t:"Tetraedro del fuego", cnt:"4 factores", ord:false, l:[
   "<b>Combustible</b> — el reductor","<b>Oxidante</b> o comburente — el aire","<b>Energía de activación</b> — el calor","<b>Reacción en cadena</b>"] },
-{ t:"Procedimientos de extinción", cnt:"4 procedimientos", ord:false, l:[
+{ man:"INSTRUM", ud:3, t:"Procedimientos de extinción", cnt:"4 procedimientos", ord:false, l:[
   "<b>Eliminación</b> del combustible","<b>Refrigeración</b> — agua","<b>Sofocación</b> — espuma y CO₂","<b>Rotura de la reacción en cadena</b> — polvo y halones"] },
-{ t:"Clases de fuego", cnt:"A a E", ord:true, l:[
+{ man:"INSTRUM", ud:3, t:"Clases de fuego", cnt:"A a E", ord:true, l:[
   "<b>A</b> — sólidos con brasa","<b>B</b> — líquidos inflamables","<b>C</b> — gases","<b>D</b> — metales especiales","<b>E</b> — con corriente eléctrica"] },
-{ t:"Fases de la evacuación", cnt:"4 fases", ord:true, l:[
+{ man:"INSTRUM", ud:3, t:"Fases de la evacuación", cnt:"4 fases", ord:true, l:[
   "<b>Detección</b> del incendio","<b>Notificación</b>","<b>Alarma</b>","<b>Evacuación</b>"] },
-{ t:"Sistema básico de comunicación", cnt:"6 elementos", ord:true, l:[
+{ man:"INSTRUM", ud:1, t:"Sistema básico de comunicación", cnt:"6 elementos", ord:true, l:[
   "<b>Fuente</b>","<b>Transmisor</b>","<b>Medio de transmisión</b>","<b>Receptor</b>","<b>Destino</b>","<b>Canal de transmisión</b>"] },
-{ t:"Tipos de llamada por radio", cnt:"4 tipos", ord:false, l:[
+{ man:"INSTRUM", ud:1, t:"Tipos de llamada por radio", cnt:"4 tipos", ord:false, l:[
   "<b>Simple</b> — un solo corresponsal","<b>Múltiple</b> — varios corresponsales","<b>Colectiva</b> — varios con indicativo común","<b>Abreviada</b> — sin duda del destinatario"] },
-{ t:"Las siete operaciones del ordenador", cnt:"7 operaciones", ord:false, l:[
+{ man:"INSTRUM", ud:2, t:"Las siete operaciones del ordenador", cnt:"7 operaciones", ord:false, l:[
   "<b>Entrada</b> de datos","<b>Salida</b> de datos","<b>Almacenamiento</b>","<b>Recuperación</b>","<b>Transmisión</b>","<b>Recepción</b>","<b>Tratamiento</b>"] },
-{ t:"Categorías de armas", cnt:"7 categorías", ord:true, l:[
+{ man:"INSTRUM", ud:4, t:"Categorías de armas", cnt:"7 categorías", ord:true, l:[
   "<b>1.ª</b> — armas cortas: pistolas y revólveres","<b>2.ª1</b> — largas de vigilancia y guardería · <b>2.ª2</b> caza mayor","<b>3.ª1</b> — largas rayadas deportivas · <b>3.ª2</b> escopetas y ánima lisa · <b>3.ª3</b> aire comprimido","<b>4.ª</b> — carabinas, pistolas y revólveres de aire comprimido","<b>5.ª</b> — armas blancas no prohibidas","<b>6.ª</b> — históricas, anteriores a 1890","<b>7.ª</b> — anestésicas, ballestas, Flobert, arcos y detonadoras"] },
-{ t:"Armas del personal de seguridad", cnt:"Orden INT/318/2011", ord:false, l:[
+{ man:"INSTRUM", ud:4, t:"Armas del personal de seguridad", cnt:"Orden INT/318/2011", ord:false, l:[
   "<b>Vigilante de seguridad</b> — revólver 38 especial 4\"","<b>Vigilante con arma larga</b> — escopeta 12/70, 12 postas en taco contenedor","<b>Escolta privado</b> — pistola 9 mm Parabellum","<b>Guarda rural</b> — armas rayadas de repetición"] },
-{ t:"Revólver 38 especial 4\"", cnt:"Cifras", ord:false, l:[
+{ man:"INSTRUM", ud:4, t:"Revólver 38 especial 4\"", cnt:"Cifras", ord:false, l:[
   "<b>25 m</b> — alcance eficaz","<b>715 g</b> — peso sin munición","<b>6</b> — estrías dextrógiras y recámaras del cilindro","<b>250 m/s</b> — velocidad inicial","<b>60°</b> — giro del cilindro por disparo","<b>Izquierda</b> — lado hacia el que bascula el cilindro"] },
-{ t:"Escopeta 12/70", cnt:"Cifras", ord:false, l:[
+{ man:"INSTRUM", ud:4, t:"Escopeta 12/70", cnt:"Cifras", ord:false, l:[
   "<b>Calibre 12</b>, ánima lisa","<b>5 + 1</b> — cartuchos en depósito más recámara","<b>350 mm</b> — longitud del cañón","<b>300 m</b> — alcance máximo","<b>60 m</b> — alcance eficaz","<b>6 grupos</b> — cañón, carcasa, cerrojo, disparo, asta y culata"] },
-{ t:"Partes del cartucho", cnt:"4 + 1", ord:false, l:[
+{ man:"INSTRUM", ud:4, t:"Partes del cartucho", cnt:"4 + 1", ord:false, l:[
   "<b>Vaina</b> — boca, cuerpo y culote","<b>Pistón</b> — Berdan (2 oídos) o Bóxer (1 oído)","<b>Carga de proyección</b> — pólvora sin humo","<b>Bala</b> — cuerpo, culote y ojiva","<b>Taco</b> — solo en el semimetálico; refrigerante"] },
-{ t:"Cifras del módulo instrumental", cnt:"Números", ord:false, l:[
+{ man:"INSTRUM", t:"Cifras del módulo instrumental", cnt:"Números", ord:false, l:[
   "<b>20 kg / 30 kg</b> — extintor manual y dorsal","<b>6 meses</b> — revisión de extintores","<b>100 m</b> — distancia máxima de los hidrantes a las fachadas","<b>96 %</b> — eficacia de los sprinklers","<b>2 salidas</b> — mínimo en locales con riesgo, en puntos opuestos","<b>20 mm</b> — calibre desde el que un arma es de guerra","<b>30 cm / 60 cm</b> — cañón y longitud total del arma corta","<b>11 cm</b> — hoja máxima de navaja no automática","<b>3 a 8</b> — número de estrías de un cañón rayado","<b>1890</b> — año que separa las armas históricas (6.ª categoría)"] },
 /* ===== UF2676 ===== */
-{ t:"Principios básicos de actuación", cnt:"9 principios", ord:true, l:[
+{ man:"UF2676", ud:1, t:"Principios básicos de actuación", cnt:"9 principios", ord:true, l:[
   "Legalidad","Integridad","Protección","Dignidad","Corrección","<b>Congruencia</b> — medidas proporcionadas a los <b>riesgos</b>","<b>Proporcionalidad</b> — uso de <b>técnicas y medios</b> de defensa","Reserva profesional","Colaboración con las FCS"] },
-{ t:"Técnicas de protección", cnt:"3 tipos", ord:false, l:[
+{ man:"UF2676", ud:1, t:"Técnicas de protección", cnt:"3 tipos", ord:false, l:[
   "<b>Integral</b> — todos los aspectos: esfera profesional y personal","<b>Dinámica</b> — desplazamientos o traslado de un objeto","<b>Estática</b> — lugar fijo"] },
-{ t:"Escalones o niveles de seguridad", cnt:"3 puestos", ord:true, l:[
+{ man:"UF2676", ud:1, t:"Escalones o niveles de seguridad", cnt:"3 puestos", ord:true, l:[
   "<b>Puestos de vigilancia</b> — observar y comunicar novedades al superior","<b>Puestos de revisión y control</b> — filtro de acceso al área restringida","<b>Puestos especiales de seguridad</b> — función específica dentro del dispositivo"] },
-{ t:"Medidas de seguridad (Ley 5/2014)", cnt:"5 medidas", ord:false, l:[
+{ man:"UF2676", ud:1, t:"Medidas de seguridad (Ley 5/2014)", cnt:"5 medidas", ord:false, l:[
   "<b>Física</b> — barreras","<b>Electrónica</b> — detección","<b>Informática</b> — integridad, confidencialidad y disponibilidad","<b>Organizativa</b> — departamentos y planes de seguridad","<b>Personal</b> — resto de servicios"] },
-{ t:"Clasificación de riesgos", cnt:"4 clases", ord:false, l:[
+{ man:"UF2676", ud:1, t:"Clasificación de riesgos", cnt:"4 clases", ord:false, l:[
   "<b>Naturales</b> — inundaciones, rayos, incendios, terremotos","<b>Tecnológicos</b> — fallos de instalación, corte eléctrico, explosión de equipos","<b>Por accidente</b> — heridas a personas o daños en edificios","<b>Por malas acciones de personas</b> — intrusión, asalto, robo, amenaza de bomba, vandalismo, disturbios y huelgas"] },
-{ t:"Secuencia ante agresión", cnt:"4 pasos", ord:true, l:[
+{ man:"UF2676", ud:1, t:"Secuencia ante agresión", cnt:"4 pasos", ord:true, l:[
   "<b>Avisar</b> del ataque: tipo, agresor y dirección","<b>Cobertura</b>: reducir superficie de blanco y silueta","<b>Evacuación</b> al lugar seguro preestablecido","<b>Neutralizar</b>: al arma, no al cuerpo"] },
-{ t:"Maniobras evasivas", cnt:"4 maniobras", ord:true, l:[
+{ man:"UF2676", ud:2, t:"Maniobras evasivas", cnt:"4 maniobras", ord:true, l:[
   "<b>En Y</b> — 180º con marcha atrás intermedia","<b>Vuelta corta</b> — parar y girar marcha atrás","<b>California</b> — freno de mano, derrape","<b>Giro en J</b> — marcha atrás y salir hacia delante","<i>Y</i> y <i>California</i>: solo si no hay tiempo para reaccionar"] },
-{ t:"Vehículos de la caravana", cnt:"4 coches", ord:true, l:[
+{ man:"UF2676", ud:2, t:"Vehículos de la caravana", cnt:"4 coches", ord:true, l:[
   "<b>Piloto</b> — equipo de seguridad + Policía local","<b>VIP</b> — protegido, acompañantes y Jefe del Equipo","<b>Adicional</b> — repuesto del VIP","<b>Escolta</b> — resto del equipo"] },
-{ t:"Cifras de la protección de personas", cnt:"Números", ord:false, l:[
+{ man:"UF2676", ud:2, t:"Cifras de la protección de personas", cnt:"Números", ord:false, l:[
   "<b>18 años</b> — edad mínima para la habilitación","<b>2 / 4 años</b> — plazo sin sanción grave / muy grave","<b>5 años</b> — condena por intromisión ilegítima","<b>2 minutos</b> — retardo máximo del sistema de bloqueo del vehículo","<b>1 a 5</b> — miembros de una cápsula de protección","<b>5 meses</b> — revisión de los itinerarios","<b>14 cm</b> — longitud del kubotán","<b>3 círculos</b> — concéntricos del dispositivo dinámico","<b>3 planos</b> — aéreo, superficial y subterráneo de la teoría esférica"] }
 ];
