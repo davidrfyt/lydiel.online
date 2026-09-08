@@ -7,6 +7,7 @@
                           nombre, avatar }
      s:<sesion>         { u, admin }   (caduca a los 90 dias)
      sesiones:<usuario> [ids de sesion abiertos]
+     config             { paywall, precio, desde }
      contenido          material de estudio (resumenes, fichas, tests, oral)
      manual:<clave>     texto de un manual
      p:<usuario>    progreso en JSON
@@ -22,7 +23,11 @@
      PUT  /progreso            guarda el progreso de la sesion
      POST /importar            { token } copia el progreso de un token antiguo
      GET  /yo                  quien soy y si administro
-     GET  /contenido           material de estudio (requiere sesion)
+     GET  /pago/estado         si hace falta pagar y si esta pagado
+     POST /pago/sesion         abre la pasarela de Stripe
+     POST /pago/webhook        Stripe confirma el cobro (firmado)
+     POST /admin/acceso        { usuario, acceso } concede o retira a mano
+     GET  /contenido           material de estudio (requiere sesion y acceso)
      GET  /manual/<clave>      texto de un manual (requiere sesion)
      PUT  /contenido           carga el material (solo admin)
      PUT  /manual/<clave>      carga un manual (solo admin)
@@ -45,6 +50,10 @@ const ORIGENES_PERMITIDOS = [
   "https://www.lydiel.online",
 ];
 const ADMINS = ["lydiel"];
+const PRECIO_CENTIMOS = 300;          // 3,00 EUR
+const MONEDA = "eur";
+const CONCEPTO = "Acceso completo a TemarioVigilanteSeguridad";
+const SITIO = "https://temariovigilantesdeseguridad.com";
 const MAX_BYTES = 160000;      // el avatar viaja dentro del cuerpo
 const MAX_CONTENIDO = 6000000; // el temario se sube entero de una vez
 const AVATAR_MAX = 60000;      // ~44 KB de imagen en base64
@@ -61,8 +70,12 @@ const INTENTOS_SEG = 900;
 
 /* ---------- utilidades ---------- */
 
+/* los despliegues de Pages salen en <hash>.temariovigilanteseguridad.pages.dev */
+const PAGES_RE = /^https:\/\/([a-z0-9-]+\.)?temariovigilanteseguridad\.pages\.dev$/;
+const origenValido = o => ORIGENES_PERMITIDOS.includes(o) || PAGES_RE.test(o || "");
+
 function cors(origen) {
-  const permitido = ORIGENES_PERMITIDOS.includes(origen) ? origen : ORIGENES_PERMITIDOS[0];
+  const permitido = origenValido(origen) ? origen : ORIGENES_PERMITIDOS[0];
   return {
     "Access-Control-Allow-Origin": permitido,
     "Access-Control-Allow-Methods": "GET,PUT,POST,OPTIONS",
@@ -336,6 +349,8 @@ async function adminUsuarios(peticion, env, origen) {
       visto: c.visto || null,
       suspendido: !!c.suspendido,
       admin: ADMINS.includes(nombre),
+      pagado: !!c.pagado,
+      pagadoEl: c.pagadoEl || null,
       progreso: resumeProgreso(await env.PROGRESO.get("p:" + nombre))
     });
   }
@@ -374,6 +389,143 @@ async function adminBorrar(peticion, env, origen) {
   return json({ ok: true, borrado: u }, 200, origen);
 }
 
+/* ---------- inscripcion ---------- */
+
+async function config(env) {
+  try { return JSON.parse(await env.PROGRESO.get("config")) || {}; }
+  catch (e) { return {}; }
+}
+
+/* Quien puede leer el material:
+   la administracion siempre; todos, si la inscripcion esta apagada;
+   quien pago; y quien ya tenia cuenta antes de encenderla, que no se le
+   puede quitar lo que ya estaba usando. */
+function tieneAcceso(cuenta, usuario, cfg) {
+  if (ADMINS.includes(usuario)) return true;
+  if (!cfg.paywall) return true;
+  if (cuenta && cuenta.pagado) return true;
+  if (cfg.desde && cuenta && cuenta.creado && cuenta.creado < cfg.desde) return true;
+  return false;
+}
+
+async function estadoPago(peticion, env, origen) {
+  const s = await sesionDe(peticion, env);
+  if (!s) return json({ error: "Sesión no válida." }, 401, origen);
+  const cfg = await config(env);
+  const c = await leeCuenta(env, s.usuario);
+  return json({
+    paywall: !!cfg.paywall,
+    precio: cfg.precio || PRECIO_CENTIMOS,
+    moneda: MONEDA,
+    acceso: tieneAcceso(c, s.usuario, cfg),
+    pagado: !!(c && c.pagado),
+    fecha: (c && c.pagadoEl) || null,
+  }, 200, origen);
+}
+
+/* Stripe habla en formulario, no en JSON */
+function formulario(obj) {
+  return Object.entries(obj).map(([k, v]) =>
+    encodeURIComponent(k) + "=" + encodeURIComponent(v)).join("&");
+}
+
+async function abreCheckout(peticion, env, origen) {
+  const s = await sesionDe(peticion, env);
+  if (!s) return json({ error: "Sesión no válida." }, 401, origen);
+  if (!env.STRIPE_SK) return json({ error: "La inscripción aún no está configurada." }, 503, origen);
+
+  const cfg = await config(env);
+  const c = await leeCuenta(env, s.usuario);
+  if (tieneAcceso(c, s.usuario, cfg)) {
+    return json({ error: "Tu cuenta ya tiene acceso." }, 409, origen);
+  }
+
+  const base = origenValido(origen) ? origen : SITIO;
+  const cuerpo = formulario({
+    mode: "payment",
+    "line_items[0][price_data][currency]": cfg.moneda || MONEDA,
+    "line_items[0][price_data][unit_amount]": String(cfg.precio || PRECIO_CENTIMOS),
+    "line_items[0][price_data][product_data][name]": CONCEPTO,
+    "line_items[0][quantity]": "1",
+    client_reference_id: s.usuario,
+    "metadata[usuario]": s.usuario,
+    success_url: base + "/#/pago/hecho",
+    cancel_url: base + "/#/inscripcion",
+    locale: "es",
+  });
+
+  const r = await fetch("https://api.stripe.com/v1/checkout/sessions", {
+    method: "POST",
+    headers: {
+      Authorization: "Bearer " + env.STRIPE_SK,
+      "Content-Type": "application/x-www-form-urlencoded",
+    },
+    body: cuerpo,
+  });
+  const d = await r.json();
+  if (!r.ok) return json({ error: (d.error && d.error.message) || "No se pudo abrir la pasarela." }, 502, origen);
+  return json({ url: d.url }, 200, origen);
+}
+
+/* Firma del webhook: Stripe manda t=<epoch>,v1=<hmac de "t.cuerpo"> */
+function aHex(buf) {
+  return [...new Uint8Array(buf)].map(b => b.toString(16).padStart(2, "0")).join("");
+}
+
+async function firmaValida(cuerpo, cabecera, secreto) {
+  if (!cabecera || !secreto) return false;
+  const partes = Object.fromEntries(cabecera.split(",").map(p => p.split("=")));
+  const t = partes.t;
+  if (!t || !partes.v1) return false;
+  // fuera de cinco minutos se descarta: evita reenviar una llamada antigua
+  if (Math.abs(Math.floor(Date.now() / 1000) - Number(t)) > 300) return false;
+  const clave = await crypto.subtle.importKey(
+    "raw", new TextEncoder().encode(secreto),
+    { name: "HMAC", hash: "SHA-256" }, false, ["sign"]);
+  const mac = await crypto.subtle.sign("HMAC", clave, new TextEncoder().encode(t + "." + cuerpo));
+  return iguales(aHex(mac), partes.v1);
+}
+
+async function webhookPago(peticion, env, origen) {
+  const cuerpo = await peticion.text();
+  const ok = await firmaValida(cuerpo, peticion.headers.get("Stripe-Signature"), env.STRIPE_WH);
+  if (!ok) return json({ error: "Firma no válida." }, 400, origen);
+
+  let evento;
+  try { evento = JSON.parse(cuerpo); } catch (e) { return json({ error: "Cuerpo no válido." }, 400, origen); }
+  if (evento.type !== "checkout.session.completed") return json({ ok: true, ignorado: evento.type }, 200, origen);
+
+  const ses = evento.data && evento.data.object;
+  const usuario = normaliza((ses && (ses.client_reference_id || (ses.metadata || {}).usuario)) || "");
+  if (!usuario || (ses.payment_status && ses.payment_status !== "paid")) {
+    return json({ ok: true, sinUsuario: true }, 200, origen);
+  }
+  const c = await leeCuenta(env, usuario);
+  if (!c) return json({ ok: true, sinCuenta: true }, 200, origen);
+  if (c.pagado) return json({ ok: true, yaEstaba: true }, 200, origen);   // idempotente
+
+  c.pagado = true;
+  c.pagadoEl = Date.now();
+  c.pagoId = ses.id || null;
+  await env.PROGRESO.put("cuenta:" + usuario, JSON.stringify(c));
+  return json({ ok: true, concedido: usuario }, 200, origen);
+}
+
+async function adminAcceso(peticion, env, origen) {
+  const s = await sesionDe(peticion, env);
+  if (!s) return json({ error: "Sesión no válida." }, 401, origen);
+  if (!s.admin) return json({ error: "No tienes permiso." }, 403, origen);
+  const { usuario, acceso } = await leerCuerpo(peticion);
+  const u = normaliza(usuario);
+  const c = await leeCuenta(env, u);
+  if (!c) return json({ error: "Ese usuario no existe." }, 404, origen);
+  c.pagado = !!acceso;
+  if (c.pagado && !c.pagadoEl) c.pagadoEl = Date.now();
+  if (!c.pagado) { delete c.pagadoEl; delete c.pagoId; }
+  await env.PROGRESO.put("cuenta:" + u, JSON.stringify(c));
+  return json({ ok: true, usuario: u, acceso: c.pagado }, 200, origen);
+}
+
 /* ---------- material de estudio, detras de la sesion ---------- */
 
 function sirveJSON(txt, origen, segundos) {
@@ -389,6 +541,10 @@ function sirveJSON(txt, origen, segundos) {
 async function contenido(peticion, env, origen) {
   const s = await sesionDe(peticion, env);
   if (!s) return json({ error: "Sesión no válida." }, 401, origen);
+  const cfg = await config(env);
+  if (!tieneAcceso(await leeCuenta(env, s.usuario), s.usuario, cfg)) {
+    return json({ error: "Tu cuenta todavía no tiene acceso.", pago: true }, 402, origen);
+  }
   const d = await env.PROGRESO.get("contenido");
   if (!d) return json({ error: "El material aún no está cargado." }, 503, origen);
   return sirveJSON(d, origen, 3600);
@@ -397,6 +553,10 @@ async function contenido(peticion, env, origen) {
 async function manual(peticion, env, origen, clave) {
   const s = await sesionDe(peticion, env);
   if (!s) return json({ error: "Sesión no válida." }, 401, origen);
+  const cfg = await config(env);
+  if (!tieneAcceso(await leeCuenta(env, s.usuario), s.usuario, cfg)) {
+    return json({ error: "Tu cuenta todavía no tiene acceso.", pago: true }, 402, origen);
+  }
   if (!/^[A-Za-z0-9_]{3,20}$/.test(clave)) return json({ error: "Manual no válido." }, 400, origen);
   const d = await env.PROGRESO.get("manual:" + clave);
   if (!d) return json({ error: "Ese manual no existe." }, 404, origen);
@@ -529,6 +689,10 @@ export default {
       if (ruta === "/progreso" && M === "GET") return await leerProgreso(peticion, env, origen);
       if (ruta === "/progreso" && M === "PUT") return await guardarProgreso(peticion, env, origen);
       if (ruta === "/yo" && M === "GET") return await yo(peticion, env, origen);
+      if (ruta === "/pago/estado" && M === "GET") return await estadoPago(peticion, env, origen);
+      if (ruta === "/pago/sesion" && M === "POST") return await abreCheckout(peticion, env, origen);
+      if (ruta === "/pago/webhook" && M === "POST") return await webhookPago(peticion, env, origen);
+      if (ruta === "/admin/acceso" && M === "POST") return await adminAcceso(peticion, env, origen);
       if (ruta === "/contenido" && M === "GET") return await contenido(peticion, env, origen);
       if (ruta === "/contenido" && M === "PUT") return await cargaContenido(peticion, env, origen, "contenido");
       const man = ruta.match(/^\/manual\/([A-Za-z0-9_]+)$/);

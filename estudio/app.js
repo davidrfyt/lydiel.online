@@ -31,6 +31,7 @@ const CACHE = {};
    presenta una sesion. Hasta entonces estas listas estan vacias. */
 let MODULOS = [], TEMAS = [], FICHAS = [], PREGUNTAS = [], ORAL = [], CHULETA = [];
 let CONTENIDO = false;
+let PAGO = { paywall: false, precio: 300, acceso: true, pagado: false, fecha: null };
 
 const $ = id => document.getElementById(id);
 const lsGet = k => { try { return localStorage.getItem(k); } catch (e) { return null; } };
@@ -290,8 +291,17 @@ async function pideMaterial(ruta) {
   const cab = SESION ? conSesion() : {};
   const r = await fetch(CONFIG.SYNC_URL + ruta, { headers: cab });
   if (r.status === 401) { caduca(); throw new Error("Sesión no válida."); }
+  if (r.status === 402) { const e = new Error("Falta la inscripción."); e.pago = true; throw e; }
   if (!r.ok) throw new Error("No se pudo cargar el material.");
   return await r.json();
+}
+
+async function cargaEstadoPago() {
+  try {
+    const r = await fetch(CONFIG.SYNC_URL + "/pago/estado", { headers: conSesion() });
+    if (r.status === 401) { caduca(); return; }
+    if (r.ok) PAGO = await r.json();
+  } catch (e) {}
 }
 
 async function cargaContenido() {
@@ -440,6 +450,8 @@ function pinta() {
   if (r.vista === "panel") return vistaAdmin();
   if (r.vista === "perfil") return vistaPerfil();
   if (r.vista === "hoy") return ruta().sub === "fichas" ? vistaHoyFichas() : vistaHoy();
+  if (r.vista === "inscripcion") return vistaInscripcion();
+  if (r.vista === "pago") return vistaPagoHecho();
   return vistaIndice();
 }
 window.addEventListener("hashchange", () => { if (SESION || TOKEN) pinta(); });
@@ -1424,6 +1436,81 @@ function vistaHoyFichas() {
 }
 
 /* =========================================================
+   INSCRIPCION
+   ========================================================= */
+const euros = c => (c / 100).toLocaleString("es-ES", { style: "currency", currency: "EUR" });
+
+function vistaInscripcion() {
+  cabecera("Cuenta", "Inscripción");
+  const p = $("vista");
+  if (PAGO.acceso) {
+    p.innerHTML = '<div class="tarjeta-perfil" style="max-width:520px"><h3>Ya tienes acceso</h3>' +
+      '<p class="ayuda">Tu cuenta puede usar todo el material. No hay nada que pagar.</p>' +
+      '<button class="btn" type="button" data-ir="#/">Ir al panel</button></div>';
+    p.querySelectorAll("[data-ir]").forEach(b => b.onclick = () => ir(b.dataset.ir));
+    return;
+  }
+
+  p.innerHTML =
+    '<section class="inscripcion">' +
+    '<div class="ins-precio"><b>' + euros(PAGO.precio) + "</b><span>pago único</span></div>" +
+    "<h2>Acceso completo, para siempre</h2>" +
+    '<p class="lead">Un solo pago. Sin cuota mensual, sin renovaciones y sin que caduque. ' +
+    "Entras desde cualquier dispositivo con tu usuario y tu progreso te sigue.</p>" +
+    '<ul class="ins-lista">' +
+    "<li><b>El temario íntegro</b> de los ocho manuales, unidad por unidad</li>" +
+    "<li><b>Lectura en voz alta</b> de cualquier epígrafe o de la unidad entera</li>" +
+    "<li><b>Fichas con repaso espaciado</b>, que te devuelven cada una el día que toca</li>" +
+    "<li><b>Banco de preguntas</b> con corrección y explicación, incluidos los tests oficiales</li>" +
+    "<li><b>Exámenes cronometrados</b> por unidad y del certificado completo</li>" +
+    "<li><b>Simulacro de examen oral</b> con guion y autoevaluación</li>" +
+    "<li><b>Chuletas</b> de las listas y las cifras que caen</li>" +
+    "</ul>" +
+    '<div class="bar"><button class="btn" id="pagar" type="button">Inscribirme por ' + euros(PAGO.precio) + "</button>" +
+    '<span class="aviso-linea" id="pagoMsg"></span></div>' +
+    '<p class="ins-nota">El cobro lo gestiona <b>Stripe</b>. Esta página no ve ni guarda los datos de tu tarjeta. ' +
+    "Al inscribirte solicitas el acceso inmediato al contenido digital y aceptas que, una vez dado, " +
+    "decae el derecho de desistimiento de catorce días.</p>" +
+    "</section>";
+
+  $("pagar").onclick = async () => {
+    const b = $("pagar"), msg = $("pagoMsg");
+    b.disabled = true; msg.textContent = "abriendo la pasarela…"; msg.className = "aviso-linea";
+    try {
+      const r = await fetch(CONFIG.SYNC_URL + "/pago/sesion", { method: "POST", headers: conSesion() });
+      const d = await r.json().catch(() => ({}));
+      if (!r.ok) throw new Error(d.error || "No se pudo abrir la pasarela.");
+      location.href = d.url;
+    } catch (e) {
+      msg.textContent = e.message; msg.className = "aviso-linea mal";
+      b.disabled = false;
+    }
+  };
+}
+
+/* vuelta desde Stripe: el cobro lo confirma el webhook, no esta pagina */
+function vistaPagoHecho() {
+  cabecera("Cuenta", "Pago recibido");
+  $("vista").innerHTML =
+    '<div class="tarjeta-perfil" style="max-width:520px"><h3>Gracias</h3>' +
+    '<p class="ayuda">Estamos confirmando el pago con Stripe. Suele tardar unos segundos. ' +
+    "En cuanto quede confirmado, el material se abre solo.</p>" +
+    '<div class="bar"><button class="btn" id="comprobar" type="button">Comprobar ahora</button>' +
+    '<span class="aviso-linea" id="compMsg"></span></div></div>';
+  const intenta = async (avisa) => {
+    await cargaEstadoPago();
+    if (PAGO.acceso) { CONTENIDO = false; IDX = []; await boot(); ir("#/"); return true; }
+    if (avisa) $("compMsg").textContent = "todavía no consta. Espera unos segundos y vuelve a probar.";
+    return false;
+  };
+  $("comprobar").onclick = () => intenta(true);
+  let intentos = 0;
+  const reloj = setInterval(async () => {
+    if (++intentos > 10 || await intenta(false)) clearInterval(reloj);
+  }, 3000);
+}
+
+/* =========================================================
    MI PERFIL
    ========================================================= */
 const AVATAR_MAX = 60000;
@@ -1511,7 +1598,11 @@ function vistaPerfil() {
     '<span class="aviso-linea" id="nombreMsg"></span></div>' +
     '<dl class="datos"><div><dt>Usuario</dt><dd class="mono">' + esc(USUARIO) + "</dd></div>" +
     "<div><dt>Cuenta creada</dt><dd>" + fecha(PERFIL.creado) + "</dd></div>" +
-    "<div><dt>Última conexión</dt><dd>" + fecha(PERFIL.visto, true) + "</dd></div></dl></section>";
+    "<div><dt>Última conexión</dt><dd>" + fecha(PERFIL.visto, true) + "</dd></div>" +
+    "<div><dt>Inscripción</dt><dd>" +
+    (PAGO.pagado ? '<span class="etiqueta activo">Pagada</span> ' + fecha(PAGO.fecha)
+      : PAGO.acceso ? '<span class="etiqueta activo">Acceso libre</span>'
+        : '<span class="etiqueta susp">Pendiente</span>') + "</dd></div></dl></section>";
 
   /* seguridad */
   h += '<section class="tarjeta-perfil"><h3>Contraseña</h3>' +
@@ -1694,7 +1785,7 @@ async function vistaAdmin() {
 
   h += '<div class="tabla-caja"><table class="usuarios"><thead><tr>' +
     "<th>Usuario</th><th>Alta</th><th>Conexión</th><th>Actividad</th>" +
-    "<th>Epígrafes</th><th>Fichas</th><th>Notas</th><th>Estado</th><th></th>" +
+    "<th>Epígrafes</th><th>Fichas</th><th>Notas</th><th>Inscripción</th><th>Estado</th><th></th>" +
     "</tr></thead><tbody>";
 
   us.forEach(u => {
@@ -1711,11 +1802,16 @@ async function vistaAdmin() {
       '<td class="num">' + pr.fichas + "</td>" +
       '<td class="num" title="Mejor test / mejor examen">' +
       (pr.mejor != null ? pr.mejor + " %" : "—") + " · " + (pr.examen != null ? pr.examen + " %" : "—") + "</td>" +
+      "<td>" + (u.admin ? '<span class="etiqueta admin">—</span>'
+        : u.pagado ? '<span class="etiqueta activo" title="' + fecha(u.pagadoEl, true) + '">Pagada</span>'
+          : '<span class="etiqueta susp">No</span>') + "</td>" +
       "<td>" + (u.admin ? '<span class="etiqueta admin">Admin</span>'
         : u.suspendido ? '<span class="etiqueta susp">Suspendida</span>'
           : '<span class="etiqueta activo">Activa</span>') + "</td>" +
       '<td><div class="acc-fila">' +
       (u.admin ? '<span class="hint">—</span>' :
+        '<button class="btn ghost chico" data-acc="acceso" data-u="' + esc(u.usuario) + '" data-v="' + (!u.pagado) + '">' +
+        (u.pagado ? "Quitar acceso" : "Dar acceso") + "</button>" +
         '<button class="btn ghost chico" data-acc="susp" data-u="' + esc(u.usuario) + '" data-v="' + (!u.suspendido) + '">' +
         (u.suspendido ? "Reactivar" : "Suspender") + "</button>" +
         '<button class="btn peligro chico" data-acc="borrar" data-u="' + esc(u.usuario) + '">Borrar</button>') +
@@ -1727,7 +1823,14 @@ async function vistaAdmin() {
   p.innerHTML = h;
   p.querySelectorAll("[data-acc]").forEach(b => b.onclick = () => {
     const u = b.dataset.u;
-    if (b.dataset.acc === "susp") {
+    if (b.dataset.acc === "acceso") {
+      const dar = b.dataset.v === "true";
+      confirma(dar ? "Dar acceso a " + u : "Quitar el acceso a " + u,
+        dar ? "Podrá usar todo el material sin haber pagado. Útil para invitaciones o incidencias con un cobro."
+          : "Dejará de poder abrir el temario hasta que se inscriba.",
+        dar ? "Dar acceso" : "Quitar", !dar,
+        () => accionAdmin("/admin/acceso", { usuario: u, acceso: dar }));
+    } else if (b.dataset.acc === "susp") {
       const activar = b.dataset.v === "true";
       confirma(activar ? "Suspender a " + u : "Reactivar a " + u,
         activar ? "Se cerrarán sus sesiones y no podrá entrar hasta que lo reactives. Su progreso se conserva."
@@ -1821,6 +1924,7 @@ async function envia() {
     lsSet(KSES, SESION); lsSet(KUSR, USUARIO);
     PERFIL = { nombre: "", avatar: "", creado: null, visto: null };
     await cargaPerfil();
+    await cargaEstadoPago();
     $("gatePass").value = "";
     $("gate").hidden = true;
     await unlock(USUARIO);
@@ -1852,6 +1956,7 @@ async function boot() {
     if (!IDX.length) IDX = await pideMaterial("/manual/indice");
   } catch (e) {
     if (!SESION && !TOKEN) return;              // la sesion ha caducado
+    if (e.pago) { pintaNav(); vistaInscripcion(); return; }
     $("vista").innerHTML = '<p class="empty">No se ha podido cargar el material. ' +
       "Comprueba tu conexión y vuelve a entrar.</p>";
     return;
@@ -1910,6 +2015,7 @@ async function cargaPerfil() {
   if (ses && usr) {
     SESION = ses; USUARIO = usr;
     await cargaPerfil();
+    await cargaEstadoPago();
     if (!SESION) return;
     $("gate").hidden = true;
     await unlock(usr);

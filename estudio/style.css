@@ -788,3 +788,33 @@ table.usuarios .quien .alias{color:var(--gris);font-size:var(--t-xs)}
 }
 .respuesta:focus{outline:0;border-color:var(--marca);background:var(--sup);box-shadow:0 0 0 3px var(--marca-2)}
 .guion{border-top:1px solid var(--linea-2);margin-top:14px;padding-top:4px}
+
+/* =========================================================
+   INSCRIPCION
+   ========================================================= */
+.inscripcion{
+  max-width:660px;background:var(--sup);border:1px solid var(--linea);
+  border-radius:var(--r-l);padding:30px 32px;box-shadow:var(--sombra-2);
+}
+.ins-precio{
+  display:inline-flex;align-items:baseline;gap:9px;margin-bottom:16px;
+  background:var(--marca-2);border-radius:999px;padding:7px 18px;
+}
+.ins-precio b{font-family:var(--mono);font-size:var(--t-xl);font-weight:700;color:var(--marca);line-height:1}
+.ins-precio span{font-size:var(--t-xs);font-weight:700;color:var(--marca)}
+.inscripcion h2{font-size:var(--t-xl);margin-bottom:8px}
+.ins-lista{margin:0 0 24px;padding:0;list-style:none;display:flex;flex-direction:column;gap:10px}
+.ins-lista li{position:relative;padding-left:28px;font-size:var(--t-base);color:var(--ink-2);line-height:1.55}
+.ins-lista li::before{
+  content:"";position:absolute;left:0;top:.3em;width:17px;height:17px;border-radius:50%;background:var(--ok-2);
+}
+.ins-lista li::after{
+  content:"";position:absolute;left:5px;top:.58em;width:6px;height:3px;
+  border-left:2px solid var(--ok);border-bottom:2px solid var(--ok);transform:rotate(-45deg);
+}
+.ins-lista b{color:var(--ink)}
+.ins-nota{
+  margin:20px 0 0;padding-top:16px;border-top:1px solid var(--linea-2);
+  font-size:var(--t-xs);color:var(--gris);line-height:1.6;
+}
+.ins-nota b{color:var(--ink-2)}
