@@ -18,13 +18,20 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&family=JetBrains+Mono:wght@400;500&display=swap">
-<link rel="stylesheet" href="style.css?v=20">
+<link rel="stylesheet" href="style.css?v=22">
 </head>
 <body>
 
 <div id="gate" hidden>
   <div class="gate-card">
     <div class="gate-marca"><img src="logo-192.png" alt="" width="46" height="46"><div class="txt"><b>TemarioVigilanteSeguridad</b><span>Certificado SEA029</span></div></div>
+
+    <div class="gate-pk" id="gatePk" hidden>
+      <button class="btn ancho" id="pkEntrar" type="button">
+        <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="9" r="4"/><path d="M13 12h8M18 12v3M21 12v4M2 20c0-3 3.1-5 7-5"/></svg>
+        Entrar con passkey</button>
+      <p class="gate-o"><span>o con usuario y contraseña</span></p>
+    </div>
 
     <div class="gate-modo" id="gateModo" role="group" aria-label="Acceso">
       <button type="button" data-m="entrar" aria-pressed="true">Entrar</button>
@@ -154,7 +161,7 @@
 
 </div>
 
-<script src="iconos.js?v=20"></script>
-<script src="app.js?v=20"></script>
+<script src="iconos.js?v=22"></script>
+<script src="app.js?v=22"></script>
 </body>
 </html>

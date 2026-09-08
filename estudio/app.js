@@ -1626,21 +1626,27 @@ function vistaPerfil() {
     '<div class="fila-acc"><button class="btn" id="guardaNombre" type="button">Guardar</button>' +
     '<span class="aviso-linea" id="nombreMsg"></span></div></section>';
 
-  /* correo: la via principal para recuperar la cuenta */
-  h += '<section class="tarjeta-perfil"><h3>Correo</h3>' +
-    '<p class="ayuda">' + (PERFIL.email
-      ? (PERFIL.emailok
-          ? "Confirmado. Si olvidas la contraseña, podrás recuperarla desde la puerta de acceso."
-          : "Falta confirmarlo. Hasta que no lo hagas no podrás recuperar la contraseña por correo.")
-      : "No has dejado ninguna dirección. Sin ella no hay forma de recuperar la contraseña por correo.") + "</p>" +
-    '<div class="campo"><label for="miCorreo">Dirección</label>' +
-    '<input id="miCorreo" type="email" autocomplete="email" spellcheck="false" placeholder="tu@correo.com" value="' +
-    esc(PERFIL.email || "") + '"></div>' +
-    '<div class="fila-acc"><button class="btn" id="guardaCorreo" type="button">' +
-    (PERFIL.email ? "Cambiar la dirección" : "Guardar") + "</button>" +
-    (PERFIL.email && !PERFIL.emailok
-      ? '<button class="btn ghost" id="reenviaCorreo" type="button">Reenviar la confirmación</button>' : "") +
-    '<span class="aviso-linea" id="correoMsg"></span></div></section>';
+  /* passkeys */
+  if (hayPasskey()) {
+    const ks = PERFIL.passkeys || [];
+    h += '<section class="tarjeta-perfil"><h3>Passkeys</h3>' +
+      '<p class="ayuda">' + (ks.length
+        ? "Entras con la huella, la cara o el PIN del dispositivo, sin escribir la contraseña. " +
+          "Registra una en cada aparato que uses."
+        : "Puedes entrar con la huella, la cara o el PIN de este dispositivo, sin escribir la contraseña. " +
+          "La clave no sale de aquí y no sirve en ninguna otra web.") + "</p>";
+    if (ks.length) {
+      h += '<ul class="pk-lista">' + ks.map(k =>
+        "<li>" + icono("passkey") + '<span class="quien"><b>' + esc(k.nombre) + "</b>" +
+        "<span>Añadida el " + fecha(k.creado) +
+        (k.visto ? " · usada " + fecha(k.visto, true) : " · sin usar todavía") + "</span></span>" +
+        '<button type="button" data-pk="' + esc(k.id) + '">Retirar</button></li>').join("") + "</ul>";
+    }
+    h += '<div class="fila-acc"><button class="btn' + (ks.length ? " ghost" : "") + '" id="pkAlta" type="button">' +
+      (ks.length ? "Añadir otra passkey" : "Crear una passkey") + "</button>" +
+      '<span class="aviso-linea" id="pkMsg"></span></div></section>';
+  }
+
   /* acceso */
   h += '<section class="tarjeta-perfil"><h3>Contraseña</h3>' +
     '<p class="ayuda">Al cambiarla se cierran las sesiones abiertas en otros dispositivos. En este sigues dentro.</p>' +
@@ -1649,11 +1655,30 @@ function vistaPerfil() {
     '<div class="campo"><label for="claveRep">Repite la nueva</label><input id="claveRep" type="password" autocomplete="new-password"></div>' +
     '<div class="fila-acc"><button class="btn" id="cambiaClave" type="button">Cambiar contraseña</button>' +
     '<span class="aviso-linea" id="claveMsg"></span></div></section>';
-  h += '<section class="tarjeta-perfil"><h3>Código de rescate</h3>' +
-    '<p class="ayuda">' + (PERFIL.rescate
-      ? "Tienes uno emitido" + (PERFIL.rescateDesde ? " el " + fecha(PERFIL.rescateDesde) : "") +
-        ". Solo se ve una vez, así que si no lo encuentras, emite otro: el anterior dejará de servir."
-      : "Tu cuenta todavía no tiene código. Es el respaldo por si olvidas la contraseña y tampoco puedes usar el correo.") + "</p>" +
+  /* recuperar el acceso: el correo manda y el codigo es el respaldo */
+  h += '<section class="tarjeta-perfil"><h3>Recuperar el acceso</h3>' +
+    '<p class="ayuda">Si algún día olvidas la contraseña, esto es lo que te devuelve la cuenta.</p>' +
+
+    '<h4 class="sub">Correo</h4>' +
+    '<p class="ayuda ceñida">' + (PERFIL.email
+      ? (PERFIL.emailok
+          ? "Confirmado. Pide el enlace desde la puerta de acceso y listo."
+          : "Falta confirmarlo: hasta entonces no sirve para recuperar la contraseña.")
+      : "No has dejado ninguna dirección. Es la forma más cómoda de recuperar la cuenta.") + "</p>" +
+    '<div class="campo"><label for="miCorreo">Dirección</label>' +
+    '<input id="miCorreo" type="email" autocomplete="email" spellcheck="false" placeholder="tu@correo.com" value="' +
+    esc(PERFIL.email || "") + '"></div>' +
+    '<div class="fila-acc"><button class="btn" id="guardaCorreo" type="button">' +
+    (PERFIL.email ? "Cambiar la dirección" : "Guardar") + "</button>" +
+    (PERFIL.email && !PERFIL.emailok
+      ? '<button class="btn ghost" id="reenviaCorreo" type="button">Reenviar la confirmación</button>' : "") +
+    '<span class="aviso-linea" id="correoMsg"></span></div>' +
+
+    '<h4 class="sub">Código de rescate</h4>' +
+    '<p class="ayuda ceñida">' + (PERFIL.rescate
+      ? "Emitido" + (PERFIL.rescateDesde ? " el " + fecha(PERFIL.rescateDesde) : "") +
+        ". Si no lo encuentras, emite otro: el anterior dejará de servir."
+      : "El respaldo por si tampoco puedes usar el correo.") + "</p>" +
     '<div class="campo"><label for="rescClave">Tu contraseña</label>' +
     '<input id="rescClave" type="password" autocomplete="current-password" placeholder="para confirmar que eres tú"></div>' +
     '<div class="fila-acc"><button class="btn' + (PERFIL.rescate ? " ghost" : "") + '" id="nuevoRescate" type="button">' +
@@ -1744,6 +1769,34 @@ function vistaPerfil() {
   };
 
   /* --- sesiones y descarga --- */
+  const alta = $("pkAlta");
+  if (alta) {
+    alta.onclick = async () => {
+      const msg = $("pkMsg");
+      alta.disabled = true; msg.textContent = "esperando al dispositivo…"; msg.className = "aviso-linea";
+      try {
+        const d = await altaPasskey();
+        PERFIL.passkeys = d.passkeys;
+        pinta();
+        const m2 = $("pkMsg");
+        if (m2) { m2.textContent = "passkey registrada"; m2.className = "aviso-linea bien"; }
+      } catch (e) {
+        msg.textContent = fallaPasskey(e); msg.className = "aviso-linea mal";
+        alta.disabled = false;
+      }
+    };
+    document.querySelectorAll("[data-pk]").forEach(b => b.onclick = () => confirma(
+      "Retirar esta passkey",
+      "Dejará de servir para entrar desde ese dispositivo. Puedes volver a crearla cuando quieras.",
+      "Retirar", true, async () => {
+        try {
+          const d = await pideJson("/pk/borrar", { id: b.dataset.pk }, true);
+          PERFIL.passkeys = d.passkeys;
+          pinta();
+        } catch (e) { alert(e.message); }
+      }));
+  }
+
   $("guardaCorreo").onclick = async () => {
     const b = $("guardaCorreo"), msg = $("correoMsg"), email = $("miCorreo").value.trim().toLowerCase();
     if (!CORREO_RE.test(email)) { msg.textContent = "dirección no válida"; msg.className = "aviso-linea mal"; return; }
@@ -2054,10 +2107,101 @@ function pintaModo() {
   $("gateOlvido").textContent = rescate || olvido ? "Volver a entrar" : "He olvidado la contraseña";
   $("gateOlvido").hidden = registro;
   $("gateOtraVia").hidden = !olvido;
+  if (hayPasskey()) $("gatePk").hidden = modoGate !== "entrar";
   $("gateErr").textContent = "";
   $("gateOk").hidden = true; $("gateOk").textContent = "";
   document.querySelectorAll("#gateModo button").forEach(b =>
     b.setAttribute("aria-pressed", String(b.dataset.m === modoGate)));
+}
+
+/* =========================================================
+   PASSKEYS
+   ========================================================= */
+const hayPasskey = () => !!(window.PublicKeyCredential && navigator.credentials);
+
+const aBytes = t => Uint8Array.from(
+  atob(String(t).replace(/-/g, "+").replace(/_/g, "/")), c => c.charCodeAt(0));
+
+const aTexto = b => btoa(String.fromCharCode(...new Uint8Array(b)))
+  .replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "");
+
+/* Nombre por defecto de la passkey: lo que se deduce del navegador.
+   Es solo una etiqueta para distinguirlas en la lista. */
+function nombreDispositivo() {
+  const u = navigator.userAgent;
+  const so = /Windows/.test(u) ? "Windows" : /Android/.test(u) ? "Android"
+    : /iPhone|iPad/.test(u) ? "iPhone o iPad" : /Mac/.test(u) ? "Mac"
+      : /Linux/.test(u) ? "Linux" : "Este dispositivo";
+  return so;
+}
+
+async function pideJson(ruta, cuerpo, conSes) {
+  const cab = conSes ? conSesion({ "Content-Type": "application/json" })
+    : { "Content-Type": "application/json" };
+  const r = await fetch(CONFIG.SYNC_URL + ruta, {
+    method: "POST", headers: cab, body: JSON.stringify(cuerpo || {})
+  });
+  const d = await r.json().catch(() => ({}));
+  if (!r.ok) throw new Error(d.error || "No se ha podido completar.");
+  return d;
+}
+
+/* Registra una passkey en la cuenta abierta. */
+async function altaPasskey(nombre) {
+  const reto = await pideJson("/pk/reto/alta", {}, true);
+  const cred = await navigator.credentials.create({
+    publicKey: {
+      challenge: aBytes(reto.reto),
+      rp: reto.rp,
+      user: { id: aBytes(reto.usuario.id), name: reto.usuario.name, displayName: reto.usuario.displayName },
+      // ES256 primero; RS256 para los autenticadores que solo hacen RSA
+      pubKeyCredParams: [{ type: "public-key", alg: -7 }, { type: "public-key", alg: -257 }],
+      timeout: 120000,
+      attestation: "none",
+      excludeCredentials: (reto.excluir || []).map(id => ({ type: "public-key", id: aBytes(id) })),
+      authenticatorSelection: { residentKey: "preferred", userVerification: "preferred" },
+    }
+  });
+  if (!cred) throw new Error("No se ha creado la passkey.");
+  return await pideJson("/pk/alta", {
+    reto: reto.reto,
+    id: aTexto(cred.rawId),
+    clientDataJSON: aTexto(cred.response.clientDataJSON),
+    attestationObject: aTexto(cred.response.attestationObject),
+    nombre: nombre || nombreDispositivo(),
+  }, true);
+}
+
+/* Entra sin usuario ni contraseña: el dispositivo elige la credencial. */
+async function entraConPasskey() {
+  const reto = await pideJson("/pk/reto/entrar");
+  const cred = await navigator.credentials.get({
+    publicKey: {
+      challenge: aBytes(reto.reto),
+      rpId: reto.rp,
+      timeout: 120000,
+      userVerification: "preferred",
+    },
+    mediation: "optional",
+  });
+  if (!cred) throw new Error("No se ha usado ninguna passkey.");
+  return await pideJson("/pk/entrar", {
+    reto: reto.reto,
+    id: aTexto(cred.rawId),
+    clientDataJSON: aTexto(cred.response.clientDataJSON),
+    authenticatorData: aTexto(cred.response.authenticatorData),
+    signature: aTexto(cred.response.signature),
+  });
+}
+
+/* Los mensajes del navegador no sirven para el usuario: se traducen. */
+function fallaPasskey(e) {
+  const n = e && e.name;
+  if (n === "NotAllowedError") return "Se ha cancelado o ha tardado demasiado.";
+  if (n === "InvalidStateError") return "Este dispositivo ya tiene una passkey de esta cuenta.";
+  if (n === "NotSupportedError") return "Este dispositivo no admite passkeys.";
+  if (n === "SecurityError") return "El navegador no permite passkeys en esta dirección.";
+  return (e && e.message) || "No se ha podido completar.";
 }
 
 /* Pide el enlace de restablecimiento. La respuesta es siempre la misma,
@@ -2311,7 +2455,7 @@ async function cargaPerfil() {
     ADMIN = !!d.admin;
     PERFIL = { nombre: d.nombre || "", avatar: d.avatar || "", creado: d.creado, visto: d.visto,
                rescate: !!d.rescate, rescateDesde: d.rescateDesde || null,
-               email: d.email || "", emailok: !!d.emailok };
+               email: d.email || "", emailok: !!d.emailok, passkeys: d.passkeys || [] };
   } catch (e) {}
 }
 
@@ -2353,6 +2497,29 @@ async function cargaPerfil() {
     (modoGate === "olvido" ? $("gateMail") : $("gateUser")).focus();
   };
   $("gateVia").onclick = () => { modoGate = "rescate"; pintaModo(); $("gateUser").focus(); };
+
+  if (hayPasskey()) {
+    $("gatePk").hidden = false;
+    $("pkEntrar").onclick = async () => {
+      const b = $("pkEntrar"), err = $("gateErr"), texto = b.textContent;
+      err.textContent = ""; $("gateOk").textContent = "";
+      b.disabled = true; b.textContent = "Esperando al dispositivo…";
+      try {
+        const d = await entraConPasskey();
+        SESION = d.sesion; USUARIO = d.usuario; ADMIN = !!d.admin;
+        lsSet(KSES, SESION); lsSet(KUSR, USUARIO);
+        PERFIL = { nombre: "", avatar: "", creado: null, visto: null };
+        await cargaPerfil();
+        await cargaEstadoPago();
+        $("gate").hidden = true;
+        await unlock(USUARIO);
+      } catch (e) {
+        err.textContent = fallaPasskey(e);
+      } finally {
+        b.disabled = false; b.textContent = texto;
+      }
+    };
+  }
   ["gateMail", "gateCodigo"].forEach(id =>
     $(id).addEventListener("keydown", e => { if (e.key === "Enter") $("gateGo").click(); }));
   document.querySelectorAll("#gateModo button").forEach(b => b.onclick = () => { modoGate = b.dataset.m; pintaModo(); $("gateUser").focus(); });

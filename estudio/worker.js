@@ -4,7 +4,14 @@
 
    Claves en KV
      cuenta:<usuario>   { salt, hash, iter, creado, visto, suspendido,
-                          nombre, avatar }
+                          nombre, avatar, email, emailok, rhash, pk }
+     dir:<email>        que usuario tiene esa direccion
+     ver:<huella>       confirmacion de correo pendiente (caduca en 24 h)
+     res:<huella>       restablecimiento pendiente (caduca en 1 h)
+     env:<email>        freno de envios (caduca en 60 s)
+     pk:<credencial>    que usuario tiene esa passkey
+     pkid:<identidad>   que usuario corresponde a ese identificador WebAuthn
+     reto:<huella>      reto de passkey en curso (caduca en 5 min)
      s:<sesion>         { u, admin }   (caduca a los 90 dias)
      sesiones:<usuario> [ids de sesion abiertos]
      config             { paywall, precio, desde }
@@ -34,6 +41,12 @@
      GET  /perfil              nombre, avatar y fechas de la cuenta
      PUT  /perfil              { nombre, avatar } actualiza el perfil
      POST /clave               { actual, nueva } cambia la contrasena
+     POST /pk/reto/alta        reto para registrar una passkey (pide sesion)
+     POST /pk/alta             guarda la passkey recien creada
+     POST /pk/reto/entrar      reto para entrar con passkey
+     POST /pk/entrar           comprueba la firma y abre sesion
+     GET  /pk                  lista las passkeys de la cuenta
+     POST /pk/borrar           { id } retira una
      POST /correo              { email } fija o cambia el correo (pide sesion)
      POST /correo/reenviar     vuelve a mandar la confirmacion
      POST /correo/confirma     { testigo } confirma la direccion
@@ -79,6 +92,10 @@ const VER_SEG = 24 * 3600;        // la confirmacion dura un dia
 const RES_SEG = 3600;             // el restablecimiento, una hora
 const FRENO_SEG = 60;             // un envio por direccion y minuto
 const REMITE = "TemarioVigilanteSeguridad <no-responder@temariovigilanteseguridad.com>";
+const RP_NOMBRE = "TemarioVigilanteSeguridad";
+const RETO_SEG = 300;             // cinco minutos para completar el gesto
+const PK_MAX = 10;                // passkeys por cuenta
+const PK_NOMBRE_MAX = 40;
 const INTENTOS_MAX = 8;
 const INTENTOS_SEG = 900;
 
@@ -156,6 +173,296 @@ async function sesionDe(peticion, env) {
 
 /* indice de sesiones abiertas: permite cerrarlas al suspender o borrar */
 const MAX_SESIONES = 10;
+
+/* ---------- passkeys ----------
+
+   Piezas que hay que leer del navegador:
+     clientDataJSON     JSON con el tipo de operacion, el reto y el origen
+     attestationObject  CBOR; de el solo interesa authData
+     authenticatorData  hash del dominio, banderas, contador y, en el alta,
+                        la credencial con su clave publica en formato COSE
+*/
+
+const deB64url = t => {
+  const b = String(t || "").replace(/-/g, "+").replace(/_/g, "/");
+  const bin = atob(b + "=".repeat((4 - (b.length % 4)) % 4));
+  const a = new Uint8Array(bin.length);
+  for (let i = 0; i < bin.length; i++) a[i] = bin.charCodeAt(i);
+  return a;
+};
+
+/* Lector de CBOR reducido a lo que aparece en WebAuthn: enteros, cadenas de
+   bytes y de texto, listas y mapas. Devuelve [valor, siguiente posicion]. */
+function cbor(b, i) {
+  const cab = b[i++], mayor = cab >> 5, menor = cab & 31;
+  let n = menor;
+  if (menor === 24) n = b[i++];
+  else if (menor === 25) { n = (b[i] << 8) | b[i + 1]; i += 2; }
+  else if (menor === 26) { n = ((b[i] << 24) | (b[i + 1] << 16) | (b[i + 2] << 8) | b[i + 3]) >>> 0; i += 4; }
+  else if (menor === 27) {                      // 64 bits: no aparece, pero por si acaso
+    n = 0; for (let k = 0; k < 8; k++) n = n * 256 + b[i + k];
+    i += 8;
+  } else if (menor > 27) throw new Error("CBOR no admitido");
+
+  if (mayor === 0) return [n, i];
+  if (mayor === 1) return [-1 - n, i];
+  if (mayor === 2) return [b.slice(i, i + n), i + n];
+  if (mayor === 3) return [new TextDecoder().decode(b.slice(i, i + n)), i + n];
+  if (mayor === 4) {
+    const l = [];
+    for (let k = 0; k < n; k++) { const [v, j] = cbor(b, i); l.push(v); i = j; }
+    return [l, i];
+  }
+  if (mayor === 5) {
+    const m = new Map();
+    for (let k = 0; k < n; k++) {
+      const [c, j] = cbor(b, i); const [v, j2] = cbor(b, j);
+      m.set(c, v); i = j2;
+    }
+    return [m, i];
+  }
+  if (mayor === 7) {
+    if (menor === 20) return [false, i];
+    if (menor === 21) return [true, i];
+    if (menor === 22) return [null, i];
+  }
+  throw new Error("CBOR no admitido");
+}
+
+function leeAuthData(ad) {
+  if (ad.length < 37) throw new Error("authData corto");
+  const contador = (ad[33] << 24 | ad[34] << 16 | ad[35] << 8 | ad[36]) >>> 0;
+  const salida = { rpIdHash: ad.slice(0, 32), flags: ad[32], contador, cred: null };
+  if (salida.flags & 0x40) {                    // trae credencial (solo en el alta)
+    const largo = (ad[53] << 8) | ad[54];
+    salida.cred = { id: ad.slice(55, 55 + largo), cose: cbor(ad, 55 + largo)[0] };
+  }
+  return salida;
+}
+
+/* COSE -> JWK. Se admiten las dos familias que usan los autenticadores
+   reales: ES256 (casi todos) y RS256 (Windows Hello con TPM). */
+function claveDeCose(m) {
+  const kty = m.get(1), alg = m.get(3);
+  if (kty === 2 && alg === -7) {
+    return { alg: -7, jwk: { kty: "EC", crv: "P-256", x: b64url(m.get(-2)), y: b64url(m.get(-3)) } };
+  }
+  if (kty === 3 && alg === -257) {
+    return { alg: -257, jwk: { kty: "RSA", n: b64url(m.get(-1)), e: b64url(m.get(-2)) } };
+  }
+  return null;
+}
+
+async function importaClave(pk) {
+  if (pk.alg === -7) {
+    return await crypto.subtle.importKey("jwk", pk.jwk, { name: "ECDSA", namedCurve: "P-256" }, false, ["verify"]);
+  }
+  return await crypto.subtle.importKey("jwk", pk.jwk, { name: "RSASSA-PKCS1-v1_5", hash: "SHA-256" }, false, ["verify"]);
+}
+
+/* La firma ECDSA de WebAuthn viene en DER; WebCrypto la quiere en crudo. */
+function derACrudo(der) {
+  if (der[0] !== 0x30) throw new Error("firma no DER");
+  let i = 2;
+  if (der[1] & 0x80) i = 2 + (der[1] & 0x7f);
+  const parte = () => {
+    if (der[i++] !== 0x02) throw new Error("firma no DER");
+    const n = der[i++];
+    let v = der.slice(i, i + n);
+    i += n;
+    while (v.length > 32 && v[0] === 0) v = v.slice(1);       // fuera el cero de signo
+    const out = new Uint8Array(32);
+    out.set(v, 32 - v.length);
+    return out;
+  };
+  const r = parte(), t = parte();
+  const crudo = new Uint8Array(64);
+  crudo.set(r, 0); crudo.set(t, 32);
+  return crudo;
+}
+
+async function firmaBuena(pk, datos, firma) {
+  const clave = await importaClave(pk);
+  if (pk.alg === -7) {
+    return await crypto.subtle.verify({ name: "ECDSA", hash: "SHA-256" }, clave, derACrudo(firma), datos);
+  }
+  return await crypto.subtle.verify("RSASSA-PKCS1-v1_5", clave, firma, datos);
+}
+
+/* El dominio de la passkey sale del origen que hace la peticion: en
+   produccion es el dominio propio; en pruebas, el host tal cual. */
+function rpDe(origen) {
+  let h = "";
+  try { h = new URL(origen).hostname; } catch (e) { return ""; }
+  return h.endsWith("temariovigilanteseguridad.com") ? "temariovigilanteseguridad.com" : h;
+}
+
+async function sha256(datos) {
+  return new Uint8Array(await crypto.subtle.digest("SHA-256", datos));
+}
+
+const mismosBytes = (a, b) => a.length === b.length && a.every((x, i) => x === b[i]);
+
+/* Comprueba lo comun al alta y a la entrada: el JSON del cliente y el
+   encabezado de authData. Devuelve el authData ya leido. */
+async function revisaGesto(tipo, clientDataB64, authData, origen, retoEsperado) {
+  const cd = JSON.parse(new TextDecoder().decode(deB64url(clientDataB64)));
+  if (cd.type !== tipo) return { error: "Tipo de operación inesperado." };
+  if (cd.challenge !== retoEsperado) return { error: "El reto no coincide." };
+  if (cd.origin !== origen) return { error: "El origen no coincide." };
+  const ad = leeAuthData(authData);
+  if (!(ad.flags & 0x01)) return { error: "El autenticador no confirmó la presencia del usuario." };
+  const esperado = await sha256(new TextEncoder().encode(rpDe(origen)));
+  if (!mismosBytes(ad.rpIdHash, esperado)) return { error: "La passkey es de otro dominio." };
+  return { ad, cd };
+}
+
+async function ponReto(env, datos) {
+  const reto = aleatorio(32);
+  await env.PROGRESO.put("reto:" + (await huella(reto)), JSON.stringify(datos),
+    { expirationTtl: RETO_SEG });
+  return reto;
+}
+
+async function tomaReto(env, reto) {
+  return await tomaTestigo(env, "reto:", reto);       // de un solo uso
+}
+
+/* --- alta --- */
+
+async function retoAlta(peticion, env, origen) {
+  const s = await sesionDe(peticion, env);
+  if (!s) return json({ error: "Sesión no válida." }, 401, origen);
+  const c = await leeCuenta(env, s.usuario);
+  if (!c) return json({ error: "La cuenta ya no existe." }, 401, origen);
+  if ((c.pk || []).length >= PK_MAX) {
+    return json({ error: "Ya tienes el máximo de passkeys. Retira alguna antes." }, 409, origen);
+  }
+  if (!c.pkid) {                                  // identidad estable de la cuenta
+    c.pkid = aleatorio(16);
+    await env.PROGRESO.put("cuenta:" + s.usuario, JSON.stringify(c));
+    await env.PROGRESO.put("pkid:" + c.pkid, s.usuario);
+  }
+  const reto = await ponReto(env, { t: "alta", u: s.usuario });
+  return json({
+    reto, rp: { id: rpDe(origen), name: RP_NOMBRE },
+    usuario: { id: c.pkid, name: s.usuario, displayName: c.nombre || s.usuario },
+    excluir: (c.pk || []).map(k => k.id),
+  }, 200, origen);
+}
+
+async function altaPasskey(peticion, env, origen) {
+  const s = await sesionDe(peticion, env);
+  if (!s) return json({ error: "Sesión no válida." }, 401, origen);
+  const { reto, id, clientDataJSON, attestationObject, nombre } = await leerCuerpo(peticion);
+  const d = await tomaReto(env, reto);
+  if (!d || d.t !== "alta" || d.u !== s.usuario) {
+    return json({ error: "El reto ya no es válido. Vuelve a intentarlo." }, 400, origen);
+  }
+  let ad, pk;
+  try {
+    const att = cbor(deB64url(attestationObject), 0)[0];
+    const rev = await revisaGesto("webauthn.create", clientDataJSON, att.get("authData"), origen, reto);
+    if (rev.error) return json({ error: rev.error }, 400, origen);
+    ad = rev.ad;
+    if (!ad.cred) return json({ error: "El autenticador no envió la credencial." }, 400, origen);
+    pk = claveDeCose(ad.cred.cose);
+  } catch (e) {
+    return json({ error: "No se ha podido leer la passkey." }, 400, origen);
+  }
+  if (!pk) return json({ error: "Ese autenticador usa un algoritmo que no admitimos." }, 400, origen);
+
+  const credId = b64url(ad.cred.id);
+  if (credId !== id) return json({ error: "La credencial no coincide." }, 400, origen);
+  const duena = await env.PROGRESO.get("pk:" + credId);
+  if (duena) return json({ error: "Esa passkey ya está registrada." }, 409, origen);
+
+  const c = await leeCuenta(env, s.usuario);
+  c.pk = c.pk || [];
+  c.pk.push({
+    id: credId, alg: pk.alg, jwk: pk.jwk, contador: ad.contador,
+    nombre: String(nombre || "").trim().slice(0, PK_NOMBRE_MAX) || "Este dispositivo",
+    creado: Date.now(), visto: null,
+  });
+  await env.PROGRESO.put("cuenta:" + s.usuario, JSON.stringify(c));
+  await env.PROGRESO.put("pk:" + credId, s.usuario);
+  return json({ ok: true, passkeys: listaPk(c) }, 200, origen);
+}
+
+/* --- entrada --- */
+
+async function retoEntrar(peticion, env, origen) {
+  const reto = await ponReto(env, { t: "entrar" });
+  return json({ reto, rp: rpDe(origen) }, 200, origen);
+}
+
+async function entrarPasskey(peticion, env, origen) {
+  const { reto, id, clientDataJSON, authenticatorData, signature } = await leerCuerpo(peticion);
+  const d = await tomaReto(env, reto);
+  if (!d || d.t !== "entrar") {
+    return json({ error: "El reto ya no es válido. Vuelve a intentarlo." }, 400, origen);
+  }
+  const malo = () => json({ error: "Esa passkey no vale para entrar aquí." }, 401, origen);
+  const usuario = await env.PROGRESO.get("pk:" + String(id || ""));
+  if (!usuario) return malo();
+  const c = await leeCuenta(env, usuario);
+  if (!c) return malo();
+  if (c.suspendido) return json({ error: "Esta cuenta está suspendida." }, 403, origen);
+  const guardada = (c.pk || []).find(k => k.id === id);
+  if (!guardada) return malo();
+
+  let ad;
+  try {
+    const datosAut = deB64url(authenticatorData);
+    const rev = await revisaGesto("webauthn.get", clientDataJSON, datosAut, origen, reto);
+    if (rev.error) return json({ error: rev.error }, 400, origen);
+    ad = rev.ad;
+    const firmado = new Uint8Array(datosAut.length + 32);
+    firmado.set(datosAut, 0);
+    firmado.set(await sha256(deB64url(clientDataJSON)), datosAut.length);
+    if (!(await firmaBuena(guardada, firmado, deB64url(signature)))) return malo();
+  } catch (e) {
+    return malo();
+  }
+  // el contador solo se comprueba si el autenticador lo lleva: los sincronizados devuelven 0
+  if (guardada.contador > 0 && ad.contador > 0 && ad.contador <= guardada.contador) {
+    return json({ error: "Esa passkey parece duplicada. Retírala y registra otra." }, 401, origen);
+  }
+  guardada.contador = ad.contador;
+  guardada.visto = Date.now();
+  c.visto = Date.now();
+  await env.PROGRESO.put("cuenta:" + usuario, JSON.stringify(c));
+  const sesion = await abreSesion(env, usuario);
+  return json({ sesion, usuario, admin: ADMINS.includes(usuario) }, 200, origen);
+}
+
+/* --- gestion --- */
+
+const listaPk = c => (c.pk || []).map(k => ({
+  id: k.id, nombre: k.nombre, creado: k.creado, visto: k.visto,
+}));
+
+async function misPasskeys(peticion, env, origen) {
+  const s = await sesionDe(peticion, env);
+  if (!s) return json({ error: "Sesión no válida." }, 401, origen);
+  const c = await leeCuenta(env, s.usuario);
+  if (!c) return json({ error: "La cuenta ya no existe." }, 401, origen);
+  return json({ passkeys: listaPk(c) }, 200, origen);
+}
+
+async function borraPasskey(peticion, env, origen) {
+  const s = await sesionDe(peticion, env);
+  if (!s) return json({ error: "Sesión no válida." }, 401, origen);
+  const { id } = await leerCuerpo(peticion);
+  const c = await leeCuenta(env, s.usuario);
+  if (!c) return json({ error: "La cuenta ya no existe." }, 401, origen);
+  const antes = (c.pk || []).length;
+  c.pk = (c.pk || []).filter(k => k.id !== id);
+  if (c.pk.length === antes) return json({ error: "Esa passkey no es tuya." }, 404, origen);
+  await env.PROGRESO.put("cuenta:" + s.usuario, JSON.stringify(c));
+  await env.PROGRESO.delete("pk:" + id);
+  return json({ ok: true, passkeys: listaPk(c) }, 200, origen);
+}
 
 /* ---------- correo ---------- */
 
@@ -575,6 +882,7 @@ async function adminUsuarios(peticion, env, origen) {
       admin: ADMINS.includes(nombre),
       rescate: !!c.rhash,
       email: c.email || "", emailok: !!c.emailok,
+      passkeys: (c.pk || []).length,
       pagado: !!c.pagado,
       pagadoEl: c.pagadoEl || null,
       progreso: resumeProgreso(await env.PROGRESO.get("p:" + nombre))
@@ -611,6 +919,8 @@ async function adminBorrar(peticion, env, origen) {
   await cierraTodas(env, u);
   const borrada = await leeCuenta(env, u);
   if (borrada && borrada.email) await env.PROGRESO.delete("dir:" + borrada.email);
+  for (const k of (borrada && borrada.pk) || []) await env.PROGRESO.delete("pk:" + k.id);
+  if (borrada && borrada.pkid) await env.PROGRESO.delete("pkid:" + borrada.pkid);
   await env.PROGRESO.delete("cuenta:" + u);
   await env.PROGRESO.delete("p:" + u);
   await env.PROGRESO.delete("r:" + u);
@@ -811,6 +1121,7 @@ async function perfil(peticion, env, origen) {
     usuario: s.usuario, admin: s.admin,
     rescate: !!c.rhash, rescateDesde: c.rdesde || null,
     email: c.email || "", emailok: !!c.emailok,
+    passkeys: listaPk(c),
     nombre: c.nombre || "", avatar: c.avatar || "",
     creado: c.creado || null, visto: c.visto || null
   }, 200, origen);
@@ -937,6 +1248,8 @@ async function baja(peticion, env, origen) {
 
   await cierraTodas(env, s.usuario);
   if (c.email) await env.PROGRESO.delete("dir:" + c.email);
+  for (const k of c.pk || []) await env.PROGRESO.delete("pk:" + k.id);
+  if (c.pkid) await env.PROGRESO.delete("pkid:" + c.pkid);
   await env.PROGRESO.delete("cuenta:" + s.usuario);
   await env.PROGRESO.delete("p:" + s.usuario);
   await env.PROGRESO.delete("r:" + s.usuario);
@@ -994,6 +1307,12 @@ export default {
       if (ruta === "/perfil" && M === "GET") return await perfil(peticion, env, origen);
       if (ruta === "/perfil" && M === "PUT") return await guardaPerfil(peticion, env, origen);
       if (ruta === "/clave" && M === "POST") return await cambiaClave(peticion, env, origen);
+      if (ruta === "/pk" && M === "GET") return await misPasskeys(peticion, env, origen);
+      if (ruta === "/pk/reto/alta" && M === "POST") return await retoAlta(peticion, env, origen);
+      if (ruta === "/pk/alta" && M === "POST") return await altaPasskey(peticion, env, origen);
+      if (ruta === "/pk/reto/entrar" && M === "POST") return await retoEntrar(peticion, env, origen);
+      if (ruta === "/pk/entrar" && M === "POST") return await entrarPasskey(peticion, env, origen);
+      if (ruta === "/pk/borrar" && M === "POST") return await borraPasskey(peticion, env, origen);
       if (ruta === "/correo" && M === "POST") return await ponCorreo(peticion, env, origen);
       if (ruta === "/correo/reenviar" && M === "POST") return await reenviaCorreo(peticion, env, origen);
       if (ruta === "/correo/confirma" && M === "POST") return await confirmaCorreo(peticion, env, origen);
