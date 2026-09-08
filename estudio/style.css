@@ -182,9 +182,11 @@ mark{background:var(--acento-2);color:var(--ink);padding:0 3px;border-radius:3px
 #gateOlvido{margin-left:auto}
 /* Avisos de la puerta. Antes era texto rojo pegado a los botones; ahora es
    un recuadro con su marca de color, y no ocupa sitio cuando esta vacio. */
-.gate-err,
-.gate-ok{
-  margin:24px 0 4px;padding:12px 14px 12px 41px;position:relative;
+/* el selector lleva `.gate-card` porque `.gate-card > p` fija otro margen
+   y, a igualdad de orden, gana por especificidad */
+.gate-card > .gate-err,
+.gate-card > .gate-ok{
+  margin:28px 0 6px;padding:12px 14px 12px 41px;position:relative;
   border-radius:var(--r-s);border:1px solid;
   font-size:var(--t-sm);line-height:1.5;font-weight:500;
 }
@@ -605,6 +607,30 @@ nav.tabs::-webkit-scrollbar{display:none}
 .face.back{transform:rotateY(180deg);background:var(--sup-2)}
 .face .lbl{font-size:var(--t-xs);font-weight:700;color:var(--marca);text-transform:uppercase;letter-spacing:.05em}
 .face .q{font-size:var(--t-lg);font-weight:700;line-height:1.35}
+
+/* el dibujo de la ficha: a la izquierda del enunciado, con el color de su modulo */
+.ficha-cuerpo{display:flex;align-items:center;gap:24px;flex:1;min-height:0}
+.ficha-dibujo{
+  flex:0 0 auto;width:96px;height:96px;border-radius:22px;
+  display:grid;place-items:center;background:var(--marca-2);color:var(--marca);
+}
+.ficha-dibujo svg{width:54px;height:54px}
+.card[data-mod="mf0080"] .ficha-dibujo{background:var(--m80-2);color:var(--m80)}
+.card[data-mod="mf0081"] .ficha-dibujo{background:var(--m81-2);color:var(--m81)}
+.card[data-mod="mf0082"] .ficha-dibujo{background:var(--m82-2);color:var(--m82)}
+.card[data-mod="mf0272"] .ficha-dibujo{background:var(--m272-2);color:var(--m272)}
+/* en el reverso queda al fondo y muy tenue, para no estorbar la lectura */
+.ficha-marca{
+  position:absolute;right:22px;bottom:18px;width:120px;height:120px;
+  color:var(--ink);opacity:.06;pointer-events:none;
+}
+.ficha-marca svg{width:100%;height:100%}
+@media (max-width:620px){
+  .ficha-cuerpo{gap:16px}
+  .ficha-dibujo{width:64px;height:64px;border-radius:16px}
+  .ficha-dibujo svg{width:36px;height:36px}
+  .ficha-marca{width:84px;height:84px;right:14px;bottom:12px}
+}
 .face .a{font-size:var(--t-base);color:var(--ink-2);line-height:1.65;overflow-y:auto;max-height:200px}
 .face .a b{color:var(--ink)}
 @media(prefers-reduced-motion:reduce){.card-in{transition:none}}

@@ -170,6 +170,7 @@ async function lock() {
 const temaById = id => TEMAS.find(t => t.id === id);
 const modById = id => MODULOS.find(m => m.id === id);
 function shuffle(a) { for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1));[a[i], a[j]] = [a[j], a[i]]; } return a; }
+const sinEtiquetas = s => String(s).replace(/<[^>]+>/g, " ");
 const esc = s => String(s).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
 const plano = h => String(h).replace(/<[^>]*>/g, "");
 const sinAc = s => s.normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase();
@@ -912,8 +913,12 @@ function panelFichas(c) {
     '<button class="chip" data-md="all" aria-pressed="' + (fModo === "all") + '">Todas, al azar</button>' +
     '<span class="spacer"></span><span class="hint" id="fStats"></span></div>';
   h += '<div class="deck"><div class="card" id="card" data-flip="0" tabindex="0" role="button" aria-label="Girar ficha"><div class="card-in">' +
-    '<div class="face front"><span class="lbl" id="fLbl"></span><div class="q" id="fQ"></div><span class="lbl" style="opacity:.6">Pulsa para ver la respuesta</span></div>' +
-    '<div class="face back"><span class="lbl">Respuesta</span><div class="a" id="fA"></div></div></div></div>' +
+    '<div class="face front"><span class="lbl" id="fLbl"></span>' +
+    '<div class="ficha-cuerpo"><span class="ficha-dibujo" id="fDib"></span>' +
+    '<div class="q" id="fQ"></div></div>' +
+    '<span class="lbl" style="opacity:.6">Pulsa para ver la respuesta</span></div>' +
+    '<div class="face back"><span class="lbl">Respuesta</span><div class="a" id="fA"></div>' +
+    '<span class="ficha-marca" id="fDib2"></span></div></div></div>' +
     '<div class="deck-nav"><button class="btn ghost" id="prev" type="button">&larr;</button>' +
     '<span class="counter" id="fCount"></span>' +
     '<div class="grade"><button class="bad" id="gBad" type="button">La fallé</button>' +
@@ -951,12 +956,20 @@ function paintFicha(terminado) {
       : "No quedan fichas.";
     $("fA").textContent = "";
     $("fCount").textContent = "";
+    $("fDib").innerHTML = ""; $("fDib2").innerHTML = "";
     $("card").dataset.flip = "0";
   } else {
     $("card").dataset.flip = "0";
     const e = S.sr[fKey(f)];
     $("fLbl").textContent = temaById(f.t).t + (e && e.n ? " · acertada " + e.n + (e.n > 1 ? " veces seguidas" : " vez") : " · nueva");
     $("fQ").innerHTML = f.q; $("fA").innerHTML = f.a;
+    const tm = temaById(f.t);
+    // el dibujo se elige por lo que dice la ficha, no por su unidad
+    const svg = dibujoFicha(sinEtiquetas(f.q + " " + f.a + " " + (tm ? tm.t : "")),
+      tm ? tm.man : "", tm ? tm.ud : 0);
+    $("fDib").innerHTML = svg;
+    $("fDib2").innerHTML = svg;
+    $("card").dataset.mod = tm ? tm.mod : "";
     $("fCount").textContent = (fIdx + 1) + " / " + fDeck.length;
   }
   const pend = pendientesHoy(base).length;
