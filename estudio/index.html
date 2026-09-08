@@ -18,7 +18,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&family=JetBrains+Mono:wght@400;500&display=swap">
-<link rel="stylesheet" href="style.css?v=17">
+<link rel="stylesheet" href="style.css?v=18">
 </head>
 <body>
 
@@ -38,6 +38,12 @@
       <label for="gateUser">Usuario</label>
       <input id="gateUser" type="text" autocomplete="username" autocapitalize="off" spellcheck="false" placeholder="tu nombre de usuario">
     </div>
+    <div class="gate-field" id="campoCorreo" hidden>
+      <label for="gateMail">Correo electrónico</label>
+      <input id="gateMail" type="email" autocomplete="email" autocapitalize="off" spellcheck="false"
+             placeholder="tu@correo.com">
+      <span class="pista" id="mailPista">Solo se usa para recuperar la cuenta. No se comparte con nadie.</span>
+    </div>
     <div class="gate-field" id="campoCodigo" hidden>
       <label for="gateCodigo">Código de rescate</label>
       <input id="gateCodigo" type="text" autocomplete="off" autocapitalize="characters" spellcheck="false"
@@ -54,6 +60,10 @@
       <button class="btn" id="gateGo" type="button">Entrar</button>
       <button class="link" id="gateOtro" type="button">Crear una cuenta</button>
       <button class="link" id="gateOlvido" type="button">He olvidado la contraseña</button>
+    </div>
+    <p class="gate-ok" id="gateOk" hidden></p>
+    <div class="gate-otra" id="gateOtraVia" hidden>
+      <button class="link" id="gateVia" type="button">Usar el código de rescate</button>
     </div>
     <p class="gate-err" id="gateErr"></p>
 
@@ -141,7 +151,7 @@
 
 </div>
 
-<script src="iconos.js?v=17"></script>
-<script src="app.js?v=17"></script>
+<script src="iconos.js?v=18"></script>
+<script src="app.js?v=18"></script>
 </body>
 </html>

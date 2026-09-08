@@ -152,6 +152,8 @@ mark{background:var(--acento-2);color:var(--ink);padding:0 3px;border-radius:3px
 .gate-row{display:flex;gap:16px;align-items:center;flex-wrap:wrap;margin-top:22px}
 #gateOlvido{margin-left:auto}
 .gate-err{color:var(--mal);font-size:var(--t-sm);min-height:1.3em;margin:12px 0 0}
+.gate-ok{color:var(--ok);font-size:var(--t-sm);margin:12px 0 0;line-height:1.55}
+.gate-otra{margin-top:14px;padding-top:14px;border-top:1px solid var(--linea-2)}
 .codigo-card{max-width:520px}
 .codigo-caja{
   margin:20px 0 4px;padding:20px 16px;border-radius:var(--r);

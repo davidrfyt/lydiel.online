@@ -471,11 +471,19 @@ function pinta() {
   if (r.vista === "panel") return vistaAdmin();
   if (r.vista === "perfil") return vistaPerfil();
   if (r.vista === "hoy") return ruta().sub === "fichas" ? vistaHoyFichas() : vistaHoy();
+  if (r.vista === "nueva" && r.sub) return vistaNuevaClave(r.sub);
+  if (r.vista === "correo" && r.sub) return vistaConfirmaCorreo(r.sub);
   if (r.vista === "inscripcion") return vistaInscripcion();
   if (r.vista === "pago") return vistaPagoHecho();
   return vistaIndice();
 }
-window.addEventListener("hashchange", () => { if (SESION || TOKEN) pinta(); });
+window.addEventListener("hashchange", () => {
+  const r = ruta();
+  // los enlaces del correo funcionan tambien con la sesion cerrada
+  if (r.vista === "nueva" && r.sub) return vistaNuevaClave(r.sub);
+  if (r.vista === "correo" && r.sub) return vistaConfirmaCorreo(r.sub);
+  if (SESION || TOKEN) pinta();
+});
 
 /* =========================================================
    INDICE DE UNIDADES
@@ -1635,6 +1643,20 @@ function vistaPerfil() {
     '<span class="aviso-linea" id="claveMsg"></span></div></section>';
 
   /* sesiones y datos */
+  h += '<section class="tarjeta-perfil"><h3>Correo</h3>' +
+    '<p class="ayuda">' + (PERFIL.email
+      ? (PERFIL.emailok
+          ? "Confirmado. Si olvidas la contraseña, podrás recuperarla desde la puerta de acceso."
+          : "Falta confirmarlo. Hasta que no lo hagas no podrás recuperar la contraseña por correo.")
+      : "No has dejado ninguna dirección. Sin ella no hay forma de recuperar la contraseña por correo.") + "</p>" +
+    '<div class="campo"><label for="miCorreo">Dirección</label>' +
+    '<input id="miCorreo" type="email" autocomplete="email" spellcheck="false" placeholder="tu@correo.com" value="' +
+    esc(PERFIL.email || "") + '"></div>' +
+    '<div class="fila-acc"><button class="btn" id="guardaCorreo" type="button">' +
+    (PERFIL.email ? "Cambiar la dirección" : "Guardar") + "</button>" +
+    (PERFIL.email && !PERFIL.emailok
+      ? '<button class="btn ghost" id="reenviaCorreo" type="button">Reenviar la confirmación</button>' : "") +
+    '<span class="aviso-linea" id="correoMsg"></span></div></section>';
   h += '<section class="tarjeta-perfil"><h3>Código de rescate</h3>' +
     '<p class="ayuda">' + (PERFIL.rescate
       ? "Tienes uno emitido" + (PERFIL.rescateDesde ? " el " + fecha(PERFIL.rescateDesde) : "") +
@@ -1720,6 +1742,49 @@ function vistaPerfil() {
   };
 
   /* --- sesiones y descarga --- */
+  $("guardaCorreo").onclick = async () => {
+    const b = $("guardaCorreo"), msg = $("correoMsg"), email = $("miCorreo").value.trim().toLowerCase();
+    if (!CORREO_RE.test(email)) { msg.textContent = "dirección no válida"; msg.className = "aviso-linea mal"; return; }
+    if (email === PERFIL.email && PERFIL.emailok) {
+      msg.textContent = "ya está confirmada"; msg.className = "aviso-linea"; return;
+    }
+    b.disabled = true; msg.textContent = "guardando…"; msg.className = "aviso-linea";
+    try {
+      const r = await fetch(CONFIG.SYNC_URL + "/correo", {
+        method: "POST", headers: conSesion({ "Content-Type": "application/json" }),
+        body: JSON.stringify({ email })
+      });
+      const d = await r.json().catch(() => ({}));
+      if (!r.ok) throw new Error(d.error || "No se ha podido guardar.");
+      await cargaPerfil();
+      pinta();
+      const m2 = $("correoMsg");
+      if (m2) {
+        m2.textContent = d.enviado ? "guardado: mira tu correo para confirmarlo"
+                                   : "guardado, pero el envío falló: " + (d.aviso || "");
+        m2.className = "aviso-linea " + (d.enviado ? "bien" : "mal");
+      }
+    } catch (e) {
+      msg.textContent = e.message; msg.className = "aviso-linea mal";
+      b.disabled = false;
+    }
+  };
+  const reen = $("reenviaCorreo");
+  if (reen) reen.onclick = async () => {
+    const msg = $("correoMsg");
+    reen.disabled = true; msg.textContent = "enviando…"; msg.className = "aviso-linea";
+    try {
+      const r = await fetch(CONFIG.SYNC_URL + "/correo/reenviar", {
+        method: "POST", headers: conSesion({ "Content-Type": "application/json" })
+      });
+      const d = await r.json().catch(() => ({}));
+      if (!r.ok) throw new Error(d.error || "No se ha podido enviar.");
+      msg.textContent = "enviado: mira tu correo"; msg.className = "aviso-linea bien";
+    } catch (e) {
+      msg.textContent = e.message; msg.className = "aviso-linea mal";
+    } finally { reen.disabled = false; }
+  };
+
   $("nuevoRescate").onclick = async () => {
     const b = $("nuevoRescate"), msg = $("rescMsg"), clave = $("rescClave").value;
     if (!clave) { msg.textContent = "escribe tu contraseña"; msg.className = "aviso-linea mal"; return; }
@@ -1835,7 +1900,7 @@ async function vistaAdmin() {
 
   h += '<div class="tabla-caja"><table class="usuarios"><thead><tr>' +
     "<th>Usuario</th><th>Alta</th><th>Conexión</th><th>Actividad</th>" +
-    "<th>Epígrafes</th><th>Fichas</th><th>Notas</th><th>Inscripción</th><th>Estado</th><th></th>" +
+    "<th>Correo</th><th>Epígrafes</th><th>Fichas</th><th>Notas</th><th>Inscripción</th><th>Estado</th><th></th>" +
     "</tr></thead><tbody>";
 
   us.forEach(u => {
@@ -1848,6 +1913,10 @@ async function vistaAdmin() {
       '<td class="num">' + fecha(u.creado) + "</td>" +
       '<td class="num">' + fecha(u.visto, true) + "</td>" +
       '<td class="num">' + fecha(pr.actividad, true) + "</td>" +
+      "<td>" + (u.email
+        ? '<span class="etiqueta ' + (u.emailok ? "activo" : "susp") + '" title="' + esc(u.email) + '">' +
+          (u.emailok ? "Confirmado" : "Sin confirmar") + "</span>"
+        : '<span class="hint">—</span>') + "</td>" +
       '<td class="num">' + pr.epi + "</td>" +
       '<td class="num">' + pr.fichas + "</td>" +
       '<td class="num" title="Mejor test / mejor examen">' +
@@ -1950,28 +2019,142 @@ function abrePuerta(mensaje) {
   u.focus();
   if (mensaje) u.select();
 }
+/* Modos de la puerta: entrar, registro, olvido (por correo) y rescate (por codigo). */
 function pintaModo() {
-  const registro = modoGate === "registro", rescate = modoGate === "rescate";
-  $("gateTitulo").textContent = rescate ? "Recupera tu cuenta"
+  const registro = modoGate === "registro";
+  const rescate = modoGate === "rescate";
+  const olvido = modoGate === "olvido";
+  $("gateTitulo").textContent =
+    olvido ? "Recupera tu contraseña"
+    : rescate ? "Recupera tu cuenta"
     : registro ? "Crea tu cuenta" : "Entra en tu cuenta";
-  $("gateTexto").textContent = rescate
-    ? "Escribe tu usuario, el código de rescate que guardaste y la contraseña nueva. El código se gastará y te daremos otro."
-    : registro
-      ? "Elige un usuario y una contraseña. Tu progreso queda guardado en la cuenta y lo recuperas desde cualquier dispositivo."
-      : "Tu progreso —epígrafes leídos, fichas dominadas, notas y preguntas falladas— se guarda en tu cuenta, no en este navegador. Entra con los mismos datos en el móvil y sigues donde lo dejaste.";
-  $("gateGo").textContent = rescate ? "Recuperar" : registro ? "Crear cuenta" : "Entrar";
-  $("gateOtro").textContent = registro || rescate ? "Ya tengo cuenta" : "Crear una cuenta";
+  $("gateTexto").textContent =
+    olvido ? "Escribe el correo con el que te registraste y te enviamos un enlace para poner una contraseña nueva."
+    : rescate ? "Escribe tu usuario, el código de rescate que guardaste y la contraseña nueva. El código se gastará y te daremos otro."
+    : registro ? "Elige un usuario y una contraseña, y deja un correo por si algún día la olvidas. Tu progreso queda guardado en la cuenta."
+    : "Tu progreso —epígrafes leídos, fichas dominadas, notas y preguntas falladas— se guarda en tu cuenta, no en este navegador. Entra con los mismos datos en el móvil y sigues donde lo dejaste.";
+  $("gateGo").textContent =
+    olvido ? "Enviarme el enlace" : rescate ? "Recuperar" : registro ? "Crear cuenta" : "Entrar";
+  $("gateOtro").textContent = registro || rescate || olvido ? "Ya tengo cuenta" : "Crear una cuenta";
   $("gatePassLab").textContent = rescate ? "Contraseña nueva" : "Contraseña";
   $("gatePass").placeholder = rescate ? "la contraseña nueva" : "tu contraseña";
   $("gatePass").setAttribute("autocomplete", registro || rescate ? "new-password" : "current-password");
   $("gatePista").hidden = !(registro || rescate);
   $("campoCodigo").hidden = !rescate;
-  $("gateNota").hidden = rescate;
-  $("gateOlvido").textContent = rescate ? "Volver a entrar" : "He olvidado la contraseña";
+  $("campoCorreo").hidden = !(registro || olvido);
+  $("mailPista").textContent = olvido
+    ? "El que pusiste al registrarte y confirmaste."
+    : "Solo se usa para recuperar la cuenta. No se comparte con nadie.";
+  // en el olvido solo hace falta el correo
+  $("gateUser").closest(".gate-field").hidden = olvido;
+  $("gatePass").closest(".gate-field").hidden = olvido;
+  $("gateNota").hidden = rescate || olvido;
+  $("gateOlvido").textContent = rescate || olvido ? "Volver a entrar" : "He olvidado la contraseña";
   $("gateOlvido").hidden = registro;
+  $("gateOtraVia").hidden = !olvido;
   $("gateErr").textContent = "";
+  $("gateOk").hidden = true; $("gateOk").textContent = "";
   document.querySelectorAll("#gateModo button").forEach(b =>
     b.setAttribute("aria-pressed", String(b.dataset.m === modoGate)));
+}
+
+/* Pide el enlace de restablecimiento. La respuesta es siempre la misma,
+   exista o no la cuenta: no se confirma quien esta registrado. */
+async function pideEnlace(correo) {
+  const err = $("gateErr"), ok = $("gateOk"), b = $("gateGo");
+  err.textContent = ""; ok.hidden = true;
+  if (!CORREO_RE.test(correo)) {
+    err.textContent = "Escribe una dirección de correo válida.";
+    $("gateMail").focus(); return;
+  }
+  const texto = b.textContent;
+  b.disabled = true; b.textContent = "Enviando…";
+  try {
+    await fetch(CONFIG.SYNC_URL + "/olvido", {
+      method: "POST", headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email: correo })
+    });
+    ok.textContent = "Si esa dirección corresponde a una cuenta confirmada, ya va camino de tu bandeja " +
+      "un enlace para poner una contraseña nueva. Caduca en una hora. Mira también en el correo no deseado.";
+    ok.hidden = false;
+  } catch (e) {
+    err.textContent = "No hay conexión con el servicio de cuentas.";
+  } finally {
+    b.disabled = false; b.textContent = texto;
+  }
+}
+
+/* Pantallas que abren los enlaces del correo, con la sesion cerrada. */
+async function vistaNuevaClave(testigo) {
+  $("gate").hidden = true; $("codigo").hidden = true;
+  const p = $("vista");
+  cabecera("Cuenta", "Contraseña nueva");
+  p.innerHTML = '<section class="tarjeta-perfil" style="max-width:520px"><h3>Elige una contraseña nueva</h3>' +
+    '<p class="ayuda">Este enlace solo sirve una vez. Al guardarla se cerrarán las sesiones abiertas ' +
+    "en todos los dispositivos.</p>" +
+    '<div class="campo"><label for="nvUna">Contraseña nueva</label>' +
+    '<input id="nvUna" type="password" autocomplete="new-password" placeholder="mínimo 8 caracteres"></div>' +
+    '<div class="campo"><label for="nvDos">Repítela</label>' +
+    '<input id="nvDos" type="password" autocomplete="new-password"></div>' +
+    '<div class="fila-acc"><button class="btn" id="nvGo" type="button">Guardar y entrar</button>' +
+    '<span class="aviso-linea" id="nvMsg"></span></div></section>';
+  const msg = $("nvMsg");
+  $("nvGo").onclick = async () => {
+    const a = $("nvUna").value, b2 = $("nvDos").value;
+    if (a.length < 8) { msg.textContent = "mínimo 8 caracteres"; msg.className = "aviso-linea mal"; return; }
+    if (a !== b2) { msg.textContent = "las dos no coinciden"; msg.className = "aviso-linea mal"; return; }
+    $("nvGo").disabled = true; msg.textContent = "guardando…"; msg.className = "aviso-linea";
+    try {
+      const r = await fetch(CONFIG.SYNC_URL + "/olvido/nueva", {
+        method: "POST", headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ testigo, nueva: a })
+      });
+      const d = await r.json().catch(() => ({}));
+      if (!r.ok) throw new Error(d.error || "No se ha podido guardar.");
+      SESION = d.sesion; USUARIO = d.usuario; ADMIN = !!d.admin;
+      lsSet(KSES, SESION); lsSet(KUSR, USUARIO);
+      location.hash = "#/";
+      await cargaPerfil();
+      await cargaEstadoPago();
+      await unlock(USUARIO);
+    } catch (e) {
+      msg.textContent = e.message; msg.className = "aviso-linea mal";
+      $("nvGo").disabled = false;
+    }
+  };
+  $("nvUna").focus();
+}
+
+async function vistaConfirmaCorreo(testigo) {
+  $("gate").hidden = true; $("codigo").hidden = true;
+  cabecera("Cuenta", "Confirmación del correo");
+  $("vista").innerHTML = '<section class="tarjeta-perfil" style="max-width:520px">' +
+    '<h3>Confirmando…</h3><p class="ayuda" id="cfMsg">Un momento.</p></section>';
+  try {
+    const r = await fetch(CONFIG.SYNC_URL + "/correo/confirma", {
+      method: "POST", headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ testigo })
+    });
+    const d = await r.json().catch(() => ({}));
+    const t = $("cfMsg");
+    if (!r.ok) {
+      t.parentElement.querySelector("h3").textContent = "No ha podido confirmarse";
+      t.textContent = d.error || "El enlace ya no es válido.";
+    } else {
+      t.parentElement.querySelector("h3").textContent = "Correo confirmado";
+      t.textContent = "La dirección " + d.email + " queda asociada a la cuenta " + d.usuario +
+        ". Ya puedes recuperar la contraseña desde aquí si la olvidas.";
+      if (SESION) await cargaPerfil();
+    }
+    t.insertAdjacentHTML("afterend",
+      '<div class="fila-acc"><button class="btn" id="cfSeguir" type="button">Continuar</button></div>');
+    $("cfSeguir").onclick = () => {
+      location.hash = "#/";
+      if (SESION) { unlock(USUARIO); } else { abrePuerta(""); }
+    };
+  } catch (e) {
+    $("cfMsg").textContent = "No hay conexión con el servicio de cuentas.";
+  }
 }
 
 /* ---------- pantalla del codigo de rescate ---------- */
@@ -2014,13 +2197,22 @@ function muestraCodigo(codigo, usuario, titulo, texto, alSeguir) {
     if (f) f();
   };
 }
+const CORREO_RE = /^[^\s@]{1,64}@[^\s@.]+(\.[^\s@.]+)+$/;
+
 async function envia() {
   const err = $("gateErr");
   const usuario = $("gateUser").value.trim().toLowerCase();
   const clave = $("gatePass").value;
+  const correo = $("gateMail").value.trim().toLowerCase();
+
+  if (modoGate === "olvido") return await pideEnlace(correo);
   if (!USUARIO_RE.test(usuario)) {
     err.textContent = "El usuario: entre 3 y 32 caracteres, en minúsculas, sin espacios.";
     $("gateUser").focus(); return;
+  }
+  if (modoGate === "registro" && !CORREO_RE.test(correo)) {
+    err.textContent = "Escribe un correo válido: es lo que te permitirá recuperar la cuenta.";
+    $("gateMail").focus(); return;
   }
   if (modoGate !== "entrar" && clave.length < 8) {
     err.textContent = "La contraseña necesita al menos 8 caracteres.";
@@ -2039,8 +2231,9 @@ async function envia() {
   try {
     const ruta = modoGate === "registro" ? "/registro"
       : modoGate === "rescate" ? "/rescate" : "/entrar";
-    const cuerpo = modoGate === "rescate"
-      ? { usuario, codigo, nueva: clave } : { usuario, clave };
+    const cuerpo = modoGate === "rescate" ? { usuario, codigo, nueva: clave }
+      : modoGate === "registro" ? { usuario, clave, email: correo }
+      : { usuario, clave };
     const r = await fetch(CONFIG.SYNC_URL + ruta, {
       method: "POST", headers: { "Content-Type": "application/json" },
       body: JSON.stringify(cuerpo)
@@ -2052,7 +2245,7 @@ async function envia() {
     PERFIL = { nombre: "", avatar: "", creado: null, visto: null };
     await cargaPerfil();
     await cargaEstadoPago();
-    $("gatePass").value = ""; $("gateCodigo").value = "";
+    $("gatePass").value = ""; $("gateCodigo").value = ""; $("gateMail").value = "";
     const entra = async () => { $("gate").hidden = true; await unlock(USUARIO); };
     if (d.rescate) {
       const recuperada = modoGate === "rescate";
@@ -2115,7 +2308,8 @@ async function cargaPerfil() {
     const d = await r.json();
     ADMIN = !!d.admin;
     PERFIL = { nombre: d.nombre || "", avatar: d.avatar || "", creado: d.creado, visto: d.visto,
-               rescate: !!d.rescate, rescateDesde: d.rescateDesde || null };
+               rescate: !!d.rescate, rescateDesde: d.rescateDesde || null,
+               email: d.email || "", emailok: !!d.emailok };
   } catch (e) {}
 }
 
@@ -2152,12 +2346,20 @@ async function cargaPerfil() {
   $("gateGo").onclick = envia;
   $("gateOtro").onclick = () => { modoGate = modoGate === "entrar" ? "registro" : "entrar"; pintaModo(); $("gateUser").focus(); };
   $("gateOlvido").onclick = () => {
-    modoGate = modoGate === "rescate" ? "entrar" : "rescate";
+    modoGate = (modoGate === "olvido" || modoGate === "rescate") ? "entrar" : "olvido";
     pintaModo();
-    (modoGate === "rescate" ? $("gateCodigo") : $("gateUser")).focus();
+    (modoGate === "olvido" ? $("gateMail") : $("gateUser")).focus();
   };
+  $("gateVia").onclick = () => { modoGate = "rescate"; pintaModo(); $("gateUser").focus(); };
+  ["gateMail", "gateCodigo"].forEach(id =>
+    $(id).addEventListener("keydown", e => { if (e.key === "Enter") $("gateGo").click(); }));
   document.querySelectorAll("#gateModo button").forEach(b => b.onclick = () => { modoGate = b.dataset.m; pintaModo(); $("gateUser").focus(); });
   pintaModo();
+
+  // los enlaces del correo funcionan con la sesion cerrada
+  const r0 = ruta();
+  if (r0.vista === "nueva" && r0.sub) { await vistaNuevaClave(r0.sub); return; }
+  if (r0.vista === "correo" && r0.sub) { await vistaConfirmaCorreo(r0.sub); return; }
 
   const ses = lsGet(KSES), usr = lsGet(KUSR);
   if (ses && usr) {

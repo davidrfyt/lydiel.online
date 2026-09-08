@@ -34,6 +34,11 @@
      GET  /perfil              nombre, avatar y fechas de la cuenta
      PUT  /perfil              { nombre, avatar } actualiza el perfil
      POST /clave               { actual, nueva } cambia la contrasena
+     POST /correo              { email } fija o cambia el correo (pide sesion)
+     POST /correo/reenviar     vuelve a mandar la confirmacion
+     POST /correo/confirma     { testigo } confirma la direccion
+     POST /olvido              { email } manda el enlace para restablecer
+     POST /olvido/nueva        { testigo, nueva } pone la contrasena nueva
      POST /rescate             { usuario, codigo, nueva } recupera la cuenta
      POST /rescate/nuevo       emite otro codigo (pide la contrasena)
      POST /admin/rescate       { usuario } la administracion emite uno
@@ -68,6 +73,12 @@ const CLAVE_MIN = 8;
 const CLAVE_MAX = 200;
 const ITERACIONES = 100000;   // maximo que admite WebCrypto en Workers
 const SESION_SEG = 90 * 24 * 3600;
+const CORREO_RE = /^[^\s@]{1,64}@[^\s@.]+(\.[^\s@.]+)+$/;
+const EMAIL_MAX = 120;
+const VER_SEG = 24 * 3600;        // la confirmacion dura un dia
+const RES_SEG = 3600;             // el restablecimiento, una hora
+const FRENO_SEG = 60;             // un envio por direccion y minuto
+const REMITE = "TemarioVigilanteSeguridad <no-responder@temariovigilanteseguridad.com>";
 const INTENTOS_MAX = 8;
 const INTENTOS_SEG = 900;
 
@@ -145,6 +156,171 @@ async function sesionDe(peticion, env) {
 
 /* indice de sesiones abiertas: permite cerrarlas al suspender o borrar */
 const MAX_SESIONES = 10;
+
+/* ---------- correo ---------- */
+
+const normalizaCorreo = e => String(e || "").trim().toLowerCase();
+
+/* Testigo de un solo uso. En KV se guarda bajo su huella: quien lea el KV
+   no obtiene enlaces utilizables. */
+async function huella(testigo) {
+  const b = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(testigo));
+  return b64url(b);
+}
+
+async function ponTestigo(env, prefijo, datos, segundos) {
+  const testigo = aleatorio(32);
+  await env.PROGRESO.put(prefijo + (await huella(testigo)), JSON.stringify(datos),
+    { expirationTtl: segundos });
+  return testigo;
+}
+
+async function tomaTestigo(env, prefijo, testigo) {
+  if (typeof testigo !== "string" || testigo.length < 20) return null;
+  const clave = prefijo + (await huella(testigo));
+  const crudo = await env.PROGRESO.get(clave);
+  if (!crudo) return null;
+  await env.PROGRESO.delete(clave);        // de un solo uso
+  try { return JSON.parse(crudo); } catch (e) { return null; }
+}
+
+/* El proveedor se elige por la clave que este puesta como secreto. */
+async function enviaCorreo(env, a, asunto, texto) {
+  if (env.RESEND_KEY) {
+    const r = await fetch("https://api.resend.com/emails", {
+      method: "POST",
+      headers: { Authorization: "Bearer " + env.RESEND_KEY, "Content-Type": "application/json" },
+      body: JSON.stringify({ from: REMITE, to: [a], subject: asunto, text: texto }),
+    });
+    if (r.ok) return { ok: true };
+    const d = await r.text();
+    return { ok: false, error: "Resend: " + d.slice(0, 160) };
+  }
+  if (env.BREVO_KEY) {
+    const m = REMITE.match(/^(.*)<(.+)>$/);
+    const r = await fetch("https://api.brevo.com/v3/smtp/email", {
+      method: "POST",
+      headers: { "api-key": env.BREVO_KEY, "Content-Type": "application/json", accept: "application/json" },
+      body: JSON.stringify({
+        sender: { name: (m ? m[1] : "TemarioVigilanteSeguridad").trim(), email: m ? m[2] : REMITE },
+        to: [{ email: a }], subject: asunto, textContent: texto,
+      }),
+    });
+    if (r.ok) return { ok: true };
+    const d = await r.text();
+    return { ok: false, error: "Brevo: " + d.slice(0, 160) };
+  }
+  return { ok: false, error: "El envío de correo todavía no está configurado." };
+}
+
+/* Un envio por direccion y minuto: evita que se use la plataforma para molestar. */
+async function frenado(env, email) {
+  if (await env.PROGRESO.get("env:" + email)) return true;
+  await env.PROGRESO.put("env:" + email, "1", { expirationTtl: FRENO_SEG });
+  return false;
+}
+
+async function mandaConfirmacion(env, usuario, email) {
+  const t = await ponTestigo(env, "ver:", { u: usuario, email }, VER_SEG);
+  return await enviaCorreo(env, email, "Confirma tu correo",
+    "Hola " + usuario + ":\n\n" +
+    "Confirma esta dirección para poder recuperar tu cuenta si olvidas la contraseña.\n\n" +
+    SITIO + "/#/correo/" + t + "\n\n" +
+    "El enlace caduca en 24 horas. Si no has sido tú, ignora este mensaje.\n\n" +
+    "TemarioVigilanteSeguridad");
+}
+
+async function ponCorreo(peticion, env, origen) {
+  const s = await sesionDe(peticion, env);
+  if (!s) return json({ error: "Sesión no válida." }, 401, origen);
+  const { email } = await leerCuerpo(peticion);
+  const e = normalizaCorreo(email);
+  if (!CORREO_RE.test(e) || e.length > EMAIL_MAX) {
+    return json({ error: "Esa dirección de correo no es válida." }, 400, origen);
+  }
+  const duena = await env.PROGRESO.get("dir:" + e);
+  if (duena && duena !== s.usuario) {
+    return json({ error: "Esa dirección ya está en otra cuenta." }, 409, origen);
+  }
+  const c = await leeCuenta(env, s.usuario);
+  if (!c) return json({ error: "La cuenta ya no existe." }, 401, origen);
+  if (c.email && c.email !== e) await env.PROGRESO.delete("dir:" + c.email);
+  c.email = e;
+  c.emailok = false;
+  await env.PROGRESO.put("cuenta:" + s.usuario, JSON.stringify(c));
+  await env.PROGRESO.put("dir:" + e, s.usuario);
+  const env_ = await mandaConfirmacion(env, s.usuario, e);
+  return json({ ok: true, email: e, enviado: env_.ok, aviso: env_.ok ? null : env_.error }, 200, origen);
+}
+
+async function reenviaCorreo(peticion, env, origen) {
+  const s = await sesionDe(peticion, env);
+  if (!s) return json({ error: "Sesión no válida." }, 401, origen);
+  const c = await leeCuenta(env, s.usuario);
+  if (!c || !c.email) return json({ error: "No hay ninguna dirección guardada." }, 400, origen);
+  if (c.emailok) return json({ error: "Esa dirección ya está confirmada." }, 409, origen);
+  if (await frenado(env, c.email)) {
+    return json({ error: "Acabamos de enviarlo. Espera un minuto." }, 429, origen);
+  }
+  const r = await mandaConfirmacion(env, s.usuario, c.email);
+  if (!r.ok) return json({ error: r.error }, 503, origen);
+  return json({ ok: true, email: c.email }, 200, origen);
+}
+
+async function confirmaCorreo(peticion, env, origen) {
+  const { testigo } = await leerCuerpo(peticion);
+  const d = await tomaTestigo(env, "ver:", testigo);
+  if (!d) return json({ error: "Ese enlace ya no es válido. Pide otro desde tu perfil." }, 400, origen);
+  const c = await leeCuenta(env, d.u);
+  if (!c) return json({ error: "La cuenta ya no existe." }, 404, origen);
+  if (c.email !== d.email) {
+    return json({ error: "La dirección ha cambiado desde que se envió el enlace." }, 409, origen);
+  }
+  c.emailok = true;
+  await env.PROGRESO.put("cuenta:" + d.u, JSON.stringify(c));
+  return json({ ok: true, usuario: d.u, email: c.email }, 200, origen);
+}
+
+/* Siempre responde lo mismo: no se confirma quien esta registrado. */
+async function olvido(peticion, env, origen) {
+  const { email } = await leerCuerpo(peticion);
+  const e = normalizaCorreo(email);
+  const igual = json({ ok: true }, 200, origen);
+  if (!CORREO_RE.test(e)) return igual;
+  const usuario = await env.PROGRESO.get("dir:" + e);
+  if (!usuario) return igual;
+  const c = await leeCuenta(env, usuario);
+  if (!c || !c.emailok || c.email !== e || c.suspendido) return igual;
+  if (await frenado(env, e)) return igual;
+  const t = await ponTestigo(env, "res:", { u: usuario }, RES_SEG);
+  await enviaCorreo(env, e, "Restablece tu contraseña",
+    "Hola " + usuario + ":\n\n" +
+    "Has pedido restablecer la contraseña de tu cuenta. Entra aquí y elige una nueva:\n\n" +
+    SITIO + "/#/nueva/" + t + "\n\n" +
+    "El enlace caduca en una hora y solo sirve una vez.\n" +
+    "Si no has sido tú, no hagas nada: tu contraseña sigue igual.\n\n" +
+    "TemarioVigilanteSeguridad");
+  return igual;
+}
+
+async function claveNueva(peticion, env, origen) {
+  const { testigo, nueva } = await leerCuerpo(peticion);
+  if (typeof nueva !== "string" || nueva.length < CLAVE_MIN || nueva.length > CLAVE_MAX) {
+    return json({ error: "La contraseña nueva debe tener al menos " + CLAVE_MIN + " caracteres." }, 400, origen);
+  }
+  const d = await tomaTestigo(env, "res:", testigo);
+  if (!d) return json({ error: "Ese enlace ya no es válido. Pide otro desde la puerta de acceso." }, 400, origen);
+  const c = await leeCuenta(env, d.u);
+  if (!c) return json({ error: "La cuenta ya no existe." }, 404, origen);
+  if (c.suspendido) return json({ error: "Esta cuenta está suspendida." }, 403, origen);
+  c.salt = aleatorio(16);
+  c.hash = await derivar(nueva, c.salt, ITERACIONES);
+  c.iter = ITERACIONES;
+  await env.PROGRESO.put("cuenta:" + d.u, JSON.stringify(c));
+  await cierraTodas(env, d.u, null);
+  const sesion = await abreSesion(env, d.u);
+  return json({ ok: true, sesion, usuario: d.u, admin: ADMINS.includes(d.u) }, 200, origen);
+}
 
 /* ---------- codigo de rescate ---------- */
 
@@ -234,8 +410,15 @@ async function leeCuenta(env, usuario) {
 /* ---------- rutas ---------- */
 
 async function registro(peticion, env, origen) {
-  const { usuario, clave } = await leerCuerpo(peticion);
+  const { usuario, clave, email } = await leerCuerpo(peticion);
   const u = normaliza(usuario);
+  const correo = normalizaCorreo(email);
+  if (correo && (!CORREO_RE.test(correo) || correo.length > EMAIL_MAX)) {
+    return json({ error: "Esa dirección de correo no es válida." }, 400, origen);
+  }
+  if (correo && await env.PROGRESO.get("dir:" + correo)) {
+    return json({ error: "Esa dirección ya está en otra cuenta." }, 409, origen);
+  }
   if (!USUARIO_RE.test(u)) {
     return json({ error: "El usuario debe tener entre 3 y 32 caracteres: letras minúsculas, números, punto, guion o guion bajo, empezando por letra o número." }, 400, origen);
   }
@@ -249,10 +432,16 @@ async function registro(peticion, env, origen) {
   const hash = await derivar(clave, salt, ITERACIONES);
   const ahora = Date.now();
   const cuenta = { salt, hash, iter: ITERACIONES, creado: ahora, visto: ahora };
+  if (correo) { cuenta.email = correo; cuenta.emailok = false; }
   const rescate = await ponRescate(cuenta);
   await env.PROGRESO.put("cuenta:" + u, JSON.stringify(cuenta));
+  if (correo) {
+    await env.PROGRESO.put("dir:" + correo, u);
+    await mandaConfirmacion(env, u, correo);
+  }
   const sesion = await abreSesion(env, u);
-  return json({ sesion, usuario: u, nuevo: true, admin: ADMINS.includes(u), rescate }, 201, origen);
+  return json({ sesion, usuario: u, nuevo: true, admin: ADMINS.includes(u), rescate,
+                email: correo || null }, 201, origen);
 }
 
 async function entrar(peticion, env, origen) {
@@ -385,6 +574,7 @@ async function adminUsuarios(peticion, env, origen) {
       suspendido: !!c.suspendido,
       admin: ADMINS.includes(nombre),
       rescate: !!c.rhash,
+      email: c.email || "", emailok: !!c.emailok,
       pagado: !!c.pagado,
       pagadoEl: c.pagadoEl || null,
       progreso: resumeProgreso(await env.PROGRESO.get("p:" + nombre))
@@ -419,6 +609,8 @@ async function adminBorrar(peticion, env, origen) {
   if (ADMINS.includes(u)) return json({ error: "No puedes borrar una cuenta de administración." }, 400, origen);
   if (!(await env.PROGRESO.get("cuenta:" + u))) return json({ error: "Ese usuario no existe." }, 404, origen);
   await cierraTodas(env, u);
+  const borrada = await leeCuenta(env, u);
+  if (borrada && borrada.email) await env.PROGRESO.delete("dir:" + borrada.email);
   await env.PROGRESO.delete("cuenta:" + u);
   await env.PROGRESO.delete("p:" + u);
   await env.PROGRESO.delete("r:" + u);
@@ -618,6 +810,7 @@ async function perfil(peticion, env, origen) {
   return json({
     usuario: s.usuario, admin: s.admin,
     rescate: !!c.rhash, rescateDesde: c.rdesde || null,
+    email: c.email || "", emailok: !!c.emailok,
     nombre: c.nombre || "", avatar: c.avatar || "",
     creado: c.creado || null, visto: c.visto || null
   }, 200, origen);
@@ -743,6 +936,7 @@ async function baja(peticion, env, origen) {
   if (!iguales(hash, c.hash)) return json({ error: "La contraseña no es correcta." }, 401, origen);
 
   await cierraTodas(env, s.usuario);
+  if (c.email) await env.PROGRESO.delete("dir:" + c.email);
   await env.PROGRESO.delete("cuenta:" + s.usuario);
   await env.PROGRESO.delete("p:" + s.usuario);
   await env.PROGRESO.delete("r:" + s.usuario);
@@ -800,6 +994,11 @@ export default {
       if (ruta === "/perfil" && M === "GET") return await perfil(peticion, env, origen);
       if (ruta === "/perfil" && M === "PUT") return await guardaPerfil(peticion, env, origen);
       if (ruta === "/clave" && M === "POST") return await cambiaClave(peticion, env, origen);
+      if (ruta === "/correo" && M === "POST") return await ponCorreo(peticion, env, origen);
+      if (ruta === "/correo/reenviar" && M === "POST") return await reenviaCorreo(peticion, env, origen);
+      if (ruta === "/correo/confirma" && M === "POST") return await confirmaCorreo(peticion, env, origen);
+      if (ruta === "/olvido" && M === "POST") return await olvido(peticion, env, origen);
+      if (ruta === "/olvido/nueva" && M === "POST") return await claveNueva(peticion, env, origen);
       if (ruta === "/rescate" && M === "POST") return await rescate(peticion, env, origen);
       if (ruta === "/rescate/nuevo" && M === "POST") return await rescateNuevo(peticion, env, origen);
       if (ruta === "/admin/rescate" && M === "POST") return await adminRescate(peticion, env, origen);
