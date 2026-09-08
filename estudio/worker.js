@@ -44,8 +44,8 @@
    ========================================================= */
 
 const ORIGENES_PERMITIDOS = [
-  "https://temariovigilantesdeseguridad.com",
-  "https://www.temariovigilantesdeseguridad.com",
+  "https://temariovigilanteseguridad.com",
+  "https://www.temariovigilanteseguridad.com",
   "https://lydiel.online",              // se retira al completar la mudanza
   "https://www.lydiel.online",
 ];
@@ -53,7 +53,7 @@ const ADMINS = ["lydiel"];
 const PRECIO_CENTIMOS = 300;          // 3,00 EUR
 const MONEDA = "eur";
 const CONCEPTO = "Acceso completo a TemarioVigilanteSeguridad";
-const SITIO = "https://temariovigilantesdeseguridad.com";
+const SITIO = "https://temariovigilanteseguridad.com";
 const MAX_BYTES = 160000;      // el avatar viaja dentro del cuerpo
 const MAX_CONTENIDO = 6000000; // el temario se sube entero de una vez
 const AVATAR_MAX = 60000;      // ~44 KB de imagen en base64

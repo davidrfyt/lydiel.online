@@ -427,7 +427,11 @@ function pintaNav() {
   }
   const nav = $("nav");
   nav.innerHTML = h;
-  nav.querySelectorAll("[data-ir]").forEach(b => b.onclick = () => { cierraMenu(); ir(b.dataset.ir); });
+  nav.querySelectorAll("[data-ir]").forEach(b => {
+    b.onclick = () => { cierraMenu(); ir(b.dataset.ir); };
+    const t = b.querySelector("span:not(.cifra)");
+    if (t) b.title = t.textContent;                 // el rotulo, cuando esta plegada
+  });
 }
 
 function cabecera(ruta, titulo) {
@@ -436,6 +440,23 @@ function cabecera(ruta, titulo) {
   document.title = titulo + " · TemarioVigilanteSeguridad";
 }
 const cierraMenu = () => { $("app").dataset.menu = "0"; const v = document.querySelector(".velo"); if (v) v.remove(); };
+
+/* Plegar la lateral. En pantalla estrecha el boton abre el cajon, asi que
+   solo se pliega por encima del punto en que la lateral es una columna fija. */
+const anchaHay = () => matchMedia("(min-width:1001px)").matches;
+
+function pintaLateral() {
+  const abierta = $("app").dataset.lat !== "0";
+  const b = $("hambBtn");
+  b.setAttribute("aria-expanded", String(abierta));
+  b.title = anchaHay() ? (abierta ? "Ocultar el menú" : "Mostrar el menú") : "Menú";
+}
+
+function plegable(v) {
+  $("app").dataset.lat = v ? "1" : "0";
+  lsSet("sea029:lateral", v ? "1" : "0");
+  pintaLateral();
+}
 
 function pinta() {
   paraVoz();
@@ -1992,8 +2013,13 @@ async function cargaPerfil() {
   const temaGuardado = lsGet("sea029:tema");
   if (temaGuardado) document.documentElement.setAttribute("data-theme", temaGuardado);
 
+  if (lsGet("sea029:lateral") === "0") $("app").dataset.lat = "0";
+  pintaLateral();
+  addEventListener("resize", pintaLateral);
+
   $("hambBtn").onclick = () => {
     const app = $("app");
+    if (anchaHay()) { plegable(app.dataset.lat === "0"); return; }
     if (app.dataset.menu === "1") { cierraMenu(); return; }
     app.dataset.menu = "1";
     const v = document.createElement("div");

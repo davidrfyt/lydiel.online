@@ -241,7 +241,11 @@ mark{background:var(--acento-2);color:var(--ink);padding:0 3px;border-radius:3px
   padding:14px var(--borde);
   display:flex;align-items:center;gap:14px;flex-wrap:wrap;
 }
-.barra .hamb{display:none}
+.barra .hamb{
+  display:grid;place-items:center;width:38px;height:38px;flex:0 0 auto;border-radius:var(--r-s);
+  border:1px solid var(--linea);cursor:pointer;background:var(--sup);color:var(--ink-2);transition:.15s;
+}
+.barra .hamb:hover{border-color:var(--marca);color:var(--marca)}
 .barra h1{font-size:var(--t-lg);font-weight:700}
 .barra .ruta{font-size:var(--t-xs);color:var(--gris);font-weight:600}
 .contenido{padding:26px var(--borde) 60px;flex:1}
@@ -249,6 +253,30 @@ footer{
   padding:18px var(--borde) 26px;border-top:1px solid var(--linea);
   color:var(--gris);font-size:var(--t-xs);display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;
 }
+
+/* ---------- lateral plegada: queda una columna de iconos ---------- */
+.app[data-lat="0"]{--lateral:76px}
+.app[data-lat="0"] .lateral{padding:22px 12px;gap:18px;overflow-x:hidden}
+.app[data-lat="0"] .marca{justify-content:center;padding:0}
+.app[data-lat="0"] .marca .txt,
+.app[data-lat="0"] .nav .titulo,
+.app[data-lat="0"] .nav button > span,
+.app[data-lat="0"] .avance .fila > div,
+.app[data-lat="0"] .usuario .quien,
+.app[data-lat="0"] .mini button span{display:none}
+.app[data-lat="0"] .avance{padding:8px;background:none;border:none}
+.app[data-lat="0"] .avance .fila{justify-content:center}
+.app[data-lat="0"] .nav button{justify-content:center;padding:11px 0;position:relative}
+/* la cifra pendiente no cabe al lado: se convierte en un punto sobre el icono */
+.app[data-lat="0"] .nav .cifra{
+  position:absolute;top:5px;right:14px;margin:0;width:7px;height:7px;padding:0;
+  border-radius:50%;background:var(--acento);font-size:0;overflow:hidden;
+}
+.app[data-lat="0"] .usuario{justify-content:center;padding:8px}
+.app[data-lat="0"] .mini{flex-direction:column}
+.app[data-lat="0"] .mini button{padding:9px 0;display:grid;place-items:center}
+.app[data-lat="0"] .mini .ic{width:17px;height:17px}
+.mini button .ic{display:none}
 
 /* =========================================================
    PIEZAS COMUNES
@@ -646,7 +674,23 @@ table.usuarios .num{font-family:var(--mono);font-variant-numeric:tabular-nums}
    ========================================================= */
 @media (max-width:1000px){
   :root{--borde:20px}
-  .app{grid-template-columns:minmax(0,1fr)}
+  .app,.app[data-lat="0"]{grid-template-columns:minmax(0,1fr)}
+  .app[data-lat="0"]{--lateral:270px}
+  .app[data-lat="0"] .lateral{padding:22px 16px;gap:22px}
+  .app[data-lat="0"] .marca,.app[data-lat="0"] .usuario{justify-content:flex-start}
+  .app[data-lat="0"] .marca{padding:0 6px}
+  .app[data-lat="0"] .marca .txt,
+  .app[data-lat="0"] .nav .titulo,
+  .app[data-lat="0"] .nav button > span,
+  .app[data-lat="0"] .avance .fila > div,
+  .app[data-lat="0"] .usuario .quien,
+  .app[data-lat="0"] .mini button span{display:block}
+  .app[data-lat="0"] .avance{padding:14px;background:var(--sup-2);border:1px solid var(--linea-2)}
+  .app[data-lat="0"] .nav button{justify-content:flex-start;padding:9px 10px}
+  .app[data-lat="0"] .nav .cifra{position:static;width:auto;height:auto;background:none;
+    border-radius:0;font-size:var(--t-xs);margin-left:auto;overflow:visible}
+  .app[data-lat="0"] .mini{flex-direction:row}
+  .app[data-lat="0"] .mini button{padding:7px 8px;display:block}
   .lateral{
     position:fixed;top:0;left:0;bottom:0;width:270px;z-index:70;
     transform:translateX(-100%);transition:transform .25s cubic-bezier(.2,.7,.2,1);
@@ -654,10 +698,6 @@ table.usuarios .num{font-family:var(--mono);font-variant-numeric:tabular-nums}
   }
   .app[data-menu="1"] .lateral{transform:none}
   .velo{position:fixed;inset:0;z-index:60;background:rgba(15,23,36,.5)}
-  .barra .hamb{
-    display:grid;place-items:center;width:38px;height:38px;border-radius:var(--r-s);
-    border:1px solid var(--linea);cursor:pointer;background:var(--sup);
-  }
 }
 @media (max-width:620px){
   :root{--borde:16px;--t-2xl:1.625rem;--t-xl:1.3125rem}
