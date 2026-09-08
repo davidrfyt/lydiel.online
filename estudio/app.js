@@ -34,9 +34,13 @@ const slotKey = () => "sea029:p:" + (USUARIO || TOKEN);
 const remoteKey = () => TOKEN + CONFIG.SUFIJO;
 const conSesion = extra => Object.assign({ Authorization: "Bearer " + SESION }, extra || {});
 
+/* el estado de guardado solo se asoma cuando hay un problema:
+   si todo va bien, no hace falta decirlo */
 function setSync(state, txt) {
   const b = $("syncBadge"); if (!b) return;
-  b.dataset.s = state; $("syncTxt").textContent = txt;
+  b.dataset.s = state;
+  $("syncTxt").textContent = txt;
+  b.hidden = state !== "err";
 }
 function save() {
   lsSet(slotKey(), JSON.stringify(S));
@@ -326,7 +330,7 @@ function pintaNav() {
 function cabecera(ruta, titulo) {
   $("ruta").textContent = ruta;
   $("titulo").textContent = titulo;
-  document.title = titulo + " · SEA029";
+  document.title = titulo + " · TemarioVigilanteSeguridad";
 }
 const cierraMenu = () => { $("app").dataset.menu = "0"; const v = document.querySelector(".velo"); if (v) v.remove(); };
 
@@ -1609,9 +1613,7 @@ async function boot() {
   }
   updHud();
   pinta();
-  $("savedNote").textContent = SESION
-    ? "Progreso guardado en la cuenta " + USUARIO
-    : "Progreso guardado en el token " + TOKEN;
+  pintaIdentidad();
 }
 async function servicioTieneCuentas() {
   try {

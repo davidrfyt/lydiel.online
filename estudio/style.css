@@ -178,7 +178,10 @@ mark{background:var(--acento-2);color:var(--ink);padding:0 3px;border-radius:3px
 :root[data-theme="dark"] .marca .sigla{color:#0B111C}
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .marca .sigla{color:#0B111C}}
 .marca .txt{min-width:0}
-.marca .txt b{display:block;font-size:var(--t-base);font-weight:700;line-height:1.25}
+.marca .txt b{display:block;font-size:var(--t-sm);font-weight:800;line-height:1.2;letter-spacing:-.015em}
+.marca .sigla{letter-spacing:.04em;font-weight:700}
+.amor{color:var(--gris)}
+.amor b{color:var(--marca);font-weight:700}
 .marca .txt span{font-size:var(--t-xs);color:var(--gris)}
 
 .avance{background:var(--sup-2);border:1px solid var(--linea-2);border-radius:var(--r);padding:14px}
