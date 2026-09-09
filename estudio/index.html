@@ -2,166 +2,36 @@
 <html lang="es">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>TemarioVigilanteSeguridad · Certificado SEA029</title>
-<meta name="description" content="Temario completo del certificado SEA029 Vigilancia y Seguridad Privada: los ocho manuales con lectura en voz alta, resúmenes, fichas de repaso espaciado, tests, exámenes cronometrados y simulacro de examen oral, organizados unidad por unidad.">
-<meta property="og:type" content="website">
-<meta property="og:title" content="TemarioVigilanteSeguridad">
-<meta property="og:description" content="Temario, fichas, tests y examen oral del certificado SEA029, unidad por unidad y con lectura en voz alta.">
-<meta name="theme-color" content="#1B4B91">
-<meta property="og:url" content="https://temariovigilanteseguridad.com/">
-<meta property="og:image" content="https://temariovigilanteseguridad.com/social.jpg">
-<meta name="twitter:card" content="summary_large_image">
-<meta name="color-scheme" content="light dark">
-<link rel="icon" href="logo-192.png" type="image/png">
-<link rel="apple-touch-icon" href="logo-192.png">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&family=JetBrains+Mono:wght@400;500&display=swap">
-<link rel="stylesheet" href="style.css?v=23">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>El temario se ha mudado — TemarioVigilanteSeguridad</title>
+<link rel="canonical" href="https://temariovigilanteseguridad.com/">
+<meta name="robots" content="noindex,follow">
+<meta http-equiv="refresh" content="0; url=https://temariovigilanteseguridad.com/">
+<style>
+  :root{color-scheme:light dark}
+  body{margin:0;min-height:100vh;display:grid;place-items:center;padding:24px;
+    font:16px/1.6 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+    background:#0f1115;color:#e7e9ee}
+  main{max-width:34rem;text-align:center}
+  h1{font-size:1.5rem;margin:0 0 12px;font-weight:700}
+  p{margin:0 0 20px;color:#a8b0bf}
+  a.boton{display:inline-block;padding:12px 22px;border-radius:10px;
+    background:#3b82f6;color:#fff;text-decoration:none;font-weight:600}
+  a.boton:hover{background:#2f6fd8}
+  code{color:#e7e9ee}
+</style>
 </head>
 <body>
-
-<div id="gate" hidden>
-  <div class="gate-card">
-    <div class="gate-marca"><img src="logo-192.png" alt="" width="46" height="46"><div class="txt"><b>TemarioVigilanteSeguridad</b><span>Certificado SEA029</span></div></div>
-
-    <div class="gate-pk" id="gatePk" hidden>
-      <button class="btn ancho" id="pkEntrar" type="button">
-        <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="9" r="4"/><path d="M13 12h8M18 12v3M21 12v4M2 20c0-3 3.1-5 7-5"/></svg>
-        Entrar con passkey</button>
-      <p class="gate-o"><span>o con usuario y contraseña</span></p>
-    </div>
-
-    <div class="gate-modo" id="gateModo" role="group" aria-label="Acceso">
-      <button type="button" data-m="entrar" aria-pressed="true">Entrar</button>
-      <button type="button" data-m="registro" aria-pressed="false">Crear cuenta</button>
-    </div>
-
-    <h2 id="gateTitulo">Entra en tu cuenta</h2>
-    <p id="gateTexto">Tu progreso —epígrafes leídos, fichas dominadas, notas y preguntas falladas— se guarda en tu cuenta, no en este navegador. Entra con los mismos datos en el móvil y sigues donde lo dejaste.</p>
-
-    <div class="gate-field">
-      <label for="gateUser">Usuario</label>
-      <input id="gateUser" type="text" autocomplete="username" autocapitalize="off" spellcheck="false" placeholder="tu nombre de usuario">
-    </div>
-    <div class="gate-field" id="campoCorreo" hidden>
-      <label for="gateMail">Correo electrónico</label>
-      <input id="gateMail" type="email" autocomplete="email" autocapitalize="off" spellcheck="false"
-             placeholder="tu@correo.com">
-      <span class="pista" id="mailPista">Solo se usa para recuperar la cuenta. No se comparte con nadie.</span>
-    </div>
-    <div class="gate-field" id="campoCodigo" hidden>
-      <label for="gateCodigo">Código de rescate</label>
-      <input id="gateCodigo" type="text" autocomplete="off" autocapitalize="characters" spellcheck="false"
-             maxlength="23" placeholder="XXXXX-XXXXX-XXXXX-XXXXX" class="mono">
-      <span class="pista">Los cuatro grupos que guardaste al crear la cuenta. Da igual mayúsculas o guiones.</span>
-    </div>
-    <div class="gate-field">
-      <label for="gatePass" id="gatePassLab">Contraseña</label>
-      <input id="gatePass" type="password" autocomplete="current-password" placeholder="tu contraseña">
-      <span class="pista" id="gatePista" hidden>Mínimo 8 caracteres.</span>
-    </div>
-
-    <div class="gate-row">
-      <button class="btn" id="gateGo" type="button">Entrar</button>
-      <button class="link" id="gateOtro" type="button">Crear una cuenta</button>
-      <button class="link" id="gateOlvido" type="button">He olvidado la contraseña</button>
-    </div>
-    <p class="gate-ok" id="gateOk" hidden></p>
-    <div class="gate-otra" id="gateOtraVia" hidden>
-      <button class="link" id="gateVia" type="button">Usar el código de rescate</button>
-    </div>
-    <p class="gate-err" id="gateErr"></p>
-
-    <div class="gate-note" id="gateNota">
-      Tu contraseña se guarda cifrada, nunca en claro. Si la olvidas, la recuperas desde el
-      <b>correo</b> que confirmes. Además recibirás un <b>código de rescate</b>: guárdalo por si
-      algún día pierdes también el acceso al correo.
-    </div>
-  </div>
-</div>
-
-<div id="codigo" hidden>
-  <div class="gate-card codigo-card">
-    <h2 id="codTitulo">Guarda tu código de rescate</h2>
-    <p id="codTexto">Es tu respaldo: te devuelve el acceso si olvidas la contraseña y tampoco puedes usar el correo. No se puede volver a ver, aunque siempre puedes emitir otro desde tu perfil.</p>
-    <div class="codigo-caja"><code id="codValor">—</code></div>
-    <div class="bar">
-      <button class="btn ghost" id="codCopiar" type="button">Copiar</button>
-      <button class="btn ghost" id="codBajar" type="button">Descargar</button>
-      <span class="aviso-linea" id="codMsg"></span>
-    </div>
-    <label class="codigo-ok"><input type="checkbox" id="codVisto"> Lo he guardado en un sitio seguro</label>
-    <div class="bar"><button class="btn" id="codSeguir" type="button" disabled>Continuar</button></div>
-  </div>
-</div>
-
-<div class="app" id="app" data-menu="0" data-lat="1">
-
-  <aside class="lateral" id="lateral">
-    <div class="marca">
-      <img class="sigla" id="sigla" src="logo-64.png" alt="" width="40" height="40">
-      <span class="txt">
-        <b>TemarioVigilante<br>Seguridad</b>
-        <span>Certificado SEA029</span>
-      </span>
-    </div>
-
-    <div class="avance">
-      <div class="fila">
-        <svg class="ring" viewBox="0 0 64 64" aria-hidden="true">
-          <circle cx="32" cy="32" r="26" fill="none" stroke="var(--sup-3)" stroke-width="6"></circle>
-          <circle id="ringArc" cx="32" cy="32" r="26" fill="none" stroke="var(--marca)" stroke-width="6"
-                  stroke-linecap="round" stroke-dasharray="164" stroke-dashoffset="164" transform="rotate(-90 32 32)"></circle>
-          <text id="ringTxt" x="32" y="36" text-anchor="middle">0%</text>
-        </svg>
-        <div>
-          <b id="hudDone">0 / 0</b>
-          <span>epígrafes leídos</span>
-        </div>
-      </div>
-    </div>
-
-    <nav class="nav" id="nav"></nav>
-
-    <div class="pie">
-      <div class="usuario">
-        <span class="av" id="avatar">?</span>
-        <span class="quien">
-          <b id="whoChip">-</b>
-          <span class="sync" id="syncBadge" data-s="local" hidden><span class="dot"></span><span id="syncTxt"></span></span>
-        </span>
-      </div>
-      <div class="mini">
-        <button id="themeBtn" type="button" title="Cambiar el tema" aria-label="Cambiar el tema">
-          <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4.2"/><path d="M12 2.5v2.2M12 19.3v2.2M4.6 4.6l1.6 1.6M17.8 17.8l1.6 1.6M2.5 12h2.2M19.3 12h2.2M4.6 19.4l1.6-1.6M17.8 6.2l1.6-1.6"/></svg><span>Tema</span></button>
-        <button id="outBtn" type="button" title="Cerrar la sesión" aria-label="Cerrar la sesión">
-          <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 3h3.5A1.5 1.5 0 0 1 20 4.5v15a1.5 1.5 0 0 1-1.5 1.5H15"/><path d="M10 17l-5-5 5-5M5 12h11"/></svg><span>Salir</span></button>
-      </div>
-    </div>
-  </aside>
-
-  <div class="principal">
-    <header class="barra">
-      <button class="hamb" id="hambBtn" type="button" aria-label="Menú" aria-expanded="true" title="Ocultar el menú">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
-      </button>
-      <div>
-        <div class="ruta" id="ruta">Panel</div>
-        <h1 id="titulo">Panel de estudio</h1>
-      </div>
-    </header>
-    <main class="contenido" id="vista"></main>
-    <footer>
-      <span>TemarioVigilanteSeguridad · Certificado de profesionalidad SEA029 · Vigilancia y Seguridad Privada</span>
-      <span class="amor">Hecho con mucho amor por <b>Lydiel</b></span>
-    </footer>
-  </div>
-
-</div>
-
-<script src="iconos.js?v=23"></script>
-<script src="app.js?v=23"></script>
+<main>
+  <h1>El temario ahora vive en su propio dominio</h1>
+  <p>Esta dirección ya no se mantiene. Tu cuenta y tu progreso son los mismos:
+     entra con el usuario de siempre.</p>
+  <p><a class="boton" href="https://temariovigilanteseguridad.com/">Ir a temariovigilanteseguridad.com</a></p>
+</main>
+<script>
+  // Se conserva lo que venga tras la almohadilla, para no perder la pantalla
+  // concreta a la que apuntaba el enlace (#/perfil, #/hoy/fichas...).
+  location.replace("https://temariovigilanteseguridad.com/" + location.hash);
+</script>
 </body>
 </html>
